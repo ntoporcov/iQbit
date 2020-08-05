@@ -1,0 +1,551 @@
+$blue : #0076ff;
+$gray-light : #e5e5e5;
+$gray : #b2b2b2;
+$offwhite: #fafafa;
+$backgroound: #efeff4;
+$red:#fe3824;
+
+*{
+  font-family: -apple-system, 'Helvetica Neue', 'Helvetica', 'Arial', 'Lucida Grande', sans-serif !important;
+}
+
+.danger{
+  color:$red;
+}
+
+@mixin for-phone {
+  @media (max-width: 599px) { @content; }
+}
+@mixin for-tablet {
+  @media (min-width: 600px) { @content; }
+}
+
+.App {
+  text-align: center;
+}
+
+.App-logo {
+  height: 40vmin;
+}
+
+.App-header {
+  background-color: #282c34;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: calc(10px + 2vmin);
+  color: white;
+}
+
+.App-link {
+  color: #09d3ac;
+}
+
+h1{
+  margin-top:10px;
+  margin-bottom: 10px;
+}
+
+h2{
+  font-size: 20px;
+  color: black;
+  font-weight: bold;
+  margin:0 !important;
+}
+
+h3{
+  margin:0 !important;
+}
+
+.toolbar{
+  height: initial;
+  min-height: 90px;
+  width: 100%;
+  z-index: 100;
+  position: fixed !important;
+
+  *{
+    display: flex;
+    align-items: flex-end;
+  }
+
+  .right{
+    justify-content: flex-end;
+    padding: 0 10px 5px 0;
+  }
+
+  .left{
+    padding: 0 0 0 20px;
+  }
+}
+
+.tabWrapper{
+  position: fixed !important;
+  //pointer-events: none;
+
+  &.installed .tabbar{
+    padding-bottom: 30px !important;
+  }
+}
+
+.page__content{
+  margin-top:88px !important;
+}
+
+.LogoHeader{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding-bottom: 20px;
+
+  .iqbit{
+    font-size: 45px !important;
+    font-family: -apple-system, 'Helvetica Neue', 'Helvetica', 'Arial', 'Lucida Grande', sans-serif;
+    font-weight: 400;
+    margin-bottom: 0 !important;
+    padding-bottom: 0;
+  }
+
+  .poweredBy{
+    font-size: 20px !important;
+    font-family: -apple-system, 'Helvetica Neue', 'Helvetica', 'Arial', 'Lucida Grande', sans-serif;
+    font-weight: 400;
+    opacity: .5;
+    margin: 0;
+  }
+}
+
+
+.torrentBox{
+  background-color: $offwhite;
+  width: 100%;
+  padding:20px;
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+  margin-bottom: 20px;
+  border-bottom: .5px solid $gray;
+  border-top: .5px solid $gray;
+
+  h3{
+    padding-bottom: 30px;
+    max-height: 100px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+
+    &.centered{
+      text-align: center;
+    }
+  }
+
+  .stats{
+    display: flex;
+    justify-content: space-between;
+    padding-bottom: 10px;
+
+    > * {
+      font-size: 18px;
+      font-weight: bold;
+    }
+
+    > *:first-child {
+      color: $blue;
+    }
+
+    > *:nth-child(2) {
+      color: $gray;
+    }
+  }
+
+  .details{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    .statsRow{
+      display: flex;
+      align-items: center;
+      height: 100%;
+
+      .data {
+        color: darken($gray,40%);
+        margin-right: 15px;
+        font-size: 14px;
+      }
+
+      .ons-icon{
+        margin-right: 3px;
+      }
+
+    }
+
+    .buttonsRow{
+      display: flex;
+      justify-content: space-between;
+      padding-top: 5px;
+
+      button{
+        flex-grow: 2;
+        min-width: 50px;
+        background: none;
+        border: none;
+
+        &:focus{
+          background-color: initial;
+          color: initial;
+          outline: none;
+          border-radius: initial;
+        }
+
+        &:active{
+          background-color: $blue;
+          color: white;
+          outline: none;
+          border-radius: 5px;
+        }
+      }
+
+      button:nth-child(2){
+        border-color: $gray-light;
+        border-style: solid;
+        border-width: 0 1px 0 1px;
+      }
+
+      button.active{
+        background-color: $blue;
+        color: white;
+        outline: none;
+        border-radius: 5px;
+      }
+    }
+  }
+
+  &:not(.login):first-child{
+    margin-top: 20px;
+  }
+
+  &.login{
+    background-color: transparent;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 0!important;
+    border:none;
+
+    h2{
+      text-align: center;
+      margin-bottom: 20px !important;
+    }
+  }
+
+  .inputGroup {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    border: 1px solid $gray;
+    border-radius: 10px;
+    margin-bottom: 20px;
+    background-color: white;
+
+    label{
+      display: flex;
+      align-items: center;
+      box-sizing: border-box;
+      width: 100%;
+      padding: 10px 10px;
+      font-size: 16px;
+      font-weight: bold;
+
+      span{
+        width: 100px;
+      }
+
+      input{
+        flex-grow: 2;
+        border:none;
+        font-size: 16px;
+        margin-left: 5px;
+        width: 70%;
+        background-color: transparent;
+
+        &::placeholder{
+          color: $gray;
+        }
+      }
+
+    }
+
+    label:not(:first-child){
+      border-top: 1px solid $gray;
+    }
+  }
+
+  .headerToAdd{
+    padding:10px;
+    border-radius: 10px;
+    background-color: $gray-light;
+    display: block;
+  }
+
+  .feedback{
+    text-align: center;
+  }
+}
+
+.segmentPicker{
+  padding:20px;
+}
+
+.torrentControls{
+  padding:20px;
+  display: flex;
+  align-items: center;
+
+  h2{
+    flex-grow: 4;
+  }
+}
+
+.loginImage{
+  max-width: 125px;
+  height: auto;
+}
+
+.loginImage-small{
+  max-width: 50px;
+  height: auto;
+  margin-right: 5px;
+}
+
+.progress-bar{
+  height:4px
+}
+
+.progress-bar__secondary{
+  background-color: lighten($blue,40%) !important;
+}
+
+.tabletView{
+  display: flex;
+
+  .torrentsCol{
+    width: 400px;
+    border-right: .5px solid $gray;
+    height: calc(100vh - 88px);
+    overflow-y: scroll ;
+  }
+
+  .torrentsCol.login{
+    background-color: white;
+  }
+
+  .searchCol{
+    flex-grow: 2;
+    height: calc(100vh - 88px);
+    overflow-y: scroll ;
+  }
+}
+
+.searchWrap{
+  padding: 30px 20px;
+  box-sizing: border-box;
+}
+
+.action-sheet-mask,.alert-dialog-mask {
+  background-color: rgba(0,0,0,.5);
+}
+
+.action-sheet{
+
+
+  @include for-tablet{
+    max-width: 500px;
+    margin:0 auto;
+  }
+
+  .action-sheet-button{
+    background-color: white !important;
+  }
+}
+
+.root{
+  >*:not(.BottomSheet.open){
+    transform: scale(.5);
+  }
+}
+
+.BottomSheet{
+
+  &.open{
+    background-color: rgba(0,0,0,.7);
+    position: fixed;
+    height: 100%;
+    width: 100%;
+    z-index: 10000;
+    transition: background-color ease-out .2s ;
+  }
+
+  &.open .modal{
+    transition: transform ease-out .4s;
+  }
+
+  .modal{
+    transform: translate(0px, 30px);
+    position: fixed;
+    width: 100%;
+    max-width: 768px;
+    margin: 0 auto;
+    background: white none repeat scroll 0% 0%;
+    box-shadow: rgba(0, 0, 0, 0.2) 0px -3px 6px;
+    height: 100%;
+    border-radius: 15px 15px 0 0;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    padding: 0 40px ;
+  }
+
+  .handleArea{
+    padding-top: 20px;
+    height: 50px;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+  }
+
+  .handle{
+    height: 10px;
+    width: 50%;
+    border-radius: 50px;
+    margin-bottom: 30px;
+    background-color: $gray-light;
+  }
+}
+
+.react-draggable-dragging.modal{
+     transition: none !important;
+}
+
+.torrentInfoCol{
+  height: 100%;
+  width: 100%;
+  box-sizing: border-box;
+  overflow-y: scroll;
+  padding-bottom: 30vh;
+
+  h2{
+    font-size: 25px;
+    padding-bottom: 12px;
+  }
+
+  h3{
+    font-size: 22px;
+  }
+
+
+  @include for-tablet{
+    h2{
+      font-size: 35px;
+    }
+    h3{
+      font-size: 32px;
+    }
+  }
+
+  .stickyRow{
+    position: sticky;
+    top: 0;
+    background-color: white;
+
+    .ProgressAmount{
+      font-size: 18px;
+      color: $blue;
+      font-weight: bold;
+    }
+  }
+
+  .infoStatsRowWrapper{
+    margin-top: 20px;
+
+    .infoTitleBox{
+      display: flex;
+      flex-wrap: nowrap;
+      align-items: center;
+      padding-bottom: 10px;
+
+      .ons-icon{
+        color:$blue;
+        margin-right: 5px;
+      }
+    }
+
+    .infoStatsRow{
+      display: flex;
+      flex-wrap: wrap;
+      box-sizing: initial;
+      justify-content: center;
+
+      .infoStatBox{
+        margin-right: 20px;
+        margin-bottom: 20px;
+        padding: 15px;
+        border-radius: 10px;
+        box-sizing: content-box;
+        background-color: lighten($gray-light,7%);
+        flex-grow: 2;
+
+        >div{
+          display: flex;
+          align-items: center;
+          margin-top:5px
+        }
+      }
+
+      .infoStatIcon{
+        margin-right: 10px;
+        color: $blue;
+      }
+
+      .infoStat{
+        font-size: 20px;
+        margin:0;
+      }
+
+      @include for-tablet{
+        .infoStat{
+          font-size: 25px;
+        }
+      }
+
+      .infoStatLabel{
+        color:darken($gray,10%);
+      }
+
+    }
+  }
+}
+
+.searchCol{
+  padding: 20px;
+
+  .searchInputRow{
+    margin-top: 20px;
+    display: flex;
+    align-items: center;
+
+    .searchInput{
+      flex-grow: 4;
+      margin-right: 20px;
+    }
+
+    .fab,.fab__icon{
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+  }
+}
+
