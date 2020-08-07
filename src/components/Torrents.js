@@ -52,6 +52,7 @@ const Torrents = (props) =>{
           setUserSettings(userObject);
           updateSettings(userObject)
           setLoggedIn(true);
+          updateTorrentList()
         })
 
       }else{
