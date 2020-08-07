@@ -51,10 +51,10 @@ const Tabs = () => {
                         content: <Page><Search title={pageTitles[1]} active={activeIndex === 1}/></Page>,
                         tab: <Tab label="Search" icon="ion-ios-search"/>
                     },
-                    {
+                    settings.loggedin?{
                         content: <Page><Settings title={pageTitles[2]} active={activeIndex === 1}/></Page>,
                         tab: <Tab label="Settings" icon="ion-ios-cog"/>
-                    },
+                    }: {tab:null,content: null},
                 ]
                 }
             />

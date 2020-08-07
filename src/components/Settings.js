@@ -302,7 +302,7 @@ const Settings = (props) =>{
                 WebUI
             </ListHeader>
             <SwitchRow
-                title={"WebUI IP Enabled"}
+                title={"Custom WebUI Enabled"}
                 icon={faPaintBrushAlt}
                 objKey={"alternative_webui_enabled"}
                 color={"#19a700"}
