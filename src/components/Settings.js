@@ -161,13 +161,18 @@ const Settings = (props) =>{
         web_ui_username: ""
     })
 
-    const {settings,initialLogin} = useContext(Context)
+    const [prefsRefresh,setPrefsRefresh] = useState(true)
+
+    const {settings,initialLogin,updateAlert} = useContext(Context)
 
     useEffect(()=>{
-        getPrefs().then(response=>{
-            setPreferences(response.data)
-        })
-    },[initialLogin])
+        if(prefsRefresh){
+            getPrefs().then(response=>{
+                setPreferences(response.data)
+                setPrefsRefresh(false);
+            })
+        }
+    },[initialLogin,prefsRefresh])
 
     const SwitchRow = (props) =>{
         return(
@@ -181,7 +186,16 @@ const Settings = (props) =>{
                 <div className="right">
                     {console.log(preferences[props.objKey])}
                     <Switch checked={preferences[props.objKey]} onChange={()=>{
-                        updatePref(`{"${props.objKey}":${!preferences[props.objKey]}}`)
+                        updatePref(`{"${props.objKey}":${!preferences[props.objKey]}}`).then(()=>{
+                            setTimeout(()=>{
+                                let updatedObj = {...preferences}
+                                updatedObj[props.objKey] = !preferences[props.objKey];
+                                setPreferences(updatedObj)
+                            },350)
+                        }).catch(()=>{
+                            setPrefsRefresh(true);
+                            updateAlert("Settings Update Failed","Settings could not be updated")
+                        })
                     }}/>
                 </div>
                 SubFolders
@@ -249,7 +263,7 @@ const Settings = (props) =>{
                 <SwitchRow
                     title={"Temp Folder"}
                     icon={faFolderMinus}
-                    objKey={"start_paused_enabled"}
+                    objKey={"temp_path_enabled"}
                     color={"#5b00b6"}
                 />
                 <InputRow
@@ -368,7 +382,11 @@ const Settings = (props) =>{
                         Cancel
                     </Button>
                     <Button onClick={()=>{
-                        updatePref(`{"${props.objKey}":"${alertInput.current.value}"}`)
+                        updatePref(`{"${props.objKey}":"${alertInput.current.value}"}`).then(()=>{
+                            setTimeout(()=>{
+                                setPrefsRefresh(true)
+                            },300)
+                        })
                     }} className="alert-dialog-button">
                         Save
                     </Button>
