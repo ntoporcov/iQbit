@@ -38,6 +38,7 @@ My suggestion is to do a git clone of this repo locally and then point your qbit
 On your terminal
 
 `$ cd [path of directory you want to download project to]`
+
 `$ git clone https://github.com/ntoporcov/iQbit.git`
 
 Then in qBitTorrent you'll want to point the WebUI theme folder selection to the newly created `[...]/iqbit/release` folder and you should be done.
