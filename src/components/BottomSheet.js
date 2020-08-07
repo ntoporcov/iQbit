@@ -1,23 +1,33 @@
 import React, {useEffect, useState} from "react";
 import Draggable from 'react-draggable';
-
+import useWindowSize from "../utils/useWindowSize";
 
 const BottomSheet = (props) => {
 
+    const WindowSize = useWindowSize();
+
     const topDiff = props.top || 100;
     const leftDiff = props.left || 0;
-    const open = props.open;
+    // const open = props.open;
 
-    const screenHeight = window.innerHeight;
+    const [open,setOpen] = useState(false)
 
-    const initialPosition = {x: 0, y: screenHeight}
+    useEffect(()=>{
+        if(props.open){
+            setOpen(true)
+        }else{
+            setOpen(false)
+        }
+    },[props])
+
+    const initialPosition = {x: 0, y: WindowSize.height}
 
     const finalPosition = {
         y: topDiff,
         x: leftDiff,
     }
 
-    const threshold = .15;
+    const threshold = .25;
 
     return (
         <div className={open?"BottomSheet open":"BottomSheet"}>
@@ -34,8 +44,11 @@ const BottomSheet = (props) => {
                 }
                 bounds={{top:topDiff}}
                 onStop={(event)=>{
-                    if(event.screenY > ( screenHeight - (screenHeight * threshold))){
-                        props.onDismiss()
+                    if(event.pageY > ( WindowSize.height - (WindowSize.height * threshold))){
+                        setOpen(false)
+                        setTimeout(()=>{
+                            props.onDismiss()
+                        },400)
                     }
                 }}
             />

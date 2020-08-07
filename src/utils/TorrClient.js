@@ -27,10 +27,23 @@ export const logout = () => {
 }
 
 export const getTorrents = async () => {
-  return APICall.get('torrents/info')
+  return APICall.get('torrents/info',{
+    params:{
+      sort:"added_on",
+      reverse:true,
+    }
+  })
 }
 
-export const sync = async () => {
+export const getProperties = async (hash) => {
+  return APICall.get('torrents/properties',{
+    params:{
+      hashes:hash
+    }
+  })
+}
+
+export const sync = async (rid) => {
   return APICall.get('sync/maindata')
 }
 
@@ -56,5 +69,25 @@ export const remove = async (hash="",deleteFiles=false) => {
       hashes:hash,
       deleteFiles
     }
+  })
+}
+
+export const addTorrent = async (url="") => {
+  return APICall.get('torrents/add',{
+    params:{
+      urls:url,
+    }
+  })
+}
+
+export const getPrefs = async () => {
+  return APICall.get('app/preferences')
+}
+
+export const updatePref = async (json={}) =>{
+  return APICall.get('app/setPreferences',{
+    params:{
+      json
+    },
   })
 }

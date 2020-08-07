@@ -5,6 +5,12 @@
   "private": true,
   "dependencies": {
     "@babel/core": "7.9.0",
+    "@fortawesome/fontawesome-pro": "^5.14.0",
+    "@fortawesome/fontawesome-svg-core": "^1.2.30",
+    "@fortawesome/free-solid-svg-icons": "^5.14.0",
+    "@fortawesome/pro-regular-svg-icons": "^5.14.0",
+    "@fortawesome/pro-solid-svg-icons": "^5.14.0",
+    "@fortawesome/react-fontawesome": "^0.1.11",
     "@ionic/react": "^5.3.1",
     "@svgr/webpack": "4.3.3",
     "@testing-library/jest-dom": "^4.2.4",

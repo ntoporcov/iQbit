@@ -1,23 +1,36 @@
 import Torrents from "./Torrents";
-import {Icon, Page, Toolbar, ToolbarButton} from "react-onsenui";
+import {Icon, Page, Toolbar, ToolbarButton, Popover} from "react-onsenui";
 import Search from "./Search";
 import React, {useContext, useState} from "react";
 import { Context } from "../App"
 import RoundLogo from "../images/logo_round.png"
+import TorrentTopControls from "./TorrentsTopControls";
+import Settings from "./Settings";
 
 const TabletView = () => {
 
-    const LocalContext = useContext(Context)
+    const {settings,updateModal} = useContext(Context)
 
     return (
         <>
-            <Toolbar style={{alignItems:"flex-end"}}>
-                <div className="left" style={{alignItems:"center"}}>
-                    <img className={"loginImage-small"} alt={"iQbit Logo"} src={RoundLogo}/>
-                    <h1>iQbit</h1>
+            <Toolbar>
+                <div className="left tabletHeader">
+                    <div>
+                        {settings.loggedin?<img className={"loginImage-small"} alt={"iQbit Logo"} src={RoundLogo}/>:null}
+                        <h1>iQbit</h1>
+                    </div>
+                    {settings.loggedin?
+                        <TorrentTopControls/>
+                        :null
+                    }
                 </div>
                 <div className="right">
-                    <ToolbarButton>
+                    <ToolbarButton
+                        onClick={()=>updateModal({
+                            open:true,
+                            content:<Settings/>,
+                        })}
+                    >
                         <Icon size={35} icon="ion-ios-cog" />
                     </ToolbarButton>
                 </div>

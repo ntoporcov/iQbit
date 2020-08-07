@@ -4,15 +4,12 @@ import {getTorrents, login, remove } from '../utils/TorrClient';
 import TorrentBox from './TorrentBox';
 import { Context } from "../App"
 import { saveStorage } from '../utils/Storage';
-import useInterval from "../utils/useInterval";
 import LogoHeader from "./LogoHeader";
 import {IonSegment, IonSegmentButton, IonLabel } from '@ionic/react';
 import TorrentInfo from "./TorrentInfo"
 
 const Torrents = (props) =>{
-  const {settings,updateSettings,bigScreen, updateModal} = useContext(Context);
-
-  const [APIresponse,setAPIResponse] = useState([]);
+  const {settings,updateSettings,installed, updateModal,torrentList,updateTorrentList} = useContext(Context);
 
   const [userSettings,setUserSettings] = useState(settings)
   const [loggedin,setLoggedIn] = useState(settings.loggedin)
@@ -38,23 +35,6 @@ const Torrents = (props) =>{
     open:false,
     hash:undefined,
   })
-
-  useEffect(()=>{
-    if(loggedin){
-      getTorrents().then(resp => {
-        setAPIResponse(resp.data)
-      });
-    }
-
-  },[loggedin])
-
-  useInterval(() => {
-    if(loggedin){
-      getTorrents().then(resp => {
-        setAPIResponse(resp.data)
-      });
-    }
-  },1000)
 
   const handleSignin = () => {
 
@@ -107,7 +87,7 @@ const Torrents = (props) =>{
                 placeholder="Password"/>
           </label>
         </div>
-        <p className="feedback">{feedback}</p>
+        {feedback?<p className="feedback">{feedback}</p>:null}
         <Button modifier="large--quiet" onClick={()=>handleSignin()}>
           Sign In
         </Button>
@@ -120,14 +100,14 @@ const Torrents = (props) =>{
       open: true,
       options: [
         {
-          label: "More Info",
-          modifier: null,
-          onclick: () => updateModal({open: true,content:TorrentInfo({item})}),
-        },
-        {
           label: "Remove Torrent",
           modifier: "destructive",
           onclick: () => setDeleteAlert({open:true,hash}),
+        },
+        {
+          label: "More Info",
+          modifier: null,
+          onclick: () => updateModal({open: true,content:<TorrentInfo item={item} hash={hash} /> }),
         },
       ]
     })
@@ -155,14 +135,8 @@ const Torrents = (props) =>{
           </IonSegment>
         </div>
       )
-    }
-  }
-
-  const handleFilter = (progress) => {
-    switch (segment) {
-      case "downloading": return progress < 1;
-      case "complete": return progress === 1
-      default: return  true;
+    }else{
+      return null
     }
   }
 
@@ -170,11 +144,12 @@ const Torrents = (props) =>{
       <div className={loggedin?"torrentsCol":"torrentsCol login"} {...props}>
         <SegmentPicker/>
 
-        {loggedin? APIresponse.filter(item => handleFilter(item.progress)).map((item) =>
+        {loggedin? torrentList.list.map((item) =>
             <TorrentBox
                 item={item}
                 key={item.hash}
-                openAction={(hash) => handleMoreButton(hash,item)}
+                filter={segment}
+                openAction={(hash,item) => handleMoreButton(hash,item)}
             />)
             :null
         }
@@ -182,6 +157,7 @@ const Torrents = (props) =>{
 
         {/*More info Action Sheet*/}
         <ActionSheet
+            className={installed?"installed":null}
             isOpen={torrentAction.open}
             isCancelable={true}
             onCancel={()=>setTorrentAction({open:false,options: torrentAction.options})}
@@ -201,7 +177,11 @@ const Torrents = (props) =>{
         </ActionSheet>
 
         {/*Alert Dialog Before Deleting Files*/}
-        <AlertDialog isOpen={deleteAlert.open} onCancel={()=>setDeleteAlert({open: false})} cancelable>
+        <AlertDialog
+            isOpen={deleteAlert.open}
+            onCancel={()=>setDeleteAlert({open: false})}
+            cancelable
+        >
           <div className="alert-dialog-title">Delete Files</div>
           <div className="alert-dialog-content">
             Would you also like to delete the files downloaded?
@@ -211,7 +191,7 @@ const Torrents = (props) =>{
             <AlertDialogButton
                 onClick={()=> {
                   setDeleteAlert({open: false});
-                  remove(deleteAlert.hash, true);
+                  remove(deleteAlert.hash, true).finally(()=>updateTorrentList());
                 }}
                 className={"danger"}
             >

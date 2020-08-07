@@ -1,57 +1,88 @@
-import React from "react";
+import React, {useState} from "react";
 import {Icon,ProgressBar} from "react-onsenui";
 import fileSize from "filesize";
 import stateDictionary from './stateDictionary';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import {
+    faBolt, faDownload,
+    faFolderOpen,
+    faPallet,
+    faPalletAlt,
+    faShareAlt,
+    faStopwatch,
+    faTachometerAltFastest,
+    faTachometerAltSlowest,
+    faUpload,
+    faUserAstronaut,
+    faUserSecret
+} from '@fortawesome/pro-regular-svg-icons'
+import useInterval from "../utils/useInterval";
+import {sync} from "../utils/TorrClient";
 
 const TorrentInfo = (props) => {
-    const torrent = props.item;
-    const {name} = props.item
+    const {item} = props;
+    const {name} = item
+    const {hash} = props
+
+    const [torrent,setTorrent] = useState(item)
+
+    console.log(item,hash)
+
+    useInterval(() => {
+        sync().then(resp => {
+            setTorrent(resp.data.torrents[hash])
+        });
+    },1000)
 
     const AmountRow = [
         {
             value: `${fileSize(torrent.downloaded)} / ${fileSize(torrent.size)}`,
-            icon: "fa-download",
+            icon: faDownload,
             label: "Downloaded"
         },
         {
             value: fileSize(torrent.downloaded_session),
-            icon: "fa-pallet",
+            icon: faPallet,
             label: "Downloaded This Session"
         },
         {
             value: fileSize(torrent.uploaded),
-            icon: "fa-upload",
+            icon: faUpload,
             label: "Uploaded"
         },
         {
             value: fileSize(torrent.uploaded_session),
-            icon: "fa-pallet",
+            icon: faPalletAlt,
             label: "Uploaded This Session"
         },
         {
-            value: torrent.ratio.toFixed(2),
-            icon: "fa-share-alt",
+            value: torrent.ratio?torrent.ratio.toFixed(2):0,
+            icon: faShareAlt,
             label: "Share Ratio"
         },
     ]
 
+    const date = new Date(0);
+    date.setSeconds(torrent.eta); // specify value for SECONDS here
+    const timeString = date.toISOString().substr(11, 8);
+
     const SpeedsRow = [
         {
             value: `${fileSize(torrent.dlspeed)}/s`,
-            icon: "fa-tachometer",
+            icon: torrent.dlspeed > 0 ? faTachometerAltFastest : faTachometerAltSlowest,
             label: "Download Speed"
         },
         {
             value: `${fileSize(torrent.upspeed)}/s`,
-            icon: "fa-tachometer",
+            icon: torrent.upspeed > 0 ? faTachometerAltFastest : faTachometerAltSlowest,
             label: "Download Speed"
         },
         {
             value: torrent.eta !== 8640000 ?
-                torrent.eta.toISOString().substr(11, 8)
+                timeString
                 :0
             ,
-            icon: "fa-stopwatch",
+            icon: faStopwatch,
             label: "Estimate Time Left"
         },
     ]
@@ -59,17 +90,17 @@ const TorrentInfo = (props) => {
     const DataRow = [
         {
             value: `${torrent.num_seeds} (${torrent.num_complete})`,
-            icon: "fa-user-astronaut",
+            icon: faUserAstronaut,
             label: "Seeds"
         },
         {
             value: `${torrent.num_leechs} (${torrent.num_incomplete})`,
-            icon: "fa-user-secret",
+            icon: faUserSecret,
             label: "Leechs"
         },
         {
             value: torrent.save_path,
-            icon: "fa-folder-open",
+            icon: faFolderOpen,
             label: "Save Path"
         },
     ]
@@ -77,35 +108,14 @@ const TorrentInfo = (props) => {
     const StateRow = [
         {
             value: stateDictionary[torrent.state].short,
-            icon: "fa-bolt",
+            icon: faBolt,
             label: stateDictionary[torrent.state].long
         },
     ]
 
-    const StatsRow = (props) => {
-        return(
-            <div className={"infoStatsRowWrapper"}>
-                <div className={"infoTitleBox"}>
-                    <h3>{props.title}</h3>
-                </div>
-                <div className={"infoStatsRow"}>
-                    {props.data.map((item,key) =>
-                        <div className={"infoStatBox"} key={key}>
-                            <h4 className={"infoStat"}>{item.value}</h4>
-                            <div>
-                                <Icon className={"infoStatIcon"} icon={item.icon} size={20}/>
-                                <span className={"infoStatLabel"}>{item.label}</span>
-                            </div>
-                        </div>
-                    )}
-                </div>
-            </div>
-        )
-    }
-
     return(
         <div className={"torrentInfoCol"}>
-            <div className={"stickyRow"}>
+            <div>
                 <h2>{name}</h2>
                 <div>
                     <span className={"ProgressAmount"}>{(torrent.progress*100).toFixed(1)}%</span>
@@ -119,6 +129,27 @@ const TorrentInfo = (props) => {
             <StatsRow data={DataRow} title={"Metadata"}/>
             <StatsRow data={SpeedsRow} title={"Speeds"}/>
             <StatsRow data={AmountRow} title={"Amounts"}/>
+        </div>
+    )
+}
+
+export const StatsRow = (props) => {
+    return(
+        <div className={"infoStatsRowWrapper"}>
+            <div className={"infoTitleBox"}>
+                <h3>{props.title}</h3>
+            </div>
+            <div className={"infoStatsRow"}>
+                {props.data.map((item,key) =>
+                    <div className={"infoStatBox"} key={key}>
+                        <h4 className={"infoStat"}>{item.value}</h4>
+                        <div>
+                            <FontAwesomeIcon className={"infoStatIcon"} icon={item.icon}/>
+                            <span className={"infoStatLabel"}>{item.label}</span>
+                        </div>
+                    </div>
+                )}
+            </div>
         </div>
     )
 }

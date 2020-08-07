@@ -2,11 +2,32 @@ $blue : #0076ff;
 $gray-light : #e5e5e5;
 $gray : #b2b2b2;
 $offwhite: #fafafa;
-$backgroound: #efeff4;
+$background: #efeff4;
 $red:#fe3824;
+
+html,body{
+  overflow-y: hidden;
+  position: fixed;
+  overscroll-behavior-y: none;
+}
 
 *{
   font-family: -apple-system, 'Helvetica Neue', 'Helvetica', 'Arial', 'Lucida Grande', sans-serif !important;
+}
+
+button,.fab,.action-sheet-button,
+div[role="button"],.button{
+  cursor: pointer !important;
+}
+
+.handleArea{
+  cursor: grab;
+}
+
+.react-draggable-dragging{
+  .handleArea{
+    cursor: grabbing;
+  }
 }
 
 .danger{
@@ -14,10 +35,10 @@ $red:#fe3824;
 }
 
 @mixin for-phone {
-  @media (max-width: 599px) { @content; }
+  @media (max-width: 765px) { @content; }
 }
 @mixin for-tablet {
-  @media (min-width: 600px) { @content; }
+  @media (min-width: 768px) { @content; }
 }
 
 .App {
@@ -60,11 +81,22 @@ h3{
 }
 
 .toolbar{
+  background-color: white;
   height: initial;
   min-height: 90px;
   width: 100%;
   z-index: 100;
-  position: fixed !important;
+  top: 0;
+
+  .tabletHeader{
+    display: flex;
+    justify-content: space-between;
+
+    >div{
+      display: flex;
+      align-items: center;
+    }
+  }
 
   *{
     display: flex;
@@ -74,6 +106,7 @@ h3{
   .right{
     justify-content: flex-end;
     padding: 0 10px 5px 0;
+    display: none;
   }
 
   .left{
@@ -81,13 +114,24 @@ h3{
   }
 }
 
+@include for-tablet{
+  .left{
+    min-width: 400px;
+    max-width:400px;
+  }
+
+
+}
+
+.loggedin {
+  .toolbar__right{
+    display: flex;
+  }
+}
+
 .tabWrapper{
   position: fixed !important;
   //pointer-events: none;
-
-  &.installed .tabbar{
-    padding-bottom: 30px !important;
-  }
 }
 
 .page__content{
@@ -119,179 +163,184 @@ h3{
 }
 
 
-.torrentBox{
-  background-color: $offwhite;
-  width: 100%;
-  padding:20px;
-  display: flex;
-  flex-direction: column;
-  box-sizing: border-box;
-  margin-bottom: 20px;
-  border-bottom: .5px solid $gray;
-  border-top: .5px solid $gray;
+.torrentsCol{
+  padding-bottom: 30vh;
+  overscroll-behavior-y:none;
 
-  h3{
-    padding-bottom: 30px;
-    max-height: 100px;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-
-    &.centered{
-      text-align: center;
-    }
-  }
-
-  .stats{
+  .torrentBox{
+    background-color: $offwhite;
+    width: 100%;
+    padding:20px;
     display: flex;
-    justify-content: space-between;
-    padding-bottom: 10px;
+    flex-direction: column;
+    box-sizing: border-box;
+    margin-bottom: 20px;
+    border-bottom: .5px solid $gray;
+    border-top: .5px solid $gray;
 
-    > * {
-      font-size: 18px;
-      font-weight: bold;
-    }
+    h3{
+      padding-bottom: 30px;
+      max-height: 100px;
+      white-space: normal;
+      overflow: hidden;
+      text-overflow: ellipsis;
 
-    > *:first-child {
-      color: $blue;
-    }
-
-    > *:nth-child(2) {
-      color: $gray;
-    }
-  }
-
-  .details{
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-
-    .statsRow{
-      display: flex;
-      align-items: center;
-      height: 100%;
-
-      .data {
-        color: darken($gray,40%);
-        margin-right: 15px;
-        font-size: 14px;
+      &.centered{
+        text-align: center;
       }
-
-      .ons-icon{
-        margin-right: 3px;
-      }
-
     }
 
-    .buttonsRow{
+    .stats{
       display: flex;
       justify-content: space-between;
-      padding-top: 5px;
+      padding-bottom: 10px;
 
-      button{
-        flex-grow: 2;
-        min-width: 50px;
-        background: none;
-        border: none;
+      > * {
+        font-size: 18px;
+        font-weight: bold;
+      }
 
-        &:focus{
-          background-color: initial;
-          color: initial;
-          outline: none;
-          border-radius: initial;
+      > *:first-child {
+        color: $blue;
+      }
+
+      > *:nth-child(2) {
+        color: $gray;
+      }
+    }
+
+    .details{
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+
+      .statsRow{
+        display: flex;
+        align-items: center;
+        height: 100%;
+
+        .data {
+          color: darken($gray,40%);
+          margin-right: 15px;
+          font-size: 14px;
         }
 
-        &:active{
+        .ons-icon{
+          margin-right: 3px;
+        }
+
+      }
+
+      .buttonsRow{
+        display: flex;
+        justify-content: space-between;
+        padding-top: 5px;
+
+        button{
+          flex-grow: 2;
+          min-width: 50px;
+          background: none;
+          border: none;
+
+          &:focus{
+            background-color: initial;
+            color: initial;
+            outline: none;
+            border-radius: initial;
+          }
+
+          &:active{
+            background-color: $blue;
+            color: white;
+            outline: none;
+            border-radius: 5px;
+          }
+        }
+
+        button:nth-child(2){
+          border-color: $gray-light;
+          border-style: solid;
+          border-width: 0 1px 0 1px;
+        }
+
+        button.active{
           background-color: $blue;
           color: white;
           outline: none;
           border-radius: 5px;
         }
       }
-
-      button:nth-child(2){
-        border-color: $gray-light;
-        border-style: solid;
-        border-width: 0 1px 0 1px;
-      }
-
-      button.active{
-        background-color: $blue;
-        color: white;
-        outline: none;
-        border-radius: 5px;
-      }
     }
-  }
 
-  &:not(.login):first-child{
-    margin-top: 20px;
-  }
-
-  &.login{
-    background-color: transparent;
-    align-items: center;
-    justify-content: center;
-    margin-bottom: 0!important;
-    border:none;
-
-    h2{
-      text-align: center;
-      margin-bottom: 20px !important;
+    &:not(.login):first-child{
+      margin-top: 20px;
     }
-  }
 
-  .inputGroup {
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    border: 1px solid $gray;
-    border-radius: 10px;
-    margin-bottom: 20px;
-    background-color: white;
-
-    label{
-      display: flex;
+    &.login{
+      background-color: transparent;
       align-items: center;
-      box-sizing: border-box;
-      width: 100%;
-      padding: 10px 10px;
-      font-size: 16px;
-      font-weight: bold;
+      justify-content: center;
+      margin-bottom: 0!important;
+      border:none;
 
-      span{
-        width: 100px;
+      h2{
+        text-align: center;
+        margin-bottom: 20px !important;
       }
+    }
 
-      input{
-        flex-grow: 2;
-        border:none;
+    .inputGroup {
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      border: 1px solid $gray;
+      border-radius: 10px;
+      margin-bottom: 20px;
+      background-color: white;
+
+      label{
+        display: flex;
+        align-items: center;
+        box-sizing: border-box;
+        width: 100%;
+        padding: 10px 10px;
         font-size: 16px;
-        margin-left: 5px;
-        width: 70%;
-        background-color: transparent;
+        font-weight: bold;
 
-        &::placeholder{
-          color: $gray;
+        span{
+          width: 100px;
         }
+
+        input{
+          flex-grow: 2;
+          border:none;
+          font-size: 16px;
+          margin-left: 5px;
+          width: 70%;
+          background-color: transparent;
+
+          &::placeholder{
+            color: $gray;
+          }
+        }
+
       }
 
+      label:not(:first-child){
+        border-top: 1px solid $gray;
+      }
     }
 
-    label:not(:first-child){
-      border-top: 1px solid $gray;
+    .headerToAdd{
+      padding:10px;
+      border-radius: 10px;
+      background-color: $gray-light;
+      display: block;
     }
-  }
 
-  .headerToAdd{
-    padding:10px;
-    border-radius: 10px;
-    background-color: $gray-light;
-    display: block;
-  }
-
-  .feedback{
-    text-align: center;
+    .feedback{
+      text-align: center;
+    }
   }
 }
 
@@ -330,11 +379,14 @@ h3{
 
 .tabletView{
   display: flex;
+  height:calc(100vh - 88px);
 
   .torrentsCol{
-    width: 400px;
+    min-width: 400px;
+    max-width: 400px;
     border-right: .5px solid $gray;
-    height: calc(100vh - 88px);
+    height:100%;
+    box-sizing: border-box;
     overflow-y: scroll ;
   }
 
@@ -344,8 +396,10 @@ h3{
 
   .searchCol{
     flex-grow: 2;
-    height: calc(100vh - 88px);
+    height:100%;
+    box-sizing: border-box;
     overflow-y: scroll ;
+    overscroll-behavior-y:none;
   }
 }
 
@@ -354,12 +408,11 @@ h3{
   box-sizing: border-box;
 }
 
-.action-sheet-mask,.alert-dialog-mask {
+.action-sheet-mask,.alert-dialog-mask,.popover-mask {
   background-color: rgba(0,0,0,.5);
 }
 
 .action-sheet{
-
 
   @include for-tablet{
     max-width: 500px;
@@ -371,6 +424,16 @@ h3{
   }
 }
 
+.installed{
+  .action-sheet{
+    margin-bottom: 30px;
+  }
+
+  .tabbar{
+    padding-bottom: 30px;
+  }
+}
+
 .root{
   >*:not(.BottomSheet.open){
     transform: scale(.5);
@@ -378,6 +441,11 @@ h3{
 }
 
 .BottomSheet{
+  transition: background-color ease-out .4s ;
+
+  *{
+    white-space: normal;
+  }
 
   &.open{
     background-color: rgba(0,0,0,.7);
@@ -385,7 +453,6 @@ h3{
     height: 100%;
     width: 100%;
     z-index: 10000;
-    transition: background-color ease-out .2s ;
   }
 
   &.open .modal{
@@ -406,11 +473,12 @@ h3{
     align-items: center;
     flex-direction: column;
     padding: 0 40px ;
+    transition: transform ease-out .2s;
   }
 
   .handleArea{
     padding-top: 20px;
-    height: 50px;
+    height: 30px;
     width: 100%;
     display: flex;
     justify-content: center;
@@ -459,6 +527,7 @@ h3{
     position: sticky;
     top: 0;
     background-color: white;
+    z-index: 1000;
 
     .ProgressAmount{
       font-size: 18px;
@@ -470,11 +539,25 @@ h3{
   .infoStatsRowWrapper{
     margin-top: 20px;
 
+    >p{
+      box-sizing: border-box;
+      margin:10px;
+      white-space: normal;
+    }
+
+    .movieTrailer{
+      margin: 10px;
+      border: none;
+      outline: none;
+      width:calc(100% - 20px)
+    }
+
     .infoTitleBox{
       display: flex;
       flex-wrap: nowrap;
       align-items: center;
       padding-bottom: 10px;
+      margin:0 10px;
 
       .ons-icon{
         color:$blue;
@@ -489,8 +572,7 @@ h3{
       justify-content: center;
 
       .infoStatBox{
-        margin-right: 20px;
-        margin-bottom: 20px;
+        margin: 10px 10px;
         padding: 15px;
         border-radius: 10px;
         box-sizing: content-box;
@@ -502,11 +584,38 @@ h3{
           align-items: center;
           margin-top:5px
         }
+
+        .attrBox{
+          display: flex;
+          flex-wrap: wrap;
+          flex-grow: 2;
+
+          .infoTorrentAttr{
+            padding-right: 10px;
+            margin-right: 10px;
+            margin-bottom: 8px;
+          }
+
+          .infoTorrentAttr:last-of-type{
+            border-right: none;
+          }
+        }
+
+        .downloadBtn{
+          margin-right: 0;
+          margin-left: auto;
+          min-width: 99px;
+          display: none;
+        }
       }
 
-      .infoStatIcon{
-        margin-right: 10px;
+      svg{
+        margin-right: 7px;
         color: $blue;
+      }
+
+      .downloadStarted{
+        font-size: 30px;
       }
 
       .infoStat{
@@ -528,24 +637,273 @@ h3{
   }
 }
 
+.loggedin .downloadBtn{
+  display: block !important;
+}
+
 .searchCol{
   padding: 20px;
+
+  >p{
+    margin-top: 5px;
+    color: $gray;
+  }
 
   .searchInputRow{
     margin-top: 20px;
     display: flex;
     align-items: center;
+    position: sticky;
+    top: 20px;
+    z-index: 100;
 
     .searchInput{
       flex-grow: 4;
       margin-right: 20px;
+
+      *{
+        background-color: rgba(222, 222, 222, 0.95);
+        font-size: 18px !important;
+      }
     }
 
-    .fab,.fab__icon{
-      display: flex;
-      justify-content: center;
-      align-items: center;
+
+    input{
+      transition: all ease-out .15s;
+      height: 40px;
+    }
+
+    input:focus{
+      opacity: 1;
+    }
+
+    input::placeholder{
+      font-size: 18px !important;
     }
   }
+
+  .searchResults{
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-evenly;
+    padding-top: 30px;
+    padding-bottom: 300px;
+
+    .MoviePoster {
+      border: none;
+      outline: none;
+      width: 145px;
+      height: 225px;
+      margin: 0 10px 20px;
+      background-size: cover;
+      box-shadow: 0 3px 6px rgba(0,0,0,.5);
+      transition: all ease-out .15s;
+      background-color: #bababa;
+      display: flex;
+      justify-content: flex-end;
+      flex-direction: column;
+      border-radius: 10px;
+      overflow: hidden;
+
+
+      @include for-tablet {
+        width: 175px;
+        height: 260px;
+        margin: 0 17px 34px;
+      }
+
+      >span{
+        display: block;
+        padding: 10px;
+        font-size: 14px;
+        font-weight: bold;
+        color: white;
+        background-color: rgba(0,0,0,.7);
+        border-radius: 10px;
+        position: relative;
+        top: 40%;
+        transition: all ease-out .2s;
+
+        @include for-phone {
+          top:0
+        }
+      }
+    }
+
+    .MoviePoster:hover{
+      transform: translateY(-5px);
+      background-color: #e2e2e2;
+      box-shadow: 0 8px 13px rgba(0,0,0,.3);
+
+      >span{
+        top:0;
+      }
+    }
+  }
+}
+
+.providerRow,.categoriesRow{
+  display: flex;
+  margin: 10px -20px;
+  padding:5px 40px 5px 20px;
+  overflow-x: scroll;
+
+  .providerBox,.categoryBox{
+    outline: none;
+    border: none;
+    margin-right: 15px;
+    background-color: white;
+    padding: 10px;
+    border-radius: 10px;
+    transition: all ease-out .2s;
+    cursor: pointer;
+
+    &:hover,&.active{
+      box-shadow: 0 3px 2px rgba(0,0,0,.15);
+    }
+
+    &.active{
+      border: solid $blue 3px;
+    }
+
+    &:active{
+      opacity: .4;
+      box-shadow: none;
+    }
+
+    p{
+      margin: 0;
+    }
+  }
+}
+
+.fab,.fab__icon{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.popover{
+  filter: drop-shadow(0 6px 6px rgba(0,0,0,.5));
+
+  .popover__content{
+    padding:15px 10px 5px;
+
+    p{
+      margin-top: 0;
+      font-weight: bold;
+    }
+  }
+}
+
+.popover, .modalAddTorrent{
+  textarea{
+    margin: 15px 0;
+    box-sizing: border-box;
+    width: 100%;
+    outline: none;
+    border: 1px solid $gray;
+    border-radius:5px;
+  }
+}
+
+
+
+.modalAddTorrent{
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.settingsCol{
+  padding: 30px 5% 25vh;
+  width: 100%;
+  box-sizing: border-box;
+  overflow-y: scroll;
+
+  >*{
+    width: 100%;
+  }
+
+  .list{
+    border-radius: 10px;
+    margin-left: 0;
+    margin-bottom: 30px;
+    border:none;
+    box-shadow: 0 2px 4px rgba(0,0,0,.15);
+  }
+
+  .list-item{
+    height:56px;
+  }
+
+  .iconBox{
+    padding: 3px;
+    border-radius: 5px;
+    margin-right: 10px;
+    color: white;
+    width: 20px;
+    height: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .right>svg{
+    color:$gray
+  }
+
+  .inputPreview{
+    color:$gray;
+    margin-right: 3px;
+    font-size: 14px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+}
+
+.settingsAlert .alert-dialog-footer{
+  display: flex;
+  flex-direction: row;
+
+  .alert-dialog-button{
+    width: 50%;
+
+    &:first-of-type{
+      border-right: 1px solid #ddd;
+    }
+  }
+}
+
+.alert-dialog{
+
+  input {
+    margin-top: 5px;
+    border-radius: 8px;
+    padding: 10px;
+    width: 85%;
+    font-size: 14px;
+    outline: none;
+    border: 1px solid darken($gray,20%);
+    margin-bottom: 10px;
+  }
+}
+
+
+
+//-------
+//Overrides, nothing should be below these
+
+.w100{
+  width: 100%;
+}
+
+.flex-row{
+  display: flex;
+  flex-direction: row;
+  align-items: center;
 }
 

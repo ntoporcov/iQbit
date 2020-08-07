@@ -4,11 +4,10 @@ import Search from "./Search";
 import Settings from "./Settings";
 import React, {useContext, useEffect, useState} from "react";
 import {Context} from "../App"
+import TorrentTopControls from "./TorrentsTopControls";
 
 const Tabs = () => {
     const [activeTab,setActiveTab] = useState(0)
-
-    const installed = window.matchMedia('(display-mode: standalone)').matches;
 
     const pageTitles = [
         "Your Torrents",
@@ -33,20 +32,13 @@ const Tabs = () => {
                 </div>
                 <div className="right">
                     {settings.loggedin && !bigScreen && activeTab===0?
-                        <div>
-                        <ToolbarButton>
-                            <Icon size={30} icon="ion-ios-search" />
-                        </ToolbarButton>
-                        <ToolbarButton>
-                            <Icon size={35} icon="ion-ios-add" />
-                        </ToolbarButton>
-                        </div>
+                        <TorrentTopControls/>
                         :null
                     }
                 </div>
             </Toolbar>
             <Tabbar
-                className={installed ? "tabWrapper installed" : "tabWrapper"}
+                className={"tabWrapper"}
                 position='bottom'
                 onPreChange={({index}) => setActiveTab(index)}
                 index={activeTab}
