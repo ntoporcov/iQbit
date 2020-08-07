@@ -1,35 +1,65 @@
-# React Boiler Plate for Custom qBitTorrent WebUI
+<img src="https://github.com/ntoporcov/iQbit/raw/master/src/images/logo_round.png" alt="iQbit logo" title="iQbit Logo" align="right" height="300" />
 
-This project is a very simple and barebones boilerplate for creating a custom WebUI for qBitTorrent with React.
+# iQbit
 
-## Get Started
-As usual, just clone this repo, run 
+iQbit is an iOS styled WebUI theme for qBitTorrent clients.
 
-`yarn/npm install`
- 
- Then after that to test on your local qBitTorrent, run
- 
- `yarn/npm build`
- 
- and point qBitTorrent's WebUI folder selection to the build folder.
- 
+True story. While I was developing this, my wife asked me if qBitTorrent was like Limewire. The reason was clear, torrent clients haven't evolved in their last 20 years of popularity. iQbit is an attempt to bring torrenting to more modern design approaches. With that being said, this is not a data-heavy approach to torrenting (or at least not yet). The main focus of this projects are the following points:
 
-## Considerations
+* Ease of Use
+* Mobile Friendly/First 
+* Adhering to Human Interface Guidelines (as much as possible)
 
-#### Build command builds to /build/public
-The reason for this is so that you can use the entire build folder as your WebUI theme folder. 
+This is a PWA! This means you can install this app on your device through your OS default browser.
 
-### Authentication
-qBitTorrent's WebUI authenticates and throws the user around between public/private folder. In react, we don't need to do that. You can keep your app a single page application and introduce a 'softer' authentication
 
-### Package.json
-I made one small change in package.json to allow the directory that the html files load to be correct. I added the line 
 
-`
-homepage:"."
-`
+## Screenshots
 
-Without it, the theme will not work.
+![Screenshot](https://github.com/ntoporcov/iQbit/raw/master/src/images/mobileScreenshot.png)
+![Screenshot](https://github.com/ntoporcov/iQbit/raw/master/src/images/mobileScreenshot2.png)
+![Screenshot](https://github.com/ntoporcov/iQbit/raw/master/src/images/mobileScreenshot3.png)
+![Screenshot](https://github.com/ntoporcov/iQbit/raw/master/src/images/tabletScreenshot.png)
+![Screenshot](https://github.com/ntoporcov/iQbit/raw/master/src/images/tabletScreenshot2.png)
 
----
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+
+
+
+## Releases And Installing
+
+All releases will be published right in this repo. All you actually need is the release folder but I do accept any other ideas of how to release updates.
+
+My suggestion is to do a git clone of this repo locally and then point your qbittorrent to the release folder and it should all just work. Then all you need to do to get updates would be pulling the repo. If you don't actually install all the dependencies for development it shouldn't be too much. You might need to install git.
+
+
+
+## Method Suggested
+
+On your terminal
+
+`$ cd [path of directory you want to download project to]`
+`$ git clone https://github.com/ntoporcov/iQbit.git`
+
+Then in qBitTorrent you'll want to point the WebUI theme folder selection to the newly created `[...]/iqbit/release` folder and you should be done.
+
+
+
+## RoadMap
+
+I intend to keep supporting this project for the foreseeable future at least until I run out of things that I would like to see in it. My current feature roadmap organized by priority is the following:
+
+1. Add Dark Mode
+2. Add More Search Providers (Maybe using qbittorrent's plugins, maybe not, maybe both native providers and plugins)
+3. Add All possible settings to the settings screen
+
+
+
+## License
+
+iQbit is licensed under the terms of the GPL Open Source license and is available for free.
+
+
+
+## Bugs & Feature Suggestions 
+
+Please use the issues tab for any bugs found and feature suggestions.
