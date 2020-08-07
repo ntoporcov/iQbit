@@ -55,7 +55,7 @@ const App = () => {
             login({username:settings.username,password:settings.password})
                 .then(()=>{
                     getTorrents().then(resp => {
-                        setTorrentList({needsRefresh:false,list:resp.data})
+                        setTorrentList({needsRefresh:true,list:resp.data})
                     });
                 }
             )
@@ -67,7 +67,7 @@ const App = () => {
             });
         }
 
-    },[settings.loggedin,torrentList.needsRefresh])
+    },[settings.loggedin, settings.password, settings.username, torrentList.needsRefresh])
 
     const [alert,setAlert] = useState({
         open:false,
