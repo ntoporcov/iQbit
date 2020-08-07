@@ -39,6 +39,7 @@ const Tabs = () => {
             </Toolbar>
             <Tabbar
                 className={"tabWrapper"}
+                animation={"none"}
                 position='bottom'
                 onPreChange={({index}) => setActiveTab(index)}
                 index={activeTab}
