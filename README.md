@@ -12,13 +12,17 @@ True story. While I was developing this, my wife asked me if qBitTorrent was lik
 
 This is a PWA! This means you can install this app on your device through your OS default browser.
 
+
+
 ## Screenshots
 
-![GitHub Logo](https://github.com/ntoporcov/iQbit/raw/master/src/images/mobileScreenshot.png)
-![GitHub Logo](https://github.com/ntoporcov/iQbit/raw/master/src/images/mobileScreenshot2.png)
-![GitHub Logo](https://github.com/ntoporcov/iQbit/raw/master/src/images/mobileScreenshot3.png)
-![GitHub Logo](https://github.com/ntoporcov/iQbit/raw/master/src/images/tabletScreenshot.png)
-![GitHub Logo](https://github.com/ntoporcov/iQbit/raw/master/src/images/tabletScreenshot2.png)
+![Screenshot](https://github.com/ntoporcov/iQbit/raw/master/src/images/mobileScreenshot.png)
+![Screenshot](https://github.com/ntoporcov/iQbit/raw/master/src/images/mobileScreenshot2.png)
+![Screenshot](https://github.com/ntoporcov/iQbit/raw/master/src/images/mobileScreenshot3.png)
+![Screenshot](https://github.com/ntoporcov/iQbit/raw/master/src/images/tabletScreenshot.png)
+![Screenshot](https://github.com/ntoporcov/iQbit/raw/master/src/images/tabletScreenshot2.png)
+
+
 
 
 ## Releases And Installing
@@ -27,7 +31,9 @@ All releases will be published right in this repo. All you actually need is the 
 
 My suggestion is to do a git clone of this repo locally and then point your qbittorrent to the release folder and it should all just work. Then all you need to do to get updates would be pulling the repo. If you don't actually install all the dependencies for development it shouldn't be too much. You might need to install git.
 
-### Method Suggested
+
+
+## Method Suggested
 
 On your terminal
 
@@ -36,7 +42,9 @@ On your terminal
 
 Then in qBitTorrent you'll want to point the WebUI theme folder selection to the newly created `[...]/iqbit/release` folder and you should be done.
 
-### RoadMap
+
+
+## RoadMap
 
 I intend to keep supporting this project for the foreseeable future at least until I run out of things that I would like to see in it. My current feature roadmap organized by priority is the following:
 
@@ -44,9 +52,13 @@ I intend to keep supporting this project for the foreseeable future at least unt
 2. Add More Search Providers (Maybe using qbittorrent's plugins, maybe not, maybe both native providers and plugins)
 3. Add All possible settings to the settings screen
 
+
+
 ## License
 
 iQbit is licensed under the terms of the GPL Open Source license and is available for free.
+
+
 
 ## Bugs & Feature Suggestions 
 
