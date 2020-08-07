@@ -6,27 +6,29 @@ import 'onsenui/css/onsen-css-components.css';
 import './App.scss';
 import { getStorage, saveStorage } from './utils/Storage';
 import BottomSheet from "./components/BottomSheet";
-import {getTorrents} from "./utils/TorrClient";
+import {getTorrents,login} from "./utils/TorrClient";
 import {AlertDialog,Button} from "react-onsenui"
 
-const StoredUser = getStorage("user")
-let templateObject = StoredUser;
-
-if(StoredUser === null){
-    templateObject = {
-        loggedin:false,
-        username:null,
-        password:null
-    }
-    saveStorage("user",templateObject)
-}
-
-const screenWidth = window.innerWidth;
-const breakpoint = 768;
 
 export const Context = createContext(null);
 
 const App = () => {
+
+    const StoredUser = getStorage("user")
+    let templateObject = StoredUser;
+
+    if(StoredUser === null){
+        templateObject = {
+            loggedin:false,
+            username:null,
+            password:null
+        }
+        saveStorage("user",templateObject)
+    }
+
+    const screenWidth = window.innerWidth;
+    const breakpoint = 768;
+
     const [settings,setSettings] = useState(templateObject);
     const [bigScreen] = useState(screenWidth > breakpoint)
     const [installed] = useState(window.matchMedia('(display-mode: standalone)').matches)
@@ -49,12 +51,21 @@ const App = () => {
         setTorrentList({needsRefresh: true, list: torrentList.list})
     }
 
+    const [initialLogin,setInitialLogin] = useState(false)
+
     useEffect(()=>{
 
-        if(settings.loggedin){
-            getTorrents().then(resp => {
-                setTorrentList({needsRefresh:false,list:resp.data})
-            });
+        if(StoredUser.loggedin && initialLogin === false){
+            login({username:StoredUser.username,password:StoredUser.password})
+                .then(()=>{
+                    getTorrents().then(resp => {
+                        setInitialLogin(true)
+                        setTorrentList({needsRefresh:false,list:resp.data})
+                    }).catch(()=>{
+                        setTorrentList({needsRefresh:false,list:[]})
+                    });
+                }
+            )
         }
 
         if(torrentList.needsRefresh){
@@ -62,7 +73,8 @@ const App = () => {
                 setTorrentList({needsRefresh:false,list:resp.data})
             });
         }
-    },[settings.loggedin,torrentList.needsRefresh])
+
+    },[initialLogin, torrentList.needsRefresh])
 
     const [alert,setAlert] = useState({
         open:false,

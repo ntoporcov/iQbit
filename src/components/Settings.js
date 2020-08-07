@@ -11,6 +11,8 @@ import {
     faStop, faUser, faUserLock, faUserNinja, faUserRobot, faUsersClass, faWifi
 } from "@fortawesome/pro-solid-svg-icons";
 import {getPrefs, updatePref} from "../utils/TorrClient";
+import {Context} from "../App";
+import {saveStorage} from "../utils/Storage";
 
 const Settings = (props) =>{
 
@@ -159,6 +161,8 @@ const Settings = (props) =>{
         web_ui_username: ""
     })
 
+    const {settings} = useContext(Context)
+
     useEffect(()=>{
         getPrefs().then(response=>{
             setPreferences(response.data)
@@ -213,157 +217,175 @@ const Settings = (props) =>{
 
     let alertInput = useRef()
 
-    return (
-    <div className={"settingsCol"}>
-        <List modifier={"inset"}>
-            <ListHeader>
-                Downloads
-            </ListHeader>
-            <SwitchRow
-                title={"Create SubFolders"}
-                icon={faFolders}
-                objKey={"create_subfolder_enabled"}
-                color={"#006ce2"}
-            />
-            <SwitchRow
-                title={"Start Torrent Paused"}
-                icon={faMinusHexagon}
-                objKey={"start_paused_enabled"}
-                color={"#bf0000"}
-            />
-        </List>
-        <List modifier={"inset"}>
-            <ListHeader>
-                Paths
-            </ListHeader>
-            <InputRow
-                title={"Default Save Path"}
-                icon={faFolderDownload}
-                objKey={"save_path"}
-                color={"#2ca700"}
-            />
-            <SwitchRow
-                title={"Temp Folder"}
-                icon={faFolderMinus}
-                objKey={"start_paused_enabled"}
-                color={"#5b00b6"}
-            />
-            <InputRow
-                title={"Default Save Path"}
-                icon={faFolderDownload}
-                objKey={"save_path"}
-                color={"#ea9d00"}
-            />
-        </List>
-        <List modifier={"inset"}>
-            <ListHeader>
-                Proxy
-            </ListHeader>
-            <InputRow
-                title={"Host"}
-                icon={faNetworkWired}
-                objKey={"proxy_ip"}
-                color={"#00a799"}
-            />
-            <InputRow
-                title={"Port"}
-                icon={faEthernet}
-                objKey={"proxy_port"}
-                color={"#b600a4"}
-            />
-            <SwitchRow
-                title={"Proxy Peer Connections"}
-                icon={faUsersClass}
-                objKey={"proxy_peer_connections"}
-                color={"#ea9d00"}
-            />
-            <SwitchRow
-                title={"Proxy Auth Enabled"}
-                icon={faUserLock}
-                objKey={"proxy_auth_enabled"}
-                color={"#b7ea00"}
-            />
-            <InputRow
-                title={"Proxy Username"}
-                icon={faUserRobot}
-                objKey={"proxy_username"}
-                color={"#ea5200"}
-            />
-            <InputRow
-                title={"Proxy Password"}
-                icon={faKey}
-                objKey={"proxy_password"}
-                color={"#ea5200"}
-            />
-        </List>
+    if(settings.loggedin){
+        return (
+        <div className={"settingsCol"}>
+            <List modifier={"inset"}>
+                <ListHeader>
+                    Downloads
+                </ListHeader>
+                <SwitchRow
+                    title={"Create SubFolders"}
+                    icon={faFolders}
+                    objKey={"create_subfolder_enabled"}
+                    color={"#006ce2"}
+                />
+                <SwitchRow
+                    title={"Start Torrent Paused"}
+                    icon={faMinusHexagon}
+                    objKey={"start_paused_enabled"}
+                    color={"#bf0000"}
+                />
+            </List>
+            <List modifier={"inset"}>
+                <ListHeader>
+                    Paths
+                </ListHeader>
+                <InputRow
+                    title={"Default Save Path"}
+                    icon={faFolderDownload}
+                    objKey={"save_path"}
+                    color={"#2ca700"}
+                />
+                <SwitchRow
+                    title={"Temp Folder"}
+                    icon={faFolderMinus}
+                    objKey={"start_paused_enabled"}
+                    color={"#5b00b6"}
+                />
+                <InputRow
+                    title={"Default Save Path"}
+                    icon={faFolderDownload}
+                    objKey={"save_path"}
+                    color={"#ea9d00"}
+                />
+            </List>
+            <List modifier={"inset"}>
+                <ListHeader>
+                    Proxy
+                </ListHeader>
+                <InputRow
+                    title={"Host"}
+                    icon={faNetworkWired}
+                    objKey={"proxy_ip"}
+                    color={"#00a799"}
+                />
+                <InputRow
+                    title={"Port"}
+                    icon={faEthernet}
+                    objKey={"proxy_port"}
+                    color={"#b600a4"}
+                />
+                <SwitchRow
+                    title={"Proxy Peer Connections"}
+                    icon={faUsersClass}
+                    objKey={"proxy_peer_connections"}
+                    color={"#ea9d00"}
+                />
+                <SwitchRow
+                    title={"Proxy Auth Enabled"}
+                    icon={faUserLock}
+                    objKey={"proxy_auth_enabled"}
+                    color={"#b7ea00"}
+                />
+                <InputRow
+                    title={"Proxy Username"}
+                    icon={faUserRobot}
+                    objKey={"proxy_username"}
+                    color={"#ea5200"}
+                />
+                <InputRow
+                    title={"Proxy Password"}
+                    icon={faKey}
+                    objKey={"proxy_password"}
+                    color={"#ea5200"}
+                />
+            </List>
 
-        <List modifier={"inset"}>
-            <ListHeader>
-                WebUI
-            </ListHeader>
-            <SwitchRow
-                title={"Custom WebUI Enabled"}
-                icon={faPaintBrushAlt}
-                objKey={"alternative_webui_enabled"}
-                color={"#19a700"}
-            />
-            <InputRow
-                title={"WebUI Path"}
-                icon={faAngleRight}
-                objKey={"alternative_webui_path"}
-                color={"#0086a7"}
-            />
-            <InputRow
-                title={"WebUI IP Address"}
-                icon={faWifi}
-                objKey={"web_ui_address"}
-                color={"#7a00a7"}
-            />
-            <InputRow
-                title={"WebUI Port"}
-                icon={faEthernet}
-                objKey={"web_ui_port"}
-                color={"#b60049"}
-            />
-            <SwitchRow
-                title={"WebUI UPnP Enabled"}
-                icon={faOutlet}
-                objKey={"web_ui_upnp"}
-                color={"#ea9d00"}
-            />
-            <InputRow
-                title={"WebUI Username"}
-                icon={faUser}
-                objKey={"web_ui_username"}
-                color={"#0069ea"}
-            />
-            <InputRow
-                title={"WebUI Password"}
-                icon={faKey}
-                objKey={"web_ui_password"}
-                color={"#0069ea"}
-            />
-        </List>
+            <List modifier={"inset"}>
+                <ListHeader>
+                    WebUI
+                </ListHeader>
+                <SwitchRow
+                    title={"Custom WebUI Enabled"}
+                    icon={faPaintBrushAlt}
+                    objKey={"alternative_webui_enabled"}
+                    color={"#19a700"}
+                />
+                <InputRow
+                    title={"WebUI Path"}
+                    icon={faAngleRight}
+                    objKey={"alternative_webui_path"}
+                    color={"#0086a7"}
+                />
+                <InputRow
+                    title={"WebUI IP Address"}
+                    icon={faWifi}
+                    objKey={"web_ui_address"}
+                    color={"#7a00a7"}
+                />
+                <InputRow
+                    title={"WebUI Port"}
+                    icon={faEthernet}
+                    objKey={"web_ui_port"}
+                    color={"#b60049"}
+                />
+                <SwitchRow
+                    title={"WebUI UPnP Enabled"}
+                    icon={faOutlet}
+                    objKey={"web_ui_upnp"}
+                    color={"#ea9d00"}
+                />
+                <InputRow
+                    title={"WebUI Username"}
+                    icon={faUser}
+                    objKey={"web_ui_username"}
+                    color={"#0069ea"}
+                />
+                <InputRow
+                    title={"WebUI Password"}
+                    icon={faKey}
+                    objKey={"web_ui_password"}
+                    color={"#0069ea"}
+                />
+            </List>
+            <Button className={"danger"} modifier={"large--quiet"}
+                onClick={()=> {
+                    window.location.reload();
+                    saveStorage("user", {})
+                }}
+            >
+                Log Out
+            </Button>
 
 
-        <AlertDialog className={"settingsAlert"} isOpen={alert.open} onCancel={()=>setAlert({open: false})} modifier={"rowfooter"} cancelable>
-            <div className="alert-dialog-title">{alert.label}</div>
-            <div className="alert-dialog-content">
-                <input ref={alertInput} value={preferences[alert.objKey]} onChange={()=>console.log(alertInput)} placeholder={"Enter "+alert.label}/>
+            <AlertDialog className={"settingsAlert"} isOpen={alert.open} onCancel={()=>setAlert({open: false})} modifier={"rowfooter"} cancelable>
+                <div className="alert-dialog-title">{alert.label}</div>
+                <div className="alert-dialog-content">
+                    <input ref={alertInput} value={preferences[alert.objKey]} onChange={()=>console.log(alertInput)} placeholder={"Enter "+alert.label}/>
+                </div>
+                <div className="alert-dialog-footer">
+                    <Button onClick={()=>setAlert({open: false})} className="alert-dialog-button">
+                        Cancel
+                    </Button>
+                    <Button onClick={()=>{
+                        updatePref(`{"${props.objKey}":"${alertInput.current.value}"}`)
+                    }} className="alert-dialog-button">
+                        Save
+                    </Button>
+                </div>
+            </AlertDialog>
+        </div>
+        )
+    }else{
+        return (
+            <div className={"settingsCol"}>
+                <h2 style={{textAlign:"center"}}>
+                    Settings require login.
+                </h2>
             </div>
-            <div className="alert-dialog-footer">
-                <Button onClick={()=>setAlert({open: false})} className="alert-dialog-button">
-                    Cancel
-                </Button>
-                <Button onClick={()=>{
-                    updatePref(`{"${props.objKey}":"${alertInput.current.value}"}`)
-                }} className="alert-dialog-button">
-                    Save
-                </Button>
-            </div>
-        </AlertDialog>
-    </div>
-    )
+        )
+    }
 }
 
 export default Settings
