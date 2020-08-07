@@ -112,7 +112,8 @@ const App = () => {
             installed,
             torrentList,
             updateTorrentList,
-            updateAlert
+            updateAlert,
+            initialLogin
         }}
         >
             <div className={(settings.loggedin ? "loggedin ":"") + (installed ? "installed" : "")}>

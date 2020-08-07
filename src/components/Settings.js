@@ -161,14 +161,13 @@ const Settings = (props) =>{
         web_ui_username: ""
     })
 
-    const {settings} = useContext(Context)
+    const {settings,initialLogin} = useContext(Context)
 
     useEffect(()=>{
         getPrefs().then(response=>{
             setPreferences(response.data)
         })
-
-    },[])
+    },[initialLogin])
 
     const SwitchRow = (props) =>{
         return(
