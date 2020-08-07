@@ -1,8 +1,6 @@
 import axios from 'axios';
 
-let serverAddress =
-    process.env.NODE_ENV === "development" ?
-    process.env.REACT_APP_DEV_SERVER : window.location.href;
+let serverAddress = window.location.href;
 
 if(serverAddress.substring(serverAddress.length-1) !== "/"){
   serverAddress = `${serverAddress}/`
@@ -14,6 +12,7 @@ const baseURL = `${serverAddress}api/v2/`
 
 const APICall = axios.create({
   baseURL:baseURL,
+  withCredentials:true
 })
 
 export const login = async ({username, password}) => {

@@ -865,6 +865,17 @@ h3{
   }
 }
 
+.tabbar__item[label="Settings"]{
+  display: none;
+}
+
+.loggedin{
+  .tabbar__item[label="Settings"]{
+    display: block;
+  }
+}
+
+
 .settingsAlert .alert-dialog-footer{
   display: flex;
   flex-direction: row;
