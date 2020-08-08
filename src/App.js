@@ -54,7 +54,11 @@ const App = () => {
                 username:StoredUser.username,
                 password:StoredUser.password
             }).then(()=>{
-                setSettings(StoredUser)
+                setSettings({
+                    loggedin:true,
+                    username:StoredUser.username,
+                    password:StoredUser.username
+                })
             })
         }
 
