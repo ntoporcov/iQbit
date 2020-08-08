@@ -910,7 +910,7 @@ h3{
   }
 }
 
-ons-input,textarea,input {
+ons-input,textarea,.loggedin input[type="text"] {
   margin-top: 5px;
   border-radius: 8px;
   padding: 5px;
