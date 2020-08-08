@@ -53,12 +53,6 @@ const App = () => {
             login({
                 username:StoredUser.username,
                 password:StoredUser.password
-            }).then(()=>{
-                setSettings({
-                    loggedin:true,
-                    username:StoredUser.username,
-                    password:StoredUser.username
-                })
             })
         }
 
