@@ -1,26 +1,71 @@
-import React, {useState, useEffect, useContext} from 'react';
-import { Icon, ProgressBar, ProgressCircular } from 'react-onsenui';
+import React, {useState, useEffect} from 'react';
+import { Icon, ProgressBar } from 'react-onsenui';
 import stateDictionary from './stateDictionary';
-import {pause, resume, getProperties, getTorrents, sync} from '../utils/TorrClient';
+import {pause, resume} from '../utils/TorrClient';
 import filesize from "filesize"
 import {IonSpinner} from "@ionic/react";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import {  faCloudDownload, faCloudUpload, faTachometerAltFast} from "@fortawesome/pro-regular-svg-icons";
-import useInterval from "../utils/useInterval";
 
 const TorrentBox = ( props ) => {
 
-  const { item } = props;
-  const { hash } = item;
+  // const template = {
+  //   added_on: 1596849714,
+  //   amount_left: 2025018553,
+  //   auto_tmm: false,
+  //   availability: 0.004999999888241291,
+  //   category: "",
+  //   completed: 19824640,
+  //   completion_on: 18000,
+  //   dl_limit: -1,
+  //   dlspeed: 0,
+  //   downloaded: 19542669,
+  //   downloaded_session: 19900384,
+  //   eta: 8640000,
+  //   f_l_piece_prio: false,
+  //   force_start: false,
+  //   last_activity: 0,
+  //   magnet_uri: "magnet:?xt=urn:btih:633545e90ff160e875f0bc267b4895abe828542e&dn=Blood%20Diamond%20(2006)%20%5b1080p%5d",
+  //   max_ratio: -1,
+  //   max_seeding_time: -1,
+  //   name: "Blood Diamond (2006) [1080p]",
+  //   num_complete: 25,
+  //   num_incomplete: 206,
+  //   num_leechs: 0,
+  //   num_seeds: 0,
+  //   priority: 3,
+  //   progress: 0.009694943880227397,
+  //   ratio: 0,
+  //   ratio_limit: -2,
+  //   save_path: "/home/ntoporcov/Downloads/",
+  //   seeding_time_limit: -2,
+  //   seen_complete: 1596849724,
+  //   seq_dl: false,
+  //   size: 2044843193,
+  //   state: "pausedDL",
+  //   super_seeding: false,
+  //   tags: "",
+  //   time_active: 11,
+  //   total_size: 2044843193,
+  //   tracker: "",
+  //   up_limit: -1,
+  //   uploaded: 0,
+  //   uploaded_session: 0,
+  //   upspeed: 0}
+
+  const item = props.item;
+  const  hash  = props.hash;
   const { name } = item;
 
   const { filter } = props;
 
-  const [torrentData,setTorrentData] = useState(item)
+  // const {syncData} = useContext(Context)
+
+  const torrentData = item ;
 
   const { progress } = torrentData || 0
   const { eta } = torrentData || 0
-  const { state } = torrentData || 0
+  const { state } = torrentData || ""
   const { num_leechs } = torrentData || 0
   const { num_seeds } = torrentData || 0
   const { upspeed } = torrentData || 0
@@ -71,20 +116,6 @@ const TorrentBox = ( props ) => {
     }
   },[actionLoading])
 
-
-  useInterval(() => {
-    sync().then(resp => {
-      setTorrentData(resp.data.torrents[hash])
-    });
-  },1000)
-
-  const handleFilter = (progress) => {
-    switch (filter) {
-      case "downloading": return progress < 1;
-      case "complete": return progress === 1
-      default: return  true;
-    }
-  }
 
   if(
       (filter=== "downloading" && progress < 1)

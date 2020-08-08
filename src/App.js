@@ -6,7 +6,7 @@ import 'onsenui/css/onsen-css-components.css';
 import './App.scss';
 import { getStorage, saveStorage } from './utils/Storage';
 import BottomSheet from "./components/BottomSheet";
-import {getTorrents,login} from "./utils/TorrClient";
+import {login} from "./utils/TorrClient";
 import {AlertDialog,Button} from "react-onsenui"
 
 
@@ -32,7 +32,7 @@ const App = () => {
     const [settings,setSettings] = useState(templateObject);
     const [bigScreen] = useState(screenWidth > breakpoint)
     const [installed] = useState(window.matchMedia('(display-mode: standalone)').matches)
-    const [torrentList,setTorrentList] = useState({needsRefresh:true,list:[]});
+    // const [torrentList,setTorrentList] = useState({needsRefresh:true,list:[]});
 
     const updateSettings = (settings) => {
         setSettings(settings);
@@ -47,34 +47,16 @@ const App = () => {
         setModal(update)
     }
 
-    const updateTorrentList = () => {
-        setTorrentList({needsRefresh: true, list: torrentList.list})
-    }
-
-    const [initialLogin,setInitialLogin] = useState(false)
-
     useEffect(()=>{
 
-        if(StoredUser.loggedin && initialLogin === false){
-            login({username:StoredUser.username,password:StoredUser.password})
-                .then(()=>{
-                    getTorrents().then(resp => {
-                        setInitialLogin(true)
-                        setTorrentList({needsRefresh:false,list:resp.data})
-                    }).catch(()=>{
-                        setTorrentList({needsRefresh:false,list:[]})
-                    });
-                }
-            )
+        if(StoredUser.loggedin){
+            login({
+                username:StoredUser.username,
+                password:StoredUser.password
+            })
         }
 
-        if(torrentList.needsRefresh){
-            getTorrents().then(resp => {
-                setTorrentList({needsRefresh:false,list:resp.data})
-            });
-        }
-
-    },[initialLogin, torrentList.needsRefresh])
+    },[StoredUser.loggedin, StoredUser.password, StoredUser.username])
 
     const [alert,setAlert] = useState({
         open:false,
@@ -110,13 +92,10 @@ const App = () => {
             modal,
             updateModal,
             installed,
-            torrentList,
-            updateTorrentList,
             updateAlert,
-            initialLogin
         }}
         >
-            <div className={(settings.loggedin ? "loggedin ":"") + (installed ? "installed" : "")}>
+            <div className={(settings.loggedin ? "loggedin ":"login") + (installed ? "installed" : "")}>
                 {bigScreen ? <TabletView/> : <Tabs/>}
                 <BottomSheet open={modal.open} onDismiss={()=>setModal({open: false})} top={modal.top?modal.top:bigScreen?25:85} children={modal.content}/>
                 <Alert open={alert.open} title={alert.title} message={alert.message} />

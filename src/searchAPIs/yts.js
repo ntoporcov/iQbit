@@ -23,6 +23,7 @@ const YTSSearch = (props) => {
     const [searchTerm,setSearchTerm] = useState(undefined)
     const [searchLoading,setSearchLoading] = useState(false)
     const [searchResults,setSearchResults] = useState([])
+    const [searchReady,setSearchReady] = useState(false);
 
     const submitQuery = () => {
         setSearchLoading(true);
@@ -41,6 +42,7 @@ const YTSSearch = (props) => {
             const moviesArray = response.data.data.movies
             setSearchResults(moviesArray);
             setSearchLoading(false);
+            setSearchReady(true);
         })
     }
 
@@ -63,22 +65,26 @@ const YTSSearch = (props) => {
             </div>
             <div className={"searchResults"}>
                 {
-                    searchResults.map((item,key) =>
-                        <div
-                            role={"button"}
-                            className={"MoviePoster"}
-                            key={key}
-                            style={{
-                                backgroundImage: `url(${item.medium_cover_image}), url(${imageMissing})`,
-                            }}
-                            onClick={()=>{
-                                updateModal({open: true,content:<YTSModalInfo item={item}/>})
-                            }}
-                        >
-                            <span>{item.title}</span>
-                        </div>
+                    searchReady?
+                        searchResults ?
+                        searchResults.map((item,key) =>
+                            <div
+                                role={"button"}
+                                className={"MoviePoster"}
+                                key={key}
+                                style={{
+                                    backgroundImage: `url(${item.medium_cover_image}), url(${imageMissing})`,
+                                }}
+                                onClick={()=>{
+                                    updateModal({open: true,content:<YTSModalInfo item={item}/>})
+                                }}
+                            >
+                                <span>{item.title}</span>
+                            </div>
 
-                    )
+                        )
+                            :<div>No results were found for that search</div>
+                        :null
                 }
             </div>
         </div>
@@ -87,7 +93,7 @@ const YTSSearch = (props) => {
 
 export const YTSModalInfo = (props) => {
     const { item } = props
-    const {updateTorrentList,updateAlert} = useContext(Context)
+    const {updateAlert} = useContext(Context)
 
     const TorrentAttr = (props) => {
         return (
@@ -133,9 +139,6 @@ export const YTSModalInfo = (props) => {
             }else{
                 updateAlert("Could Not Add Torrent","This address could not be added.")
             }
-        })
-        .finally(()=>{
-            updateTorrentList();
         })
     };
 

@@ -2,13 +2,12 @@ import React, {useContext, useEffect, useRef, useState} from 'react';
 import {List, ListItem, ListHeader, Switch, AlertDialog, Button} from "react-onsenui"
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome"
 import {
-    faAngleRight, faDoorOpen,
-    faDownload,
+    faAngleRight,
     faEdit, faEthernet,
     faFolderDownload, faFolderMinus,
-    faFolders, faFolderTree, faKey,
+    faFolders, faKey,
     faMinusHexagon, faNetworkWired, faOutlet, faPaintBrushAlt,
-    faStop, faUser, faUserLock, faUserNinja, faUserRobot, faUsersClass, faWifi
+    faUser, faUserLock, faUserRobot, faUsersClass, faWifi
 } from "@fortawesome/pro-solid-svg-icons";
 import {getPrefs, updatePref} from "../utils/TorrClient";
 import {Context} from "../App";
@@ -163,7 +162,7 @@ const Settings = (props) =>{
 
     const [prefsRefresh,setPrefsRefresh] = useState(true)
 
-    const {settings,initialLogin,updateAlert} = useContext(Context)
+    const {settings,updateAlert} = useContext(Context)
 
     useEffect(()=>{
         if(prefsRefresh){
@@ -172,7 +171,14 @@ const Settings = (props) =>{
                 setPrefsRefresh(false);
             })
         }
-    },[initialLogin,prefsRefresh])
+    },[prefsRefresh,settings.loggedin])
+
+    useEffect(()=>{
+        getPrefs().then(response=>{
+            setPreferences(response.data)
+            setPrefsRefresh(false);
+        })
+    },[])
 
     const SwitchRow = (props) =>{
         return(
@@ -184,7 +190,6 @@ const Settings = (props) =>{
                     {props.title}
                 </div>
                 <div className="right">
-                    {console.log(preferences[props.objKey])}
                     <Switch checked={preferences[props.objKey]} onChange={()=>{
                         updatePref(`{"${props.objKey}":${!preferences[props.objKey]}}`).then(()=>{
                             setTimeout(()=>{
@@ -375,7 +380,7 @@ const Settings = (props) =>{
             <AlertDialog className={"settingsAlert"} isOpen={alert.open} onCancel={()=>setAlert({open: false})} modifier={"rowfooter"} cancelable>
                 <div className="alert-dialog-title">{alert.label}</div>
                 <div className="alert-dialog-content">
-                    <input ref={alertInput} defaultValue={preferences[alert.objKey]} onChange={()=>console.log(alertInput)} placeholder={"Enter "+alert.label}/>
+                    <input ref={alertInput} defaultValue={preferences[alert.objKey]} placeholder={"Enter "+alert.label}/>
                 </div>
                 <div className="alert-dialog-footer">
                     <Button onClick={()=>setAlert({open: false})} className="alert-dialog-button">

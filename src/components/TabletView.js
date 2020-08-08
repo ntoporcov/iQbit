@@ -1,7 +1,7 @@
-import Torrents from "./Torrents";
-import {Icon, Page, Toolbar, ToolbarButton, Popover} from "react-onsenui";
+import TorrentsCol from "./TorrentsCol";
+import {Icon, Page, Toolbar, ToolbarButton} from "react-onsenui";
 import Search from "./Search";
-import React, {useContext, useState} from "react";
+import React, {useContext} from "react";
 import { Context } from "../App"
 import RoundLogo from "../images/logo_round.png"
 import TorrentTopControls from "./TorrentsTopControls";
@@ -37,7 +37,7 @@ const TabletView = () => {
             </Toolbar>
             <Page>
                 <div className="tabletView">
-                    <Torrents/>
+                    <TorrentsCol/>
                     <Search/>
                 </div>
             </Page>

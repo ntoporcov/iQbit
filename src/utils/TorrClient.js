@@ -43,7 +43,12 @@ export const getProperties = async (hash) => {
 }
 
 export const sync = async (rid) => {
-  return APICall.get('sync/maindata')
+
+  return APICall.get('sync/maindata',{
+    params:{
+      rid
+    }
+  })
 }
 
 export const resume = async (hash="") => {

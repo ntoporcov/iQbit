@@ -164,7 +164,7 @@ h3{
 
 
 .torrentsCol{
-  padding-bottom: 30vh;
+  padding-bottom: 15vh;
   overscroll-behavior-y:none;
 
   .torrentBox{
@@ -344,6 +344,15 @@ h3{
   }
 }
 
+.login {
+  .torrentsCol{
+    @include for-tablet{
+      background-color: white;
+      height: 100%;
+    }
+  }
+}
+
 .segmentPicker{
   padding:20px;
 }
@@ -385,7 +394,6 @@ h3{
     min-width: 400px;
     max-width: 400px;
     border-right: .5px solid $gray;
-    height:100%;
     box-sizing: border-box;
     overflow-y: scroll ;
   }
@@ -790,7 +798,9 @@ h3{
   filter: drop-shadow(0 6px 6px rgba(0,0,0,.5));
 
   .popover__content{
-    padding:15px 10px 5px;
+    padding:15px 15px 5px;
+    width: 500px;
+    box-sizing: border-box;
 
     p{
       margin-top: 0;
@@ -889,18 +899,27 @@ h3{
   }
 }
 
-.alert-dialog{
+.alert-dialog-title{
+  margin-bottom: 10px;
+}
 
-  input {
-    margin-top: 5px;
-    border-radius: 8px;
-    padding: 10px;
-    width: 85%;
-    font-size: 14px;
-    outline: none;
-    border: 1px solid darken($gray,20%);
-    margin-bottom: 10px;
+.alert-dialog-content{
+  .text-input{
+    padding: 3px;
+    height: initial;
   }
+}
+
+ons-input,textarea,.loggedin input[type="text"] {
+  margin-top: 5px;
+  border-radius: 8px;
+  padding: 5px;
+  width: 100%;
+  font-size: 16px;
+  outline: none;
+  border: 1px solid darken($gray,20%);
+  margin-bottom: 10px;
+  box-sizing: border-box;
 }
 
 
