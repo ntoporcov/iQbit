@@ -1,4 +1,4 @@
-import React, {useEffect,useState,useContext} from 'react';
+import React, {useState,useContext} from 'react';
 import {Button, ActionSheet, ActionSheetButton, AlertDialog, AlertDialogButton} from 'react-onsenui'; // Only import the necessary components
 import {sync, login, remove } from '../utils/TorrClient';
 import TorrentBox from './TorrentBox';

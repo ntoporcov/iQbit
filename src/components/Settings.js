@@ -1,5 +1,5 @@
 import React, {useContext, useEffect, useRef, useState} from 'react';
-import {List, ListItem, ListHeader, Switch, AlertDialog, Button, Input} from "react-onsenui"
+import {List, ListItem, ListHeader, Switch, AlertDialog, Button} from "react-onsenui"
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome"
 import {
     faAngleRight,
