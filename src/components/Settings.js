@@ -162,7 +162,7 @@ const Settings = (props) =>{
 
     const [prefsRefresh,setPrefsRefresh] = useState(true)
 
-    const {settings,initialLogin,updateAlert} = useContext(Context)
+    const {settings,updateAlert} = useContext(Context)
 
     useEffect(()=>{
         if(prefsRefresh){
@@ -171,7 +171,7 @@ const Settings = (props) =>{
                 setPrefsRefresh(false);
             })
         }
-    },[initialLogin,prefsRefresh])
+    },[prefsRefresh])
 
     const SwitchRow = (props) =>{
         return(
@@ -380,12 +380,11 @@ const Settings = (props) =>{
                         Cancel
                     </Button>
                     <Button onClick={()=>{
-                        console.log(alertInput.current.value)
-                        // updatePref(`{"${props.objKey}":"${alertInput.current.value}"}`).then(()=>{
-                        //     setTimeout(()=>{
-                        //         setPrefsRefresh(true)
-                        //     },300)
-                        // })
+                        updatePref(`{"${props.objKey}":"${alertInput.current.value}"}`).then(()=>{
+                            setTimeout(()=>{
+                                setPrefsRefresh(true)
+                            },300)
+                        })
                     }} className="alert-dialog-button">
                         Save
                     </Button>
