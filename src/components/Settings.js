@@ -173,13 +173,6 @@ const Settings = (props) =>{
         }
     },[prefsRefresh,settings.loggedin])
 
-    useEffect(()=>{
-        getPrefs().then(response=>{
-            setPreferences(response.data)
-            setPrefsRefresh(false);
-        })
-    },[])
-
     const SwitchRow = (props) =>{
         return(
             <ListItem>

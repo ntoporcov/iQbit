@@ -53,10 +53,12 @@ const App = () => {
             login({
                 username:StoredUser.username,
                 password:StoredUser.password
+            }).then(()=>{
+                setSettings(StoredUser)
             })
         }
 
-    },[StoredUser.loggedin, StoredUser.password, StoredUser.username])
+    },[StoredUser,StoredUser.loggedin, StoredUser.password, StoredUser.username])
 
     const [alert,setAlert] = useState({
         open:false,
