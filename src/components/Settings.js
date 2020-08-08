@@ -1,5 +1,5 @@
 import React, {useContext, useEffect, useRef, useState} from 'react';
-import {List, ListItem, ListHeader, Switch, AlertDialog, Button} from "react-onsenui"
+import {List, ListItem, ListHeader, Switch, AlertDialog, Button, Input} from "react-onsenui"
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome"
 import {
     faAngleRight,
@@ -183,7 +183,6 @@ const Settings = (props) =>{
                     {props.title}
                 </div>
                 <div className="right">
-                    {console.log(preferences[props.objKey])}
                     <Switch checked={preferences[props.objKey]} onChange={()=>{
                         updatePref(`{"${props.objKey}":${!preferences[props.objKey]}}`).then(()=>{
                             setTimeout(()=>{
@@ -374,18 +373,19 @@ const Settings = (props) =>{
             <AlertDialog className={"settingsAlert"} isOpen={alert.open} onCancel={()=>setAlert({open: false})} modifier={"rowfooter"} cancelable>
                 <div className="alert-dialog-title">{alert.label}</div>
                 <div className="alert-dialog-content">
-                    <input ref={alertInput} defaultValue={preferences[alert.objKey]} onChange={()=>console.log(alertInput)} placeholder={"Enter "+alert.label}/>
+                    <input ref={alertInput} defaultValue={preferences[alert.objKey]} placeholder={"Enter "+alert.label}/>
                 </div>
                 <div className="alert-dialog-footer">
                     <Button onClick={()=>setAlert({open: false})} className="alert-dialog-button">
                         Cancel
                     </Button>
                     <Button onClick={()=>{
-                        updatePref(`{"${props.objKey}":"${alertInput.current.value}"}`).then(()=>{
-                            setTimeout(()=>{
-                                setPrefsRefresh(true)
-                            },300)
-                        })
+                        console.log(alertInput.current.value)
+                        // updatePref(`{"${props.objKey}":"${alertInput.current.value}"}`).then(()=>{
+                        //     setTimeout(()=>{
+                        //         setPrefsRefresh(true)
+                        //     },300)
+                        // })
                     }} className="alert-dialog-button">
                         Save
                     </Button>

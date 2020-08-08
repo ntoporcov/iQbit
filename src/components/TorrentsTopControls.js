@@ -1,4 +1,4 @@
-import {Icon, ToolbarButton, Popover,Button} from "react-onsenui";
+import {Icon, ToolbarButton, Popover,Button, Input} from "react-onsenui";
 import React, {useContext, useState} from "react";
 import {addTorrent} from "../utils/TorrClient";
 import {Context} from "../App";

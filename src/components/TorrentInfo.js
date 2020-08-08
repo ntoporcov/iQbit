@@ -26,8 +26,6 @@ const TorrentInfo = (props) => {
 
     const [torrent,setTorrent] = useState(item)
 
-    console.log(item,hash)
-
     useInterval(() => {
         sync().then(resp => {
             setTorrent(resp.data.torrents[hash])

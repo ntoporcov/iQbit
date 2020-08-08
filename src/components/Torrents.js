@@ -65,8 +65,6 @@ const Torrents = (props) =>{
                       properties.forEach((property)=>{
                         updatedObj[hash][property] = data.torrents[hash][property]
                       })
-
-                    console.log(RID,properties)
                    })
 
                   setTorrentData(updatedObj);
@@ -78,10 +76,6 @@ const Torrents = (props) =>{
           });
       }
   },1000)
-
-  useEffect(()=>{
-    console.log(torrentData)
-  },[torrentData])
 
   const handleSignin = () => {
 
