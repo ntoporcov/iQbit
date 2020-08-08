@@ -171,7 +171,7 @@ const Settings = (props) =>{
                 setPrefsRefresh(false);
             })
         }
-    },[prefsRefresh])
+    },[prefsRefresh,settings.loggedin])
 
     const SwitchRow = (props) =>{
         return(
