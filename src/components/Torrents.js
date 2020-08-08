@@ -1,18 +1,16 @@
 import React, {useEffect,useState,useContext} from 'react';
 import {Button, ActionSheet, ActionSheetButton, AlertDialog, AlertDialogButton} from 'react-onsenui'; // Only import the necessary components
-import {getTorrents, login, remove } from '../utils/TorrClient';
+import {sync, login, remove } from '../utils/TorrClient';
 import TorrentBox from './TorrentBox';
 import { Context } from "../App"
 import { saveStorage } from '../utils/Storage';
 import LogoHeader from "./LogoHeader";
-import {IonSegment, IonSegmentButton, IonLabel } from '@ionic/react';
 import TorrentInfo from "./TorrentInfo"
+import useInterval from "../utils/useInterval";
 
 const Torrents = (props) =>{
-  const {settings,updateSettings,installed, updateModal,torrentList,updateTorrentList} = useContext(Context);
+  const {settings,updateSettings,installed, updateModal} = useContext(Context);
 
-  const [userSettings,setUserSettings] = useState(settings)
-  const [loggedin,setLoggedIn] = useState(settings.loggedin)
   const [feedback, setFeedback] = useState(null)
   const [username,setUsername] = useState(undefined)
   const [password,setPassword] = useState(undefined)
@@ -30,11 +28,60 @@ const Torrents = (props) =>{
       },
     ]
   })
-  const [segment,setSegment] = useState("all");
   const [deleteAlert, setDeleteAlert] = useState({
     open:false,
     hash:undefined,
   })
+  const [torrentList,setTorrentList] = useState([])
+  const [torrentData,setTorrentData] = useState({})
+
+
+  const [RID,setRID] = useState(0)
+
+  useInterval(()=>{
+      if(settings.loggedin){
+          sync(RID).then(resp => {
+              const {data} = resp
+
+              if(data.full_update){
+                setTorrentData(data.torrents);
+                setTorrentList(Object.keys(data.torrents));
+              }
+              else{
+
+                if(data.torrents){
+                  let updatedObj = torrentData;
+
+                  const keysArray = Object.keys(data.torrents);
+
+                  keysArray.forEach((hash) => {
+
+                      if(updatedObj[hash]===undefined){
+                          updatedObj[hash]={};
+                      }
+
+                      const properties = Object.keys(data.torrents[hash]);
+
+                      properties.forEach((property)=>{
+                        updatedObj[hash][property] = data.torrents[hash][property]
+                      })
+
+                    console.log(RID,properties)
+                   })
+
+                  setTorrentData(updatedObj);
+                }
+
+              }
+
+              setRID(RID+1)
+          });
+      }
+  },1000)
+
+  useEffect(()=>{
+    console.log(torrentData)
+  },[torrentData])
 
   const handleSignin = () => {
 
@@ -49,10 +96,7 @@ const Torrents = (props) =>{
         };
 
         saveStorage("user", userObject).then(() => {
-          setUserSettings(userObject);
           updateSettings(userObject)
-          setLoggedIn(true);
-          updateTorrentList()
         })
 
       }else{
@@ -114,47 +158,24 @@ const Torrents = (props) =>{
     })
   }
 
-  const SegmentPicker = () => {
-    if(loggedin){
-      return(
-        <div className={"segmentPicker"}>
-          <IonSegment mode={"ios"} value={segment} onIonChange={e => {
-            setTimeout(()=>{
-              setSegment(e.detail.value)
-
-            },200)
-          }}>
-            <IonSegmentButton mode={"ios"} value="all">
-              <IonLabel>All Torrents</IonLabel>
-            </IonSegmentButton>
-            <IonSegmentButton mode={"ios"} value="complete">
-              <IonLabel>Complete</IonLabel>
-            </IonSegmentButton>
-            <IonSegmentButton mode={"ios"} value="downloading">
-              <IonLabel>Downloading</IonLabel>
-            </IonSegmentButton>
-          </IonSegment>
-        </div>
-      )
-    }else{
-      return null
-    }
-  }
-
   return (
-      <div className={loggedin?"torrentsCol":"torrentsCol login"} {...props}>
-        <SegmentPicker/>
+      <>
 
-        {loggedin? torrentList.list.map((item) =>
+        {
+          settings.loggedin?
+              torrentList.map((hash) =>
             <TorrentBox
-                item={item}
-                key={item.hash}
-                filter={segment}
+                item={torrentData[hash]}
+                fullData={torrentData}
+                key={hash}
+                hash = {hash}
+                filter={props.segment}
                 openAction={(hash,item) => handleMoreButton(hash,item)}
             />)
             :null
         }
-        {loggedin? null : LoginForm()}
+
+        {settings.loggedin? null : LoginForm()}
 
         {/*More info Action Sheet*/}
         <ActionSheet
@@ -163,7 +184,8 @@ const Torrents = (props) =>{
             isCancelable={true}
             onCancel={()=>setTorrentAction({open:false,options: torrentAction.options})}
         >
-          {torrentAction.options.map((option,key) =>
+          {
+            torrentAction.options.map((option,key) =>
               <ActionSheetButton
                   key={key}
                   modifier={option.modifier}
@@ -171,10 +193,17 @@ const Torrents = (props) =>{
                     setTorrentAction({open: false,options: torrentAction.options})
                     option.onclick()
                   }}
-              >{option.label}</ActionSheetButton>
-          )}
+              >{option.label}</ActionSheetButton>)
+          }
 
-          <ActionSheetButton onClick={()=>setTorrentAction({open:false,options: torrentAction.options})}>Cancel</ActionSheetButton>
+          <ActionSheetButton
+              onClick={()=>
+                  setTorrentAction({
+                    open:false,
+                    options: torrentAction.options
+                  })
+              }>Cancel
+          </ActionSheetButton>
         </ActionSheet>
 
         {/*Alert Dialog Before Deleting Files*/}
@@ -192,7 +221,7 @@ const Torrents = (props) =>{
             <AlertDialogButton
                 onClick={()=> {
                   setDeleteAlert({open: false});
-                  remove(deleteAlert.hash, true).finally(()=>updateTorrentList());
+                  remove(deleteAlert.hash, true);
                 }}
                 className={"danger"}
             >
@@ -211,7 +240,7 @@ const Torrents = (props) =>{
             <AlertDialogButton onClick={()=>setDeleteAlert({open: false})}>Cancel</AlertDialogButton>
           </div>
         </AlertDialog>
-      </div>
+      </>
   )
 }
 

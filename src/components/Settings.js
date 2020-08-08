@@ -2,13 +2,12 @@ import React, {useContext, useEffect, useRef, useState} from 'react';
 import {List, ListItem, ListHeader, Switch, AlertDialog, Button} from "react-onsenui"
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome"
 import {
-    faAngleRight, faDoorOpen,
-    faDownload,
+    faAngleRight,
     faEdit, faEthernet,
     faFolderDownload, faFolderMinus,
-    faFolders, faFolderTree, faKey,
+    faFolders, faKey,
     faMinusHexagon, faNetworkWired, faOutlet, faPaintBrushAlt,
-    faStop, faUser, faUserLock, faUserNinja, faUserRobot, faUsersClass, faWifi
+    faUser, faUserLock, faUserRobot, faUsersClass, faWifi
 } from "@fortawesome/pro-solid-svg-icons";
 import {getPrefs, updatePref} from "../utils/TorrClient";
 import {Context} from "../App";

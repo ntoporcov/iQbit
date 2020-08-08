@@ -164,7 +164,7 @@ h3{
 
 
 .torrentsCol{
-  padding-bottom: 30vh;
+  padding-bottom: 15vh;
   overscroll-behavior-y:none;
 
   .torrentBox{
@@ -344,6 +344,15 @@ h3{
   }
 }
 
+.login {
+  .torrentsCol{
+    @include for-tablet{
+      background-color: white;
+      height: 100%;
+    }
+  }
+}
+
 .segmentPicker{
   padding:20px;
 }
@@ -385,7 +394,6 @@ h3{
     min-width: 400px;
     max-width: 400px;
     border-right: .5px solid $gray;
-    height:100%;
     box-sizing: border-box;
     overflow-y: scroll ;
   }

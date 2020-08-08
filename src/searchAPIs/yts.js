@@ -87,7 +87,7 @@ const YTSSearch = (props) => {
 
 export const YTSModalInfo = (props) => {
     const { item } = props
-    const {updateTorrentList,updateAlert} = useContext(Context)
+    const {updateAlert} = useContext(Context)
 
     const TorrentAttr = (props) => {
         return (
@@ -133,9 +133,6 @@ export const YTSModalInfo = (props) => {
             }else{
                 updateAlert("Could Not Add Torrent","This address could not be added.")
             }
-        })
-        .finally(()=>{
-            updateTorrentList();
         })
     };
 

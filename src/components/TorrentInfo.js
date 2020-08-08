@@ -1,5 +1,5 @@
 import React, {useState} from "react";
-import {Icon,ProgressBar} from "react-onsenui";
+import {ProgressBar} from "react-onsenui";
 import fileSize from "filesize";
 import stateDictionary from './stateDictionary';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'

@@ -1,8 +1,8 @@
-import Torrents from "./Torrents";
-import {Icon, Page, Tab, Tabbar, Toolbar, ToolbarButton} from "react-onsenui";
+import TorrentsCol from "./TorrentsCol";
+import {Page, Tab, Tabbar, Toolbar} from "react-onsenui";
 import Search from "./Search";
 import Settings from "./Settings";
-import React, {useContext, useEffect, useState} from "react";
+import React, {useContext, useState} from "react";
 import {Context} from "../App"
 import TorrentTopControls from "./TorrentsTopControls";
 
@@ -16,11 +16,6 @@ const Tabs = () => {
     ]
 
     const {settings,bigScreen} = useContext(Context);
-    const [loggedin,setLoggedin] = useState(settings.loggedin)
-
-    useEffect(()=>{
-        setLoggedin(settings)
-    },[settings])
 
     return (
         <>
@@ -45,7 +40,7 @@ const Tabs = () => {
                 index={activeTab}
                 renderTabs={(activeIndex) => [
                     {
-                        content: <Page><Torrents title={pageTitles[0]} active={activeIndex === 0}/></Page>,
+                        content: <Page><TorrentsCol title={pageTitles[0]} active={activeIndex === 0}/></Page>,
                         tab: <Tab label="Torrents" icon="ion-ios-download"/>
                     },
                     {
