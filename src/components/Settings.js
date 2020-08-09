@@ -228,7 +228,7 @@ const Settings = (props) =>{
             <AlertDialog className={"settingsAlert"} isOpen={alert.open} onCancel={()=>setAlert({open: false})} modifier={"rowfooter"} cancelable>
                 <div className="alert-dialog-title">{alert.label}</div>
                 <div className="alert-dialog-content">
-                    <input ref={alertInput} defaultValue={preferences[alert.objKey]} placeholder={"Enter "+alert.label}/>
+                    <input ref={alertInput} type={"text"} defaultValue={preferences[alert.objKey]} placeholder={"Enter "+alert.label}/>
                 </div>
                 <div className="alert-dialog-footer">
                     <Button onClick={()=>setAlert({open: false})} className="alert-dialog-button">

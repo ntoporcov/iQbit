@@ -914,7 +914,9 @@ h3{
   }
 }
 
-ons-input,textarea,.loggedin input[type="text"] {
+ons-input,
+textarea,
+.settingsAlert input {
   margin-top: 5px;
   border-radius: 8px;
   padding: 5px;
