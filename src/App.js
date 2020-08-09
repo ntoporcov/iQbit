@@ -40,7 +40,7 @@ const App = () => {
     const breakpoint = 768;
 
     const [bigScreen] = useState(screenWidth > breakpoint)
-    const [installed] = useState(window.matchMedia('(display-mode: standalone)').matches)
+    const installed =  window.matchMedia('(display-mode: standalone)').matches
     const [prefs,setPrefs] = useState({
         add_trackers: "",
         add_trackers_enabled: null,
@@ -253,9 +253,9 @@ const App = () => {
             prefs
         }}
         >
-            <div className={(settings.loggedin ? "loggedin ":"login") + (installed ? "installed" : "")}>
+            <div className={(settings.loggedin ? "loggedin ":" login ") + (installed ? " installed" : "")}>
                 {bigScreen ? <TabletView/> : <Tabs/>}
-                <BottomSheet open={modal.open} onDismiss={()=>setModal({open: false})} top={modal.top?modal.top:bigScreen?25:85} children={modal.content}/>
+                <BottomSheet  open={modal.open} onDismiss={()=>setModal({open: false})} top={modal.top?modal.top:bigScreen?25:85} children={modal.content}/>
                 <Alert open={alert.open} title={alert.title} message={alert.message} />
             </div>
         </Context.Provider>

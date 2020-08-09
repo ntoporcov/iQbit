@@ -98,6 +98,9 @@ const Torrents = (props) =>{
                 type="text"
                 onChange={(event) => setUsername(event.target.value)}
                 placeholder="Username"
+                autoCapitalize={"none"}
+                autoCorrect={"none"}
+                autoComplete={"none"}
             />
           </label>
           <label htmlFor="password-input">

@@ -118,7 +118,7 @@ const TorrentBox = ( props ) => {
     }
   },[actionLoading])
 
-  const {settings,updateModal} = useContext(Context)
+  const {installed,updateModal} = useContext(Context)
 
   const [torrentAction, setTorrentAction] = useState({
     open: false,
@@ -233,7 +233,7 @@ const TorrentBox = ( props ) => {
           {
             torrentAction.open?
             <ActionSheet
-              className={settings.installed ? "installed" : null}
+              className={installed ? "installed" : null}
               isOpen={torrentAction.open}
               isCancelable={true}
               onCancel={() => setTorrentAction({open: false, options: torrentAction.options})}
