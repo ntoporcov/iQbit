@@ -14,24 +14,7 @@ const Torrents = (props) =>{
   const [feedback, setFeedback] = useState(null)
   const [username,setUsername] = useState(undefined)
   const [password,setPassword] = useState(undefined)
-  const [torrentAction, setTorrentAction] = useState({
-    open: false,
-    options: [{
-        label: "More Info",
-        modifier: null,
-        onclick: () => false,
-      },
-      {
-        label: "Remove Torrent",
-        modifier: "destructive",
-        onclick: () => false,
-      },
-    ]
-  })
-  const [deleteAlert, setDeleteAlert] = useState({
-    open:false,
-    hash:undefined,
-  })
+
   const [torrentList,setTorrentList] = useState([])
   const [torrentData,setTorrentData] = useState({})
 
@@ -134,24 +117,6 @@ const Torrents = (props) =>{
     )
   }
 
-  const handleMoreButton = (hash,item) =>{
-    setTorrentAction({
-      open: true,
-      options: [
-        {
-          label: "Remove Torrent",
-          modifier: "destructive",
-          onclick: () => setDeleteAlert({open:true,hash}),
-        },
-        {
-          label: "More Info",
-          modifier: null,
-          onclick: () => updateModal({open: true,content:<TorrentInfo item={item} hash={hash} /> }),
-        },
-      ]
-    })
-  }
-
   return (
       <>
 
@@ -164,77 +129,14 @@ const Torrents = (props) =>{
                 key={hash}
                 hash = {hash}
                 filter={props.segment}
-                openAction={(hash,item) => handleMoreButton(hash,item)}
             />)
             :null
         }
 
         {settings.loggedin? null : LoginForm()}
 
-        {/*More info Action Sheet*/}
-        <ActionSheet
-            className={installed?"installed":null}
-            isOpen={torrentAction.open}
-            isCancelable={true}
-            onCancel={()=>setTorrentAction({open:false,options: torrentAction.options})}
-        >
-          {
-            torrentAction.options.map((option,key) =>
-              <ActionSheetButton
-                  key={key}
-                  modifier={option.modifier}
-                  onClick={()=> {
-                    setTorrentAction({open: false,options: torrentAction.options})
-                    option.onclick()
-                  }}
-              >{option.label}</ActionSheetButton>)
-          }
+        </>
 
-          <ActionSheetButton
-              onClick={()=>
-                  setTorrentAction({
-                    open:false,
-                    options: torrentAction.options
-                  })
-              }>Cancel
-          </ActionSheetButton>
-        </ActionSheet>
-
-        {/*Alert Dialog Before Deleting Files*/}
-        <AlertDialog
-            isOpen={deleteAlert.open}
-            onCancel={()=>setDeleteAlert({open: false})}
-            cancelable
-        >
-          <div className="alert-dialog-title">Delete Files</div>
-          <div className="alert-dialog-content">
-            Would you also like to delete the files downloaded?
-          </div>
-          <div className="alert-dialog-footer">
-
-            <AlertDialogButton
-                onClick={()=> {
-                  setDeleteAlert({open: false});
-                  remove(deleteAlert.hash, true);
-                }}
-                className={"danger"}
-            >
-              Yes, Delete Files
-            </AlertDialogButton>
-
-            <AlertDialogButton
-                onClick={()=> {
-                  setDeleteAlert({open: false});
-                  remove(deleteAlert.hash, false);
-                }}
-            >
-              No, Keep Files
-            </AlertDialogButton>
-
-            <AlertDialogButton onClick={()=>setDeleteAlert({open: false})}>Cancel</AlertDialogButton>
-          </div>
-        </AlertDialog>
-      </>
   )
 }
 
