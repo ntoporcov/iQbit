@@ -57,7 +57,7 @@ I intend to keep supporting this project for the foreseeable future at least unt
 
 ## License
 
-iQbit is licensed under the terms of the GPL Open Source license and is available for free.
+iQbit is licensed under the terms of the GNU GPLv3 and is available for free.
 
 
 
