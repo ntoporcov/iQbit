@@ -10,7 +10,7 @@ const TorrentTopControls = () =>{
         target:null
     })
 
-    const {bigScreen,updateTorrentList,updateModal,updateAlert} = useContext(Context)
+    const {bigScreen,updateModal,updateAlert} = useContext(Context)
 
     let AddButton = React.createRef()
 
@@ -19,8 +19,9 @@ const TorrentTopControls = () =>{
     const handleAddTorrent = () =>{
         addTorrent(torrentURL)
         .then(response=>{
+            console.log(response.data)
             if(response.data==="Ok."){
-                updateTorrentList()
+                updateAlert("Torrent Was Added","This torrent was added successfully.")
             }else{
                 updateAlert("Could Not Add Torrent","This address could not be added.")
             }
@@ -60,9 +61,9 @@ const TorrentTopControls = () =>{
 
     return(
         <div>
-            {/*<ToolbarButton>*/}
-            {/*    <Icon size={30} icon="ion-ios-search" />*/}
-            {/*</ToolbarButton>*/}
+            <ToolbarButton>
+                <Icon size={30} icon="ion-ios-list" />
+            </ToolbarButton>
             <ToolbarButton
                 ref={AddButton}
                 onClick={()=>handleButtonClick()}

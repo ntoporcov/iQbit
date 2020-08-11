@@ -250,7 +250,7 @@ const App = () => {
             updateModal,
             installed,
             updateAlert,
-            prefs
+            prefs,
         }}
         >
             <div className={(settings.loggedin ? "loggedin ":" login ") + (installed ? " installed" : "")}>
