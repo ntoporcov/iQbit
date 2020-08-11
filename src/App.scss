@@ -446,25 +446,35 @@ h3{
   }
 }
 
-.root{
-  >*:not(.BottomSheet.open){
-    transform: scale(.5);
-  }
-}
+//.root{
+//  >*:not(.BottomSheet.open){
+//    transform: scale(.5);
+//  }
+//}
 
 .BottomSheet{
-  transition: background-color ease-out .4s ;
+
+  .BottomSheetOverlay{
+    transition: background-color ease-out .4s ;
+  }
 
   *{
     white-space: normal;
   }
 
   &.open{
-    background-color: rgba(0,0,0,.7);
     position: fixed;
     height: 100%;
     width: 100%;
     z-index: 10000;
+
+    .BottomSheetOverlay{
+      position: fixed;
+      height: 100%;
+      width: 100%;
+      z-index: 10000;
+      background-color: rgba(0,0,0,.7);
+    }
   }
 
   &.open .modal{
