@@ -808,7 +808,7 @@ h3{
   box-sizing: border-box;
 }
 
-.popover{
+.AddTorrentPopover .popover{
   filter: drop-shadow(0 6px 6px rgba(0,0,0,.5));
 
   .popover__content{
@@ -938,6 +938,12 @@ textarea,
   box-sizing: border-box;
 }
 
+.SortTorrentPopover{
+  .list-item__center > div{
+    display: flex;
+    align-items: center;
+  }
+}
 
 
 //-------

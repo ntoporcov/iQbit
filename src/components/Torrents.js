@@ -1,6 +1,6 @@
 import React, {useState, useContext, useEffect} from 'react';
 import {Button} from 'react-onsenui'; // Only import the necessary components
-import {sync, login} from '../utils/TorrClient';
+import {sync, login, getTorrents} from '../utils/TorrClient';
 import TorrentBox from './TorrentBox';
 import {Context} from "../App"
 import {saveStorage} from '../utils/Storage';
@@ -17,18 +17,54 @@ const Torrents = (props) => {
     const [torrentList, setTorrentList] = useState([])
     const [torrentData, setTorrentData] = useState({})
     const [initialLoad,setInitialLoad] = useState(false)
+    const [sort,setSort] = useState({key:"added_on",reverse:true})
+    const [needsFullRefresh, setNeedsRefresh] = useState(false);
+
+    useEffect(() => {
+        setSort(props.sortingObj)
+        setNeedsRefresh(true)
+    },[props.sortingObj])
+
+    useEffect(()=>{
+        if(initialLoad && needsFullRefresh){
+            getTorrents(sort.key,sort.reverse).then( resp => {
+                const TorrentArray =  resp.data;
+                let hashArray = [];
+
+                TorrentArray.forEach((torrent) => {
+                    hashArray.push(torrent.hash)
+                })
+
+                setTorrentList(hashArray);
+                setNeedsRefresh(false);
+            })
+        }
+    },[needsFullRefresh])
 
 
     const [RID, setRID] = useState(0)
 
     useInterval(() => {
         if (settings.loggedin) {
+
             sync(RID).then(resp => {
                 const {data} = resp
 
                 if (data.full_update) {
                     setTorrentData(data.torrents);
-                    setTorrentList(Object.keys(data.torrents));
+
+                    getTorrents(sort.key,sort.reverse).then( resp => {
+                        const TorrentArray =  resp.data;
+                        let hashArray = [];
+
+                        TorrentArray.forEach((torrent) => {
+                            hashArray.push(torrent.hash)
+                        })
+
+                        setTorrentList(hashArray);
+                        setNeedsRefresh(false);
+                    })
+
                 } else {
 
                     if (data.torrents) {
@@ -49,7 +85,7 @@ const Torrents = (props) => {
                             })
 
                             if(!torrentList.includes(hash)){
-                                setTorrentList([...torrentList,hash])
+                                setTorrentList([hash,...torrentList])
                             }
                         })
 
@@ -77,6 +113,7 @@ const Torrents = (props) => {
                     username,
                     password,
                     loggedin: true,
+                    sort:{key: "added_on",reverse:true}
                 };
 
                 saveStorage("user", userObject).then(() => {

@@ -119,12 +119,6 @@ const Settings = (props) =>{
                     objKey={"temp_path_enabled"}
                     color={"#5b00b6"}
                 />
-                <InputRow
-                    title={"Default Save Path"}
-                    icon={faFolderDownload}
-                    objKey={"save_path"}
-                    color={"#ea9d00"}
-                />
             </List>
             <List modifier={"inset"}>
                 <ListHeader>

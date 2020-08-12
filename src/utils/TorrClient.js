@@ -25,11 +25,11 @@ export const logout = () => {
   return axios.get('auth/logout')
 }
 
-export const getTorrents = async () => {
+export const getTorrents = async (sortKey = "added_on", reverse=true) => {
   return APICall.get('torrents/info',{
     params:{
-      sort:"added_on",
-      reverse:true,
+      sort:sortKey,
+      reverse,
     }
   })
 }

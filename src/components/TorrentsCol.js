@@ -1,9 +1,9 @@
-import React, {useContext, useState} from "react";
+import React, {useContext, useEffect, useState} from "react";
 import {IonLabel, IonSegment, IonSegmentButton} from "@ionic/react";
 import Torrents from "./Torrents";
 import {Context} from "../App";
 
-const TorrentsCol = () => {
+const TorrentsCol = (props) => {
     const {settings} = useContext(Context)
 
     const [segment,setSegment] = useState("all");
@@ -38,7 +38,7 @@ const TorrentsCol = () => {
     return(
         <div  className={"torrentsCol"}>
             <SegmentPicker/>
-            <Torrents segment={segment}/>
+            <Torrents sortingObj={props.sortingObj} segment={segment}/>
         </div>
     )
 }
