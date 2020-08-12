@@ -181,31 +181,11 @@ const TorrentBox = (props) => {
                                         type="button"
                                         onClick={() => {
                                             setActionLoading(true)
-                                            if(isDone()){
-                                                isPaused()?resume(hash):pause(hash)
-                                            }else{
-                                                pause(hash)
-                                            }
+                                            isPaused()?resume(hash):pause(hash)
                                         }}
                                     >
                                         <Icon size={30} icon="ion-ios-pause"/>
                                     </button>
-
-                                    {
-                                        !isDone()?
-                                            <button
-                                                className={isDL() ? "active" : null}
-                                                type="button"
-                                                onClick={() => {
-                                                    setActionLoading(true)
-                                                    resume(hash)
-                                                }}
-                                            >
-                                                <Icon size={30} icon="ion-ios-play"/>
-                                            </button>
-                                            :null
-                                    }
-
 
                                 </div>
                         }
