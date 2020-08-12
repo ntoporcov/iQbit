@@ -6,7 +6,7 @@ import {
     faEdit, faEthernet,
     faFolderDownload, faFolderMinus,
     faFolders, faKey,
-    faMinusHexagon, faNetworkWired, faOutlet, faPaintBrushAlt,
+    faMinusHexagon, faMoonStars, faNetworkWired, faOutlet, faPaintBrushAlt,
     faUser, faUserLock, faUserRobot, faUsersClass, faWifi
 } from "@fortawesome/pro-solid-svg-icons";
 import {getPrefs, updatePref} from "../utils/TorrClient";
@@ -15,7 +15,7 @@ import {saveStorage} from "../utils/Storage";
 
 const Settings = (props) =>{
 
-    const {settings,updateAlert,prefs} = useContext(Context)
+    const {settings,updateAlert,prefs,darkMode,updateDarkMode} = useContext(Context)
     const [preferences,setPreferences] = useState(prefs)
     const [prefsRefresh,setPrefsRefresh] = useState(true)
 
@@ -82,6 +82,7 @@ const Settings = (props) =>{
     })
 
     let alertInput = useRef()
+
 
     if(settings.loggedin){
         return (

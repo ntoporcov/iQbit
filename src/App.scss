@@ -1082,6 +1082,12 @@ textarea,
   }
 }
 
+.switch__toggle{
+  background-color: var(--color-background-3);
+  border-color: var(--color-background-3);
+  box-shadow: none;
+}
+
 
 //-------
 //Overrides, nothing should be below these

@@ -20,8 +20,6 @@ const App = () => {
         password:null
     });
 
-    useDarkMode();
-
     useEffect(()=>{
         const settings = getStorage("user")
         let templateObject = settings;
@@ -30,13 +28,15 @@ const App = () => {
             templateObject = {
                 loggedin:false,
                 username:null,
-                password:null
+                password:null,
             }
             saveStorage("user",templateObject)
         }else{
             setSettings(settings)
         }
     },[])
+
+    useDarkMode();
 
     const screenWidth = window.innerWidth;
     const breakpoint = 768;
