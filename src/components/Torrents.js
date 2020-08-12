@@ -1,11 +1,12 @@
 import React, {useState, useContext, useEffect} from 'react';
-import {Button} from 'react-onsenui'; // Only import the necessary components
-import {sync, login, getTorrents} from '../utils/TorrClient';
+import {Button, Icon} from 'react-onsenui';
+import {sync, login, getTorrents, pauseAll, resumeAll} from '../utils/TorrClient';
 import TorrentBox from './TorrentBox';
 import {Context} from "../App"
 import {saveStorage} from '../utils/Storage';
 import LogoHeader from "./LogoHeader";
 import useInterval from "../utils/useInterval";
+import {IonSpinner} from "@ionic/react";
 
 const Torrents = (props) => {
     const {settings, updateSettings} = useContext(Context);
@@ -113,7 +114,6 @@ const Torrents = (props) => {
                     username,
                     password,
                     loggedin: true,
-                    sort:{key: "added_on",reverse:true}
                 };
 
                 saveStorage("user", userObject).then(() => {
@@ -171,8 +171,72 @@ const Torrents = (props) => {
         setTorrentList(listToUpdate);
     }
 
+    const [masterButtonsLoading,setMasterButtonsLoading] = useState({
+        pause:false,
+        play:false,
+    })
+
+    useEffect(()=>{
+        if(masterButtonsLoading.pause){
+            setTimeout(()=>{
+                setMasterButtonsLoading({
+                    pause: false,
+                    play: masterButtonsLoading.play
+                })
+            },1500)
+        }
+
+        if(masterButtonsLoading.play){
+            setTimeout(()=>{
+                setMasterButtonsLoading({
+                    pause: masterButtonsLoading.pause,
+                    play: false
+                })
+            },1500)
+        }
+    },[masterButtonsLoading])
+
     return (
         <>
+            <div className={"torrentBox compact"}>
+                <div className="buttonsRow">
+
+                    {
+                        masterButtonsLoading.pause ?
+                        <IonSpinner name={"lines"}/> :
+                        <button
+                            type="button"
+                            onClick={() => {
+                                pauseAll()
+                                setMasterButtonsLoading({
+                                    pause: true,
+                                    play: masterButtonsLoading.play
+                                })
+                            }}
+                        >
+                            <Icon size={30} icon="ion-ios-pause"/>
+                        </button>
+                    }
+
+                    {
+                        masterButtonsLoading.play?
+                            <IonSpinner name={"lines"}/>:
+                            <button
+                                type="button"
+                                onClick={()=> {
+                                    resumeAll()
+                                    setMasterButtonsLoading({
+                                        pause: masterButtonsLoading.pause,
+                                        play: true
+                                    })
+                                }}
+                            >
+                                <Icon size={30} icon="ion-ios-play"/>
+                            </button>
+                    }
+
+                </div>
+            </div>
 
             {
                 settings.loggedin ?

@@ -143,7 +143,6 @@ const TorrentTopControls = (props) => {
                         {
                             SortingOptions.map((option,key) =>
                                 <ListItem
-                                    tappable
                                     modifier={"longdivider"}
                                     key={key}
                                     onClick={() => updateSorting(option.object,key)}

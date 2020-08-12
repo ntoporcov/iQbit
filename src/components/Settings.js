@@ -58,7 +58,7 @@ const Settings = (props) =>{
 
     const InputRow = (props) =>{
         return(
-            <ListItem tappable
+            <ListItem
                 onClick={()=>setAlert({open: true,label: props.title, objKey:props.objKey})}
             >
                 <div className="center">

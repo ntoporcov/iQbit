@@ -36,7 +36,7 @@ const TorrentBox = (props) => {
     const timeString = eta ? date.toISOString().substr(11, 8) : 0;
 
     const isDone = () => {
-        return !!state.includes("UP");
+        return !!progress>=1;
     }
 
     const isPaused = () => {
@@ -146,20 +146,24 @@ const TorrentBox = (props) => {
                     />
                     <div className="details">
                         <div className="statsRow">
-              <span>
-                <FontAwesomeIcon style={statsIconStyle}
-                                 icon={isDone() ? faCloudUpload : faCloudDownload}
-                />
-                <span className={"data"}>
-                  {isDone() ? num_leechs : num_seeds}
-                </span>
-              </span>
                             <span>
-                <FontAwesomeIcon style={statsIconStyle} icon={faTachometerAltFast}/>
-                <span className={"data"}>
-                  {isPaused() || isDone() ? "0" : filesize(isDone() ? upspeed : dlspeed, {round: 1}) + "/s"}
-                </span>
-              </span>
+                                <FontAwesomeIcon
+                                    style={statsIconStyle}
+                                    icon={isDone() ? faCloudUpload : faCloudDownload}
+                                />
+                                <span className={"data"}>
+                                  {isDone() ? num_leechs : num_seeds}
+                                </span>
+                            </span>
+                            <span>
+                                <FontAwesomeIcon
+                                    style={statsIconStyle}
+                                    icon={faTachometerAltFast}
+                                />
+                                <span className={"data"}>
+                                    {isPaused() || isDone() ? "0" : filesize(isDone() ? upspeed : dlspeed, {round: 1}) + "/s"}
+                                </span>
+                            </span>
                         </div>
                         {
                             actionLoading ?
@@ -171,28 +175,38 @@ const TorrentBox = (props) => {
                                     >
                                         <Icon size={30} icon="ion-ios-more"/>
                                     </button>
+
                                     <button
                                         className={isPaused() ? "active" : null}
                                         type="button"
-                                        disabled={isDone()}
                                         onClick={() => {
                                             setActionLoading(true)
-                                            pause(hash)
+                                            if(isDone()){
+                                                isPaused()?resume(hash):pause(hash)
+                                            }else{
+                                                pause(hash)
+                                            }
                                         }}
                                     >
                                         <Icon size={30} icon="ion-ios-pause"/>
                                     </button>
-                                    <button
-                                        className={isDL() ? "active" : null}
-                                        type="button"
-                                        disabled={isDone()}
-                                        onClick={() => {
-                                            setActionLoading(true)
-                                            resume(hash)
-                                        }}
-                                    >
-                                        <Icon size={30} icon="ion-ios-play"/>
-                                    </button>
+
+                                    {
+                                        !isDone()?
+                                            <button
+                                                className={isDL() ? "active" : null}
+                                                type="button"
+                                                onClick={() => {
+                                                    setActionLoading(true)
+                                                    resume(hash)
+                                                }}
+                                            >
+                                                <Icon size={30} icon="ion-ios-play"/>
+                                            </button>
+                                            :null
+                                    }
+
+
                                 </div>
                         }
                     </div>

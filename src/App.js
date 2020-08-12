@@ -8,7 +8,7 @@ import { getStorage, saveStorage } from './utils/Storage';
 import BottomSheet from "./components/BottomSheet";
 import {getPrefs, login} from "./utils/TorrClient";
 import {AlertDialog,Button} from "react-onsenui"
-
+import {useDarkMode} from "./utils/useDarkMode"
 
 export const Context = createContext(null);
 
@@ -19,6 +19,8 @@ const App = () => {
         username:null,
         password:null
     });
+
+    useDarkMode();
 
     useEffect(()=>{
         const settings = getStorage("user")
