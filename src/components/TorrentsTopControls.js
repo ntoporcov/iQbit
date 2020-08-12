@@ -1,4 +1,4 @@
-import {Button, Icon, List, ListItem, Popover, ToolbarButton, Radio} from "react-onsenui";
+import {Button, Icon, List, ListItem, Popover, Radio, ToolbarButton} from "react-onsenui";
 import React, {useContext, useState} from "react";
 import {addTorrent} from "../utils/TorrClient";
 import {Context} from "../App";
@@ -10,7 +10,7 @@ const TorrentTopControls = (props) => {
         target: null
     })
 
-    const {settings,bigScreen, updateModal, updateAlert} = useContext(Context)
+    const {settings, bigScreen, updateModal, updateAlert} = useContext(Context)
 
     let AddButton = React.createRef()
     let SortButton = React.createRef()
@@ -61,45 +61,45 @@ const TorrentTopControls = (props) => {
         }
     }
 
-    const [sortPopover,setSortPopover] = useState({open:false,selected:0})
+    const [sortPopover, setSortPopover] = useState({open: false, selected: 0})
 
     const showSortPopover = () => {
-        setSortPopover({open: true,selected: sortPopover.selected})
+        setSortPopover({open: true, selected: sortPopover.selected})
     }
 
     const SortingOptions = [
         {
-            object:{
-                key:"added_on",
-                reverse:true
+            object: {
+                key: "added_on",
+                reverse: true
             },
-            label:"Added Latest Up Top",
+            label: "Added Latest Up Top",
         },
         {
-            object:{
-                key:"added_on",
-                reverse:false
+            object: {
+                key: "added_on",
+                reverse: false
             },
-            label:"Added Oldest Up Top",
+            label: "Added Oldest Up Top",
         },
         {
-            object:{
-                key:"name",
-                reverse:false
+            object: {
+                key: "name",
+                reverse: false
             },
-            label:"Abc... Up Top",
+            label: "Abc... Up Top",
         },
         {
-            object:{
-                key:"name",
-                reverse:true
+            object: {
+                key: "name",
+                reverse: true
             },
-            label:"Zxy... Up Top",
+            label: "Zxy... Up Top",
         },
     ]
 
-    const updateSorting = (object,key) => {
-        setSortPopover({open: false,selected: key})
+    const updateSorting = (object, key) => {
+        setSortPopover({open: false, selected: key})
         props.updateSorting(object)
     }
 
@@ -140,20 +140,20 @@ const TorrentTopControls = (props) => {
                 className={"SortTorrentPopover"}
             >
                 <List>
-                        {
-                            SortingOptions.map((option,key) =>
-                                <ListItem
-                                    modifier={"longdivider"}
-                                    key={key}
-                                    onClick={() => updateSorting(option.object,key)}
-                                >
-                                    <div>
-                                        <Radio name="color" checked={key===sortPopover.selected}/>
-                                        {option.label}
-                                    </div>
-                                </ListItem>
-                            )
-                        }
+                    {
+                        SortingOptions.map((option, key) =>
+                            <ListItem
+                                modifier={"longdivider"}
+                                key={key}
+                                onClick={() => updateSorting(option.object, key)}
+                            >
+                                <div>
+                                    <Radio name="color" checked={key === sortPopover.selected}/>
+                                    {option.label}
+                                </div>
+                            </ListItem>
+                        )
+                    }
                 </List>
             </Popover>
         </div>
