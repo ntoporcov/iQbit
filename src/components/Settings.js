@@ -15,7 +15,7 @@ import {saveStorage} from "../utils/Storage";
 
 const Settings = (props) =>{
 
-    const {settings,updateAlert,prefs,darkMode,updateDarkMode} = useContext(Context)
+    const {settings,updateAlert,prefs} = useContext(Context)
     const [preferences,setPreferences] = useState(prefs)
     const [prefsRefresh,setPrefsRefresh] = useState(true)
 
@@ -82,7 +82,6 @@ const Settings = (props) =>{
     })
 
     let alertInput = useRef()
-
 
     if(settings.loggedin){
         return (
@@ -226,11 +225,14 @@ const Settings = (props) =>{
                     <input ref={alertInput} type={"text"} defaultValue={preferences[alert.objKey]} placeholder={"Enter "+alert.label}/>
                 </div>
                 <div className="alert-dialog-footer">
-                    <Button onClick={()=>setAlert({open: false})} className="alert-dialog-button">
+                    <Button onClick={()=>setAlert({...alert,open: false})} className="alert-dialog-button">
                         Cancel
                     </Button>
                     <Button onClick={()=>{
-                        updatePref(`{"${props.objKey}":"${alertInput.current.value}"}`).then(()=>{
+                        let updateJSON = {}
+                        updateJSON[alert.objKey] = alertInput.current.value
+
+                        updatePref(JSON.stringify(updateJSON)).then(()=>{
                             setTimeout(()=>{
                                 setPrefsRefresh(true)
                             },300)
