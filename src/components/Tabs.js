@@ -17,6 +17,12 @@ const Tabs = () => {
 
     const {settings,bigScreen} = useContext(Context);
 
+    const [sort,setSort] = useState({key: "added_on",reverse:true})
+
+    const updateSorting = (SortObj) => {
+        setSort(SortObj)
+    }
+
     return (
         <>
             <Toolbar>
@@ -27,7 +33,9 @@ const Tabs = () => {
                 </div>
                 <div className="right">
                     {settings.loggedin && !bigScreen && activeTab===0?
-                        <TorrentTopControls/>
+                        <TorrentTopControls
+                            updateSorting={(obj)=>updateSorting(obj)}
+                        />
                         :null
                     }
                 </div>
@@ -40,7 +48,7 @@ const Tabs = () => {
                 index={activeTab}
                 renderTabs={(activeIndex) => [
                     {
-                        content: <Page><TorrentsCol title={pageTitles[0]} active={activeIndex === 0}/></Page>,
+                        content: <Page><TorrentsCol sortingObj={sort} title={pageTitles[0]} active={activeIndex === 0}/></Page>,
                         tab: <Tab label="Torrents" icon="ion-ios-download"/>
                     },
                     {

@@ -8,7 +8,7 @@ import { getStorage, saveStorage } from './utils/Storage';
 import BottomSheet from "./components/BottomSheet";
 import {getPrefs, login} from "./utils/TorrClient";
 import {AlertDialog,Button} from "react-onsenui"
-
+import {useDarkMode} from "./utils/useDarkMode"
 
 export const Context = createContext(null);
 
@@ -28,13 +28,15 @@ const App = () => {
             templateObject = {
                 loggedin:false,
                 username:null,
-                password:null
+                password:null,
             }
             saveStorage("user",templateObject)
         }else{
             setSettings(settings)
         }
     },[])
+
+    useDarkMode();
 
     const screenWidth = window.innerWidth;
     const breakpoint = 768;
@@ -250,7 +252,7 @@ const App = () => {
             updateModal,
             installed,
             updateAlert,
-            prefs
+            prefs,
         }}
         >
             <div className={(settings.loggedin ? "loggedin ":" login ") + (installed ? " installed" : "")}>

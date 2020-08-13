@@ -6,7 +6,7 @@ import {
     faEdit, faEthernet,
     faFolderDownload, faFolderMinus,
     faFolders, faKey,
-    faMinusHexagon, faNetworkWired, faOutlet, faPaintBrushAlt,
+    faMinusHexagon, faMoonStars, faNetworkWired, faOutlet, faPaintBrushAlt,
     faUser, faUserLock, faUserRobot, faUsersClass, faWifi
 } from "@fortawesome/pro-solid-svg-icons";
 import {getPrefs, updatePref} from "../utils/TorrClient";
@@ -58,7 +58,7 @@ const Settings = (props) =>{
 
     const InputRow = (props) =>{
         return(
-            <ListItem tappable
+            <ListItem
                 onClick={()=>setAlert({open: true,label: props.title, objKey:props.objKey})}
             >
                 <div className="center">
@@ -118,12 +118,6 @@ const Settings = (props) =>{
                     icon={faFolderMinus}
                     objKey={"temp_path_enabled"}
                     color={"#5b00b6"}
-                />
-                <InputRow
-                    title={"Default Save Path"}
-                    icon={faFolderDownload}
-                    objKey={"save_path"}
-                    color={"#ea9d00"}
                 />
             </List>
             <List modifier={"inset"}>
@@ -231,11 +225,14 @@ const Settings = (props) =>{
                     <input ref={alertInput} type={"text"} defaultValue={preferences[alert.objKey]} placeholder={"Enter "+alert.label}/>
                 </div>
                 <div className="alert-dialog-footer">
-                    <Button onClick={()=>setAlert({open: false})} className="alert-dialog-button">
+                    <Button onClick={()=>setAlert({...alert,open: false})} className="alert-dialog-button">
                         Cancel
                     </Button>
                     <Button onClick={()=>{
-                        updatePref(`{"${props.objKey}":"${alertInput.current.value}"}`).then(()=>{
+                        let updateJSON = {}
+                        updateJSON[alert.objKey] = alertInput.current.value
+
+                        updatePref(JSON.stringify(updateJSON)).then(()=>{
                             setTimeout(()=>{
                                 setPrefsRefresh(true)
                             },300)

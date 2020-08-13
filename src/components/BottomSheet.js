@@ -31,27 +31,37 @@ const BottomSheet = (props) => {
 
     return (
         <div className={open?"BottomSheet open":"BottomSheet"}>
-            <Draggable
-                axis={"y"}
-                handle={".handleArea"}
-                defaultPosition={initialPosition}
-                position={open?finalPosition:initialPosition}
-                children={
-                    <div className={"modal"}>
-                        <span className={"handleArea"}><span className={"handle"}/></span>
-                        {props.children}
-                    </div>
-                }
-                bounds={{top:topDiff}}
-                onStop={(event)=>{
-                    if(event.pageY > ( WindowSize.height - (WindowSize.height * threshold))){
-                        setOpen(false)
-                        setTimeout(()=>{
-                            props.onDismiss()
-                        },400)
-                    }
-                }}
+            <div
+                className={"BottomSheetOverlay"}
+                onClick={()=>props.onDismiss()}
             />
+            <div>
+                <Draggable
+                    onClick={(event)=> {
+                        console.log(event)
+                        console.log('clicked inside')
+                    }}
+                    axis={"y"}
+                    handle={".handleArea"}
+                    defaultPosition={initialPosition}
+                    position={open?finalPosition:initialPosition}
+                    children={
+                        <div className={"modal"}>
+                            <span className={"handleArea"}><span className={"handle"}/></span>
+                            {props.children}
+                        </div>
+                    }
+                    bounds={{top:topDiff}}
+                    onStop={(event)=>{
+                        if(event.pageY > ( WindowSize.height - (WindowSize.height * threshold))){
+                            setOpen(false)
+                            setTimeout(()=>{
+                                props.onDismiss()
+                            },400)
+                        }
+                    }}
+                />
+            </div>
         </div>
     )
 }
