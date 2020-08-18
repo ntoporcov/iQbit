@@ -6,7 +6,7 @@ import 'onsenui/css/onsen-css-components.css';
 import './App.scss';
 import { getStorage, saveStorage } from './utils/Storage';
 import BottomSheet from "./components/BottomSheet";
-import {getPrefs, login} from "./utils/TorrClient";
+import {getCategories, getPrefs, login} from "./utils/TorrClient";
 import {AlertDialog,Button} from "react-onsenui"
 import {useDarkMode} from "./utils/useDarkMode"
 
@@ -202,6 +202,9 @@ const App = () => {
         setModal(update)
     }
 
+    const [contextCategories,setContextCategories] = useState({})
+    const [cookie,setCookie] = useState(false);
+
     useEffect(()=>{
 
         if(settings.loggedin){
@@ -209,8 +212,13 @@ const App = () => {
                 username:settings.username,
                 password:settings.password
             }).then(()=>{
+                setCookie(true)
                 getPrefs().then((response)=>{
-                    setPrefs(response)
+                    setPrefs(response.data)
+                })
+
+                getCategories().then((response)=>{
+                    setContextCategories(response.data)
                 })
             })
         }
@@ -253,6 +261,8 @@ const App = () => {
             installed,
             updateAlert,
             prefs,
+            contextCategories,
+            cookie
         }}
         >
             <div className={(settings.loggedin ? "loggedin ":" login ") + (installed ? " installed" : "")}>

@@ -15,12 +15,12 @@ import {saveStorage} from "../utils/Storage";
 
 const Settings = (props) =>{
 
-    const {settings,updateAlert,prefs} = useContext(Context)
+    const {settings,updateAlert,prefs, cookie} = useContext(Context)
     const [preferences,setPreferences] = useState(prefs)
     const [prefsRefresh,setPrefsRefresh] = useState(true)
 
     useEffect(()=>{
-        if(prefsRefresh){
+        if(prefsRefresh && cookie){
             getPrefs().then(response=>{
                 setPreferences(response.data)
                 setPrefsRefresh(false);

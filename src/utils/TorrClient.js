@@ -112,3 +112,7 @@ export const updatePref = async (json={}) =>{
     },
   })
 }
+
+export const getCategories = async () => {
+  return APICall.get('torrents/categories')
+}
