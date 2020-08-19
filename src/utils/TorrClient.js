@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-let serverAddress = window.location.href;
+let serverAddress = window.location.origin;
 
 if(serverAddress.substring(serverAddress.length-1) !== "/"){
   serverAddress = `${serverAddress}/`

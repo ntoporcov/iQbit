@@ -107,6 +107,10 @@ h3 {
   color:var(--color-text-primary)
 }
 
+p{
+  color:var(--color-text-primary)
+}
+
 .toolbar {
   background-color: var(--color-background);
   background-image: none !important;
@@ -187,6 +191,7 @@ h3 {
     font-weight: 400;
     margin-bottom: 0 !important;
     padding-bottom: 0;
+    color: var(--color-text-primary);
   }
 
   .poweredBy {
@@ -195,6 +200,7 @@ h3 {
     font-weight: 400;
     opacity: .5;
     margin: 0;
+    color: var(--color-text-secondary);
   }
 }
 
@@ -360,6 +366,7 @@ ion-segment{
       h2 {
         text-align: center;
         margin-bottom: 20px !important;
+        color: var(--color-text-primary);
       }
     }
 
@@ -370,7 +377,7 @@ ion-segment{
       border: 1px solid $gray;
       border-radius: 10px;
       margin-bottom: 20px;
-      background-color: white;
+      background-color: var(--color-background);
 
       label {
         display: flex;
@@ -380,6 +387,7 @@ ion-segment{
         padding: 10px 10px;
         font-size: 16px;
         font-weight: bold;
+        color: var(--color-text-primary);
 
         span {
           width: 100px;
@@ -392,9 +400,10 @@ ion-segment{
           margin-left: 5px;
           width: 70%;
           background-color: transparent;
+          color: var(--color-text-primary);
 
           &::placeholder {
-            color: $gray;
+            color: var(--color-background-3);
           }
         }
 
@@ -414,6 +423,7 @@ ion-segment{
 
     .feedback {
       text-align: center;
+      color: var(--color-text-primary);
     }
   }
 }
@@ -421,7 +431,7 @@ ion-segment{
 .login {
   .torrentsCol {
     @include for-tablet {
-      background-color: white;
+      background-color: var(--color-background);
       height: 100%;
     }
   }
