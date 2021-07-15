@@ -1,6 +1,8 @@
 import React,{useState} from 'react';
 import YTSLogo from "../images/logo-YTS.svg"
+import PTB from "../images/logo-TPB.svg"
 import YTSSearch from "../searchAPIs/yts";
+import TPBSearch from '../searchAPIs/tpb';
 
 const Search = (props) =>{
 
@@ -11,7 +13,19 @@ const Search = (props) =>{
           categories:["Movies"],
           component:(props)=>YTSSearch(props)
       },
+      {
+          logo:PTB,
+          name:"PirateBay",
+          categories:["Audio","Video","Applications","Games","Porn","Other"],
+          component:(props)=>TPBSearch(props)
+      },
     ])
+
+    //    Audio          = "100"
+    //     Video          = "200"
+    //     Applications   = "300"
+    //     Games          = "400"
+    //     Other          = "600"
 
     const [selectedProvider,setSelectedProvider] = useState(0)
     const [selectedCategory,setSelectedCategory] = useState(0)
