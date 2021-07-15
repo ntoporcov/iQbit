@@ -681,83 +681,93 @@ ion-segment{
         margin-right: 5px;
       }
     }
-
-    .infoStatsRow {
-      display: flex;
-      flex-wrap: wrap;
-      box-sizing: initial;
-      justify-content: center;
-
-      .infoStatBox {
-        margin: 10px 10px;
-        padding: 15px;
-        border-radius: 10px;
-        box-sizing: content-box;
-        background-color: var(--color-background-2);
-        flex-grow: 2;
-
-        > div {
-          display: flex;
-          align-items: center;
-          margin-top: 5px
-        }
-
-        .attrBox {
-          display: flex;
-          flex-wrap: wrap;
-          flex-grow: 2;
-
-          .infoTorrentAttr {
-            padding-right: 10px;
-            margin-right: 10px;
-            margin-bottom: 8px;
-
-            span{
-              color: var(--color-text-primary);
-            }
-          }
-
-          .infoTorrentAttr:last-of-type {
-            border-right: none;
-          }
-        }
-
-        .downloadBtn {
-          margin-right: 0;
-          margin-left: auto;
-          min-width: 99px;
-          display: none;
-        }
-      }
-
-      svg {
-        margin-right: 7px;
-        color: var(--blue-accent);
-      }
-
-      .downloadStarted {
-        font-size: 30px;
-      }
-
-      .infoStat {
-        font-size: 20px;
-        margin: 0;
-        color:var(--color-text-primary)
-      }
-
-      @include for-tablet {
-        .infoStat {
-          font-size: 25px;
-        }
-      }
-
-      .infoStatLabel {
-        color: darken($gray, 10%);
-      }
-
-    }
   }
 }
+
+.infoStatsRow {
+  display: flex;
+  flex-wrap: wrap;
+  box-sizing: initial;
+  justify-content: center;
+
+  .infoStatBox {
+    margin: 10px 10px;
+    padding: 15px;
+    border-radius: 10px;
+    box-sizing: content-box;
+    background-color: var(--color-background-2);
+    flex-grow: 2;
+
+    > div {
+      display: flex;
+      align-items: center;
+      margin-top: 5px
+    }
+
+    .attrBox {
+      display: flex;
+      flex-wrap: wrap;
+      flex-grow: 2;
+
+      h3{
+        width: 100%;
+        box-sizing: border-box;
+        padding-bottom: 5px;
+        padding-right: 5px;
+        text-overflow: ellipsis;
+        word-break: break-all;
+      }
+
+      .infoTorrentAttr {
+        padding-right: 10px;
+        margin-right: 10px;
+        margin-bottom: 8px;
+
+        span{
+          color: var(--color-text-primary);
+        }
+      }
+
+      .infoTorrentAttr:last-of-type {
+        border-right: none;
+      }
+    }
+
+    .downloadBtn {
+      margin-right: 0;
+      margin-left: auto;
+      min-width: 99px;
+      display: none;
+    }
+  }
+
+  svg {
+    margin-right: 7px;
+    color: var(--blue-accent);
+  }
+
+  .downloadStarted {
+    font-size: 30px;
+  }
+
+  .infoStat {
+    font-size: 20px;
+    margin: 0;
+    color:var(--color-text-primary)
+  }
+
+  @include for-tablet {
+    .infoStat {
+      font-size: 25px;
+    }
+  }
+
+  .infoStatLabel {
+    color: darken($gray, 10%);
+  }
+
+}
+
 
 .loggedin .downloadBtn {
   display: block !important;
@@ -867,6 +877,10 @@ ion-segment{
       > span {
         top: 0;
       }
+    }
+
+    &.tpb{
+      flex-direction: column;
     }
   }
 }

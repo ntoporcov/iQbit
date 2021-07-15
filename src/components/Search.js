@@ -8,24 +8,20 @@ const Search = (props) =>{
 
     const [providers] = useState([
       {
-          logo:PTB,
-          name:"PirateBay",
-          categories:["Audio","Video","Applications","Games","Porn","Other"],
-          component:(props)=>TPBSearch(props)
-      },
-      {
           logo:YTSLogo,
           name:"YTS",
           categories:["Movies"],
           component:(props)=>YTSSearch(props)
       },
+      {
+          logo:PTB,
+          name:"PirateBay",
+          categories:["Video","Audio","Applications","Games","Porn","Other"],
+          component:(props)=>TPBSearch(props)
+      },
     ])
 
-    //    Audio          = "100"
-    //     Video          = "200"
-    //     Applications   = "300"
-    //     Games          = "400"
-    //     Other          = "600"
+
 
     const [selectedProvider,setSelectedProvider] = useState(0)
     const [selectedCategory,setSelectedCategory] = useState(0)
@@ -52,9 +48,10 @@ const Search = (props) =>{
                 </div>:null
         }
         {
-            providers[selectedProvider].component({
-                category:providers[selectedProvider].categories[selectedCategory]
-            })
+            providers[selectedProvider].name==='PirateBay' && <TPBSearch category={providers[selectedProvider].categories[selectedCategory]}/>
+        }
+        {
+            providers[selectedProvider].name==='YTS' && <YTSSearch category={providers[selectedProvider].categories[selectedCategory]}/>
         }
     </div>
     )
