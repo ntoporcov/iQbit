@@ -8,16 +8,16 @@ const Search = (props) =>{
 
     const [providers] = useState([
       {
-          logo:YTSLogo,
-          name:"YTS",
-          categories:["Movies"],
-          component:(props)=>YTSSearch(props)
-      },
-      {
           logo:PTB,
           name:"PirateBay",
           categories:["Audio","Video","Applications","Games","Porn","Other"],
           component:(props)=>TPBSearch(props)
+      },
+      {
+          logo:YTSLogo,
+          name:"YTS",
+          categories:["Movies"],
+          component:(props)=>YTSSearch(props)
       },
     ])
 
