@@ -69,10 +69,6 @@ div[role="button"], .button {
   }
 }
 
-.danger {
-  color: $red;
-}
-
 @mixin for-phone {
   @media (max-width: 765px) {
     @content;
@@ -1112,6 +1108,42 @@ textarea,
   box-shadow: none;
 }
 
+.categoryCol{
+  display: flex;
+  flex-direction: column;
+  padding: 20px;
+
+  .categoryBox{
+    background-color: var(--color-background-offset);
+    margin-bottom: 20px;
+    padding: 15px;
+    border-radius: 10px;
+
+    .title{
+      color: var(--color-text-primary);
+    }
+
+
+    .actionRow{
+      margin-top: 10px;
+      display: flex;
+      justify-content: space-between;
+
+      button{
+        border: none;
+        outline: none;
+        padding: 15px;
+        width: 48%;
+        font-size: 16px;
+        background-color: var(--color-background-2);
+        border-radius: 10px;
+        color: var(--blue-accent);
+      }
+    }
+  }
+}
+
+
 
 //-------
 //Overrides, nothing should be below these
@@ -1126,3 +1158,6 @@ textarea,
   align-items: center;
 }
 
+.danger {
+  color: $red !important;
+}
