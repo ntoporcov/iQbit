@@ -246,18 +246,27 @@ ion-segment{
       }
     }
 
-    h3 {
-      color: var(--color-text-primary);
+    .titleRow{
       padding-bottom: 30px;
-      max-height: 100px;
-      white-space: normal;
-      overflow: hidden;
-      text-overflow: ellipsis;
 
-      &.centered {
-        text-align: center;
+      h3 {
+        color: var(--color-text-primary);
+        max-height: 100px;
+        white-space: normal;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        padding-bottom: 5px;
+
+        &.centered {
+          text-align: center;
+        }
+      }
+
+      span{
+        color: var(--color-background-4);
       }
     }
+
 
     .stats {
       display: flex;
@@ -1119,10 +1128,24 @@ textarea,
     padding: 15px;
     border-radius: 10px;
 
-    .title{
-      color: var(--color-text-primary);
-    }
+    .infoRow{
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 20px;
 
+      .title{
+        color: var(--color-text-primary);
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        overflow: hidden;
+      }
+
+      .path{
+        color:var(--color-background-3)
+      }
+
+    }
 
     .actionRow{
       margin-top: 10px;

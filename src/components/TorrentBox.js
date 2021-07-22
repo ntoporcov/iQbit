@@ -13,6 +13,7 @@ import filesize from "filesize";
 import { IonSpinner } from "@ionic/react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
+  faCalendarDay,
   faCloudDownload,
   faCloudUpload,
   faTachometerAltFast,
@@ -26,7 +27,6 @@ const TorrentBox = (props) => {
   const item = props.item;
   const hash = props.hash;
   const { name } = item;
-
   const { filter } = props;
 
   // const {syncData} = useContext(Context)
@@ -36,10 +36,12 @@ const TorrentBox = (props) => {
   const { progress } = torrentData || 0;
   const { eta } = torrentData || 0;
   const { state } = torrentData || "";
+  const { category } = torrentData || "";
   const { num_leechs } = torrentData || 0;
   const { num_seeds } = torrentData || 0;
   const { upspeed } = torrentData || 0;
   const { dlspeed } = torrentData || 0;
+  const { added_on } = torrentData || 0;
 
   const [actionLoading, setActionLoading] = useState(false);
 
@@ -161,7 +163,10 @@ const TorrentBox = (props) => {
     return (
       <>
         <div className="torrentBox">
-          <h3>{name}</h3>
+          <div className={"titleRow"}>
+            <h3>{name}</h3>
+            <span>{category}</span>
+          </div>
           <div className="stats">
             <span>{(progress * 100).toFixed(0)}%</span>
             {eta !== 8640000 ? (
@@ -192,10 +197,25 @@ const TorrentBox = (props) => {
                   icon={faTachometerAltFast}
                 />
                 <span className={"data"}>
-                  {isPaused() || isDone()
+                  {() => {
+                    if (isPaused()) {
+                      return "0";
+                    } else if (isDone()) {
+                      return filesize(upspeed, { round: 1 });
+                    } else {
+                      return filesize(dlspeed, { round: 1 });
+                    }
+                  }}
+                  {isPaused()
                     ? "0"
                     : filesize(isDone() ? upspeed : dlspeed, { round: 1 }) +
                       "/s"}
+                </span>
+              </span>
+              <span>
+                <FontAwesomeIcon style={statsIconStyle} icon={faCalendarDay} />
+                <span className={"data"}>
+                  {new Date(added_on * 1000).toLocaleDateString()}
                 </span>
               </span>
             </div>

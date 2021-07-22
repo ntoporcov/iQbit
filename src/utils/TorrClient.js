@@ -16,17 +16,17 @@ const APICall = axios.create({
 });
 
 export const login = async ({ username, password }) => {
-  return APICall.get("auth/login", {
+  return await APICall.get("auth/login", {
     params: { username, password },
   });
 };
 
-export const logout = () => {
-  return axios.get("auth/logout");
+export const logout = async () => {
+  return await axios.get("auth/logout");
 };
 
 export const getTorrents = async (sortKey = "added_on", reverse = true) => {
-  return APICall.get("torrents/info", {
+  return await APICall.get("torrents/info", {
     params: {
       sort: sortKey,
       reverse,
@@ -35,7 +35,7 @@ export const getTorrents = async (sortKey = "added_on", reverse = true) => {
 };
 
 export const getProperties = async (hash) => {
-  return APICall.get("torrents/properties", {
+  return await APICall.get("torrents/properties", {
     params: {
       hashes: hash,
     },
@@ -43,7 +43,7 @@ export const getProperties = async (hash) => {
 };
 
 export const sync = async (rid) => {
-  return APICall.get("sync/maindata", {
+  return await APICall.get("sync/maindata", {
     params: {
       rid,
     },
@@ -51,7 +51,7 @@ export const sync = async (rid) => {
 };
 
 export const resume = async (hash = "") => {
-  return APICall.get("torrents/resume", {
+  return await APICall.get("torrents/resume", {
     params: {
       hashes: hash,
     },
@@ -59,7 +59,7 @@ export const resume = async (hash = "") => {
 };
 
 export const resumeAll = async () => {
-  return APICall.get("torrents/resume", {
+  return await APICall.get("torrents/resume", {
     params: {
       hashes: "all",
     },
@@ -67,7 +67,7 @@ export const resumeAll = async () => {
 };
 
 export const pause = async (hash = "") => {
-  return APICall.get("torrents/pause", {
+  return await APICall.get("torrents/pause", {
     params: {
       hashes: hash,
     },
@@ -75,7 +75,7 @@ export const pause = async (hash = "") => {
 };
 
 export const pauseAll = async () => {
-  return APICall.get("torrents/pause", {
+  return await APICall.get("torrents/pause", {
     params: {
       hashes: "all",
     },
@@ -83,7 +83,7 @@ export const pauseAll = async () => {
 };
 
 export const remove = async (hash = "", deleteFiles = false) => {
-  return APICall.get("torrents/delete", {
+  return await APICall.get("torrents/delete", {
     params: {
       hashes: hash,
       deleteFiles,
@@ -92,7 +92,7 @@ export const remove = async (hash = "", deleteFiles = false) => {
 };
 
 export const addTorrent = async (url = "") => {
-  return APICall.get("torrents/add", {
+  return await APICall.get("torrents/add", {
     params: {
       urls: url,
     },
@@ -100,11 +100,11 @@ export const addTorrent = async (url = "") => {
 };
 
 export const getPrefs = async () => {
-  return APICall.get("app/preferences");
+  return await APICall.get("app/preferences");
 };
 
 export const updatePref = async (json = {}) => {
-  return APICall.get("app/setPreferences", {
+  return await APICall.get("app/setPreferences", {
     params: {
       json,
     },
@@ -112,18 +112,37 @@ export const updatePref = async (json = {}) => {
 };
 
 export const getCategories = async () => {
-  return APICall.get("torrents/categories");
+  return await APICall.get("torrents/categories");
 };
+
+export const addCategory = async (name, path) => {
+  return await APICall.get("torrents/createCategory", {
+    params: {
+      category: name,
+      savePath: path,
+    },
+  });
+};
+
 export const removeCategories = async (category) => {
-  return APICall.get("torrents/removeCategories", {
+  return await APICall.get("torrents/removeCategories", {
     params: {
       categories: category,
     },
   });
 };
 
+export const editCategory = async (category, path) => {
+  return await APICall.get("torrents/editCategory", {
+    params: {
+      category,
+      path,
+    },
+  });
+};
+
 export const setTorrentCategory = async (hash = "", category = "") => {
-  return APICall.get("torrents/setCategory", {
+  return await APICall.get("torrents/setCategory", {
     params: {
       hashes: hash,
       category,

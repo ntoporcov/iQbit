@@ -1,40 +1,47 @@
-import React, { useContext, useEffect, useState } from "react";
-import { getCategories, removeCategories } from "../utils/TorrClient";
+import React, { useContext, useEffect, useRef, useState } from "react";
+import {
+  editCategory,
+  getCategories,
+  removeCategories,
+  updatePref,
+} from "../utils/TorrClient";
 import { Context } from "../App";
-import { AlertDialog, AlertDialogButton } from "react-onsenui";
+import { AlertDialog, AlertDialogButton, Button } from "react-onsenui";
 
 const Categories = (props) => {
-  const { contextCategories } = useContext(Context);
-
-  const [categories, setCategories] = useState(contextCategories);
-  const [categoryRefresh, setCategoryRefresh] = useState(contextCategories);
-
-  useEffect(() => {
-    if (categoryRefresh) {
-      getCategories().then((response) => {
-        setCategories(response.data);
-        setCategoryRefresh(false);
-      });
-    }
-
-    if (contextCategories !== categories) {
-      setCategories(categories);
-    }
-  }, [contextCategories, categories, categoryRefresh]);
+  const { contextCategories, refreshCategories } = useContext(Context);
 
   const [confirmAlert, setConfirmAlert] = useState({ open: false, name: "" });
+  const [editAlert, setEditAlert] = useState({ open: false, name: "" });
+  let alertInput = useRef();
 
   return (
     <div className={"categoryCol"}>
-      {Object.keys(categories).map((item, key) => (
+      {Object.keys(contextCategories).map((item, key) => (
         <div className={"categoryBox"} key={key}>
-          <h3 className={"title"}>{categories[item].name}</h3>
+          <div className={"infoRow"}>
+            <h3 className={"title"}>{contextCategories[item].name}</h3>
+            <span className={"path"}>{contextCategories[item].savePath}</span>
+          </div>
           <div className={"actionRow"}>
-            <button>Edit</button>
+            <button
+              onClick={() =>
+                setEditAlert({
+                  open: true,
+                  name: contextCategories[item].name,
+                  path: contextCategories[item].savePath,
+                })
+              }
+            >
+              Edit
+            </button>
             <button
               className={"danger"}
               onClick={() =>
-                setConfirmAlert({ open: true, name: categories[item].name })
+                setConfirmAlert({
+                  open: true,
+                  name: contextCategories[item].name,
+                })
               }
             >
               Delete
@@ -42,10 +49,10 @@ const Categories = (props) => {
           </div>
         </div>
       ))}
-      {confirmAlert && (
+      {confirmAlert.open && (
         <AlertDialog
           isOpen={confirmAlert.open}
-          onCancel={() => confirmAlert({ open: false, name: "" })}
+          onCancel={() => setConfirmAlert({ open: false, name: "", path: "" })}
           cancelable
         >
           <div className="alert-dialog-title">Delete {confirmAlert.name}</div>
@@ -56,7 +63,7 @@ const Categories = (props) => {
             <AlertDialogButton
               onClick={async () => {
                 await removeCategories(confirmAlert.name);
-                setCategoryRefresh(true);
+                refreshCategories();
                 setConfirmAlert({ open: false, name: "" });
               }}
               class={"danger"}
@@ -69,6 +76,44 @@ const Categories = (props) => {
             >
               Cancel
             </AlertDialogButton>
+          </div>
+        </AlertDialog>
+      )}
+      {editAlert.open && (
+        <AlertDialog
+          className={"settingsAlert"}
+          isOpen={editAlert.open}
+          onCancel={() => setEditAlert({ ...editAlert, open: false })}
+          modifier={"rowfooter"}
+          cancelable
+        >
+          <div className="alert-dialog-title">Edit {editAlert.name}</div>
+          <div className="alert-dialog-content">
+            <input
+              ref={alertInput}
+              type={"text"}
+              defaultValue={editAlert.path}
+              placeholder={"Enter " + alert.label}
+            />
+          </div>
+          <div className="alert-dialog-footer">
+            <Button
+              onClick={() => setEditAlert({ ...editAlert, open: false })}
+              className="alert-dialog-button"
+            >
+              Cancel
+            </Button>
+            <Button
+              onClick={async () => {
+                const newPath = alertInput.current.value;
+                await editCategory(editAlert.name, newPath);
+                refreshCategories();
+                setEditAlert({ ...editAlert, open: false });
+              }}
+              className="alert-dialog-button"
+            >
+              Save
+            </Button>
           </div>
         </AlertDialog>
       )}
