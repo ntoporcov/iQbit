@@ -172,7 +172,8 @@ const TorrentBox = (props) => {
             {eta !== 8640000 ? (
               <span>{timeString}</span>
             ) : (
-              <span>{stateDictionary[state].short}</span>
+              ""
+              // <span>{stateDictionary[state].short}</span>
             )}
           </div>
           <ProgressBar
