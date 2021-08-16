@@ -1184,3 +1184,8 @@ textarea,
 .danger {
   color: $red !important;
 }
+
+.ellipsis{
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}

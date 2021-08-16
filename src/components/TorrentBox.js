@@ -182,40 +182,44 @@ const TorrentBox = (props) => {
           />
           <div className="details">
             <div className="statsRow">
-              <span>
-                <FontAwesomeIcon
-                  style={statsIconStyle}
-                  icon={isDone() ? faCloudUpload : faCloudDownload}
-                />
-                <span className={"data"}>
-                  {isDone() ? num_leechs : num_seeds}
-                </span>
-              </span>
-              <span>
-                <FontAwesomeIcon
-                  style={statsIconStyle}
-                  icon={faTachometerAltFast}
-                />
-                <span className={"data"}>
-                  {() => {
-                    if (isPaused()) {
-                      return "0";
-                    } else if (isDone()) {
-                      return filesize(upspeed, { round: 1 });
-                    } else {
-                      return filesize(dlspeed, { round: 1 });
-                    }
-                  }}
-                  {isPaused()
-                    ? "0"
-                    : isDL()
-                    ? filesize(dlspeed, { round: 1 }) + "/s"
-                    : filesize(upspeed, { round: 1 }) + "/s"}
-                </span>
-              </span>
+              {isPaused() ? null : (
+                <>
+                  <span>
+                    <FontAwesomeIcon
+                      style={statsIconStyle}
+                      icon={isDL() ? faCloudDownload : faCloudUpload}
+                    />
+                    <span className={"data"}>
+                      {isDone() ? num_leechs : num_seeds}
+                    </span>
+                  </span>
+                  <span>
+                    <FontAwesomeIcon
+                      style={statsIconStyle}
+                      icon={faTachometerAltFast}
+                    />
+                    <span className={"data"}>
+                      {() => {
+                        if (isPaused()) {
+                          return "0";
+                        } else if (isDone()) {
+                          return filesize(upspeed, { round: 1 });
+                        } else {
+                          return filesize(dlspeed, { round: 1 });
+                        }
+                      }}
+                      {isPaused()
+                        ? "0"
+                        : isDL()
+                        ? filesize(dlspeed, { round: 1 }) + "/s"
+                        : filesize(upspeed, { round: 1 }) + "/s"}
+                    </span>
+                  </span>
+                </>
+              )}
               <span>
                 <FontAwesomeIcon style={statsIconStyle} icon={faCalendarDay} />
-                <span className={"data"}>
+                <span className={"data ellipsis"}>
                   {new Date(added_on * 1000).toLocaleDateString()}
                 </span>
               </span>
