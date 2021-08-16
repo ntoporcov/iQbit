@@ -15,14 +15,18 @@ const APICall = axios.create({
   withCredentials: true,
 });
 
+const nakedCall = axios.create({
+  baseURL: baseURL,
+});
+
 export const login = async ({ username, password }) => {
-  return await APICall.get("auth/login", {
+  return await nakedCall.get("auth/login", {
     params: { username, password },
   });
 };
 
 export const logout = async () => {
-  return await axios.get("auth/logout");
+  return await nakedCall.get("auth/logout");
 };
 
 export const getTorrents = async (sortKey = "added_on", reverse = true) => {

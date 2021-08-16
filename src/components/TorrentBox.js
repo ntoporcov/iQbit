@@ -208,8 +208,9 @@ const TorrentBox = (props) => {
                   }}
                   {isPaused()
                     ? "0"
-                    : filesize(isDone() ? upspeed : dlspeed, { round: 1 }) +
-                      "/s"}
+                    : isDL()
+                    ? filesize(dlspeed, { round: 1 }) + "/s"
+                    : filesize(upspeed, { round: 1 }) + "/s"}
                 </span>
               </span>
               <span>
