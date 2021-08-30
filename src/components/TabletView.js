@@ -1,11 +1,11 @@
-import TorrentsCol from "./TorrentsCol";
+import TorrentsCol from "../Pages/TorrentsCol";
 import {Icon, Page, Toolbar, ToolbarButton} from "react-onsenui";
-import Search from "./Search";
+import Search from "../Pages/Search";
 import React, {useContext, useEffect, useState} from "react";
 import { Context } from "../App"
 import RoundLogo from "../images/logo_round.png"
 import TorrentTopControls from "./TorrentsTopControls";
-import Settings from "./Settings";
+import Settings from "../Pages/Settings";
 
 const TabletView = () => {
 
