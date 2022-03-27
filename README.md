@@ -1,66 +1,46 @@
-<img src="https://github.com/ntoporcov/iQbit/raw/master/src/images/logo_round.png" alt="iQbit logo" title="iQbit Logo" align="right" height="300" />
+# Getting Started with Create React App
 
-# iQbit
+This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
-iQbit is an iOS styled WebUI theme for qBitTorrent clients.
+## Available Scripts
 
-True story. While I was developing this, my wife asked me if qBitTorrent was like Limewire. The reason was clear, torrent clients haven't evolved in their last 20 years of popularity. iQbit is an attempt to bring torrenting to more modern design approaches. With that being said, this is not a data-heavy approach to torrenting (or at least not yet). The main focus of this projects are the following points:
+In the project directory, you can run:
 
-* Ease of Use
-* Mobile Friendly/First 
-* Adhering to Human Interface Guidelines (as much as possible)
+### `yarn start`
 
-This is a PWA! This means you can install this app on your device through your OS default browser.
+Runs the app in the development mode.\
+Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
 
+The page will reload if you make edits.\
+You will also see any lint errors in the console.
 
+### `yarn test`
 
-## Screenshots
+Launches the test runner in the interactive watch mode.\
+See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
 
-![Screenshot](https://github.com/ntoporcov/iQbit/raw/master/src/images/mobileScreenshot.png)
-![Screenshot](https://github.com/ntoporcov/iQbit/raw/master/src/images/mobileScreenshot2.png)
-![Screenshot](https://github.com/ntoporcov/iQbit/raw/master/src/images/mobileScreenshot3.png)
-![Screenshot](https://github.com/ntoporcov/iQbit/raw/master/src/images/tabletScreenshot.png)
-![Screenshot](https://github.com/ntoporcov/iQbit/raw/master/src/images/tabletScreenshot2.png)
+### `yarn build`
 
+Builds the app for production to the `build` folder.\
+It correctly bundles React in production mode and optimizes the build for the best performance.
 
+The build is minified and the filenames include the hashes.\
+Your app is ready to be deployed!
 
+See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
 
-## Releases And Installing
+### `yarn eject`
 
-All releases will be published right in this repo. All you actually need is the release folder but I do accept any other ideas of how to release updates.
+**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
 
-My suggestion is to do a git clone of this repo locally and then point your qbittorrent to the release folder and it should all just work. Then all you need to do to get updates would be pulling the repo. If you don't actually install all the dependencies for development it shouldn't be too much. You might need to install git.
+If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
 
+Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
 
+You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
 
-## Method Suggested
+## Learn More
 
-On your terminal
+You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
 
-`$ cd [path of directory you want to download project to]`
-
-`$ git clone https://github.com/ntoporcov/iQbit.git`
-
-Then in qBitTorrent you'll want to point the WebUI theme folder selection to the newly created `[...]/iqbit/release` folder and you should be done.
-
-
-
-## RoadMap
-
-I intend to keep supporting this project for the foreseeable future at least until I run out of things that I would like to see in it. My current feature roadmap organized by priority is the following:
-
-1. Add Dark Mode
-2. Add More Search Providers (Maybe using qbittorrent's plugins, maybe not, maybe both native providers and plugins)
-3. Add All possible settings to the settings screen
-
-
-
-## License
-
-iQbit is licensed under the terms of the GNU GPLv3 and is available for free.
-
-
-
-## Bugs & Feature Suggestions 
-
-Please use the issues tab for any bugs found and feature suggestions.
+To learn React, check out the [React documentation](https://reactjs.org/).
