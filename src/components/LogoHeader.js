@@ -1,15 +1,14 @@
 import roundLogo from "../images/logo_round.png";
-import React from "react";
+import { Heading, Image, VStack } from "@chakra-ui/react";
 
 const LogoHeader = () => {
-    return (
-        <div className="LogoHeader">
-            <img className="loginImage" alt="iQbit logo" src={roundLogo}/>
-            <span className={"iqbit"}>iQbit</span>
-            <span className={"poweredBy"}>Powered by qBitTorrent</span>
-            <hr/>
-        </div>
-    )
-}
+  return (
+    <VStack justifyContent={"center"}>
+      <Image alt={"iQbit logo"} src={roundLogo} maxW={150} />
+      <Heading size={"4xl"}>iQbit</Heading>
+      <span>Powered by qBitTorrent</span>
+    </VStack>
+  );
+};
 
 export default LogoHeader;
