@@ -1,4 +1,5 @@
 import axios from "axios";
+import { TorrMainData, TorrTorrentInfo } from "../types";
 
 let serverAddress = window.location.origin;
 
@@ -30,13 +31,18 @@ export const TorrClient = {
     return await APICall.get("auth/logout");
   },
 
-  getTorrents: async (sortKey = "added_on", reverse = true) => {
-    return await APICall.get("torrents/info", {
+  getTorrents: async (
+    sortKey = "added_on",
+    reverse = true
+  ): Promise<TorrTorrentInfo[]> => {
+    const { data } = await APICall.get("torrents/info", {
       params: {
         sort: sortKey,
         reverse,
       },
     });
+
+    return data;
   },
 
   // getProperties: async (hash) => {
@@ -47,12 +53,14 @@ export const TorrClient = {
   //   });
   // },
 
-  sync: async (rid: number) => {
-    return await APICall.get("sync/maindata", {
+  sync: async (rid: number): Promise<TorrMainData> => {
+    const { data } = await APICall.get("sync/maindata", {
       params: {
         rid,
       },
     });
+
+    return data;
   },
 
   resume: async (hash = "") => {

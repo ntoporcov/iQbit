@@ -1,5 +1,5 @@
 import React, { cloneElement, ReactElement } from "react";
-import { Button, Text } from "@chakra-ui/react";
+import { Box, Button, ColorHues, ColorProps, Text } from "@chakra-ui/react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useTheme } from "@chakra-ui/react";
 
@@ -10,6 +10,7 @@ export interface NavButtonProps {
     inactive: ReactElement;
   };
   label: string;
+  activeColor: ColorProps["color"];
 }
 
 const NavButton = (props: NavButtonProps) => {
@@ -17,25 +18,20 @@ const NavButton = (props: NavButtonProps) => {
   const location = useLocation();
   const isActive = location.pathname === props.path;
 
-  const theme = useTheme();
-  const iconSize = 40;
-  const activeColor = theme.colors.blue[500];
-
-  const activeElement = cloneElement(props.icon.active, {
-    size: iconSize,
-    color: activeColor,
-  });
-  const inactiveElement = cloneElement(props.icon.inactive, { size: iconSize });
-
   return (
     <Button
+      flexGrow={2}
       display={"flex"}
       flexDirection={"column"}
       onClick={() => console.log("going")}
       variant={"ghost"}
+      minHeight={16}
+      rounded={0}
     >
-      {isActive ? activeElement : inactiveElement}
-      <Text color={isActive && activeColor}>{props.label}</Text>
+      {isActive ? props.icon.active : props.icon.inactive}
+      <Text color={isActive ? props.activeColor : undefined}>
+        {props.label}
+      </Text>
     </Button>
   );
 };

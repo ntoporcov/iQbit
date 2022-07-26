@@ -1,10 +1,12 @@
-import React, { useState } from "react";
-import "./App.css";
+import React from "react";
 
-import { ChakraProvider, extendTheme } from "@chakra-ui/react";
+import {
+  ChakraProvider,
+  extendTheme,
+  withDefaultColorScheme,
+} from "@chakra-ui/react";
 import { QueryClient, QueryClientProvider } from "react-query";
-import { AuthChecker, AuthView, LoggedInRoutes } from "./pages/_index";
-import { useReadLocalStorage } from "usehooks-ts";
+import { AuthChecker } from "./pages/_index";
 
 // 2. Extend the theme to include custom colors, fonts, etc
 const colors = {
@@ -57,7 +59,7 @@ const colors = {
       "800": "#13531E",
       "900": "#0A290F",
     },
-    blue: {
+    appleBlue: {
       "50": "#E5F2FF",
       "100": "#B8DAFF",
       "200": "#8AC2FF",
@@ -72,13 +74,18 @@ const colors = {
   },
 };
 
-const theme = extendTheme({ colors, useSystemColorMode: true });
+const theme = extendTheme({
+  colors,
+  useSystemColorMode: true,
+  initialColorMode: "dark",
+});
+
 const queryClient = new QueryClient();
 
 function App() {
   return (
     <QueryClientProvider client={queryClient}>
-      <ChakraProvider theme={theme}>
+      <ChakraProvider resetCSS theme={theme}>
         <AuthChecker />
       </ChakraProvider>
     </QueryClientProvider>

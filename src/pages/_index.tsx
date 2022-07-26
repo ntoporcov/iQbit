@@ -54,8 +54,6 @@ export const AuthChecker = () => {
       CredsLocalStorageKey
     );
 
-  console.log(credentials);
-
   const [isLoggedIn, setIsLoggedIn] = useState(
     !!credentials?.username && !!credentials?.password
   );
@@ -122,7 +120,6 @@ export const AuthView = (props: { onLogin: () => void }) => {
             <Button
               colorScheme={"blue"}
               variant={"ghost"}
-              isFullWidth
               mt={20}
               type={"submit"}
               onClick={() => handleLogin.mutate()}
