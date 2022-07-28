@@ -1,5 +1,6 @@
 import React from "react";
 import { Input, InputGroup, InputLeftAddon } from "@chakra-ui/input";
+import { useColorModeValue } from "@chakra-ui/react";
 
 export interface InputProps {
   label: string;
@@ -11,15 +12,21 @@ export interface InputProps {
 }
 
 const IosInput = (props: InputProps) => {
+  const bgColor = useColorModeValue("white", "black");
+
   return (
-    <InputGroup size={"lg"} _invalid={{ backgroundColor: "red.200" }}>
+    <InputGroup
+      size={"lg"}
+      _invalid={{ backgroundColor: "red.200" }}
+      bgColor={bgColor}
+    >
       <InputLeftAddon
         color={"gray.500"}
         fontSize={"md"}
         justifyContent={"end"}
         width={props.labelWidth}
         background={"transparent"}
-        borderRight={"none"}
+        borderBottom={!props.last ? "none" : undefined}
         borderBottomRadius={props.first ? 0 : undefined}
         borderTopRadius={props.last ? 0 : undefined}
         marginTop={!props.first ? -0.5 : undefined}

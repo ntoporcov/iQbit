@@ -1,5 +1,5 @@
 import axios from "axios";
-import { TorrMainData, TorrTorrentInfo } from "../types";
+import { TorrCategories, TorrMainData, TorrTorrentInfo } from "../types";
 
 let serverAddress = window.location.origin;
 
@@ -95,7 +95,7 @@ export const TorrClient = {
     });
   },
 
-  remove: async (hash = "", deleteFiles = false) => {
+  remove: async (hash = "", deleteFiles = true) => {
     return await APICall.get("torrents/delete", {
       params: {
         hashes: hash,
@@ -104,12 +104,16 @@ export const TorrClient = {
     });
   },
 
-  addTorrent: async (url = "") => {
-    return await APICall.get("torrents/add", {
-      params: {
-        urls: url,
+  addTorrent: async (uploadType: "urls" | "torrents", file: string | File) => {
+    const formData = new FormData();
+    formData.append(uploadType, file);
+    const { data } = await APICall.post("torrents/add", formData, {
+      headers: {
+        "Content-Type": "multipart/form-data",
       },
     });
+
+    return data;
   },
 
   getPrefs: async () => {
@@ -124,8 +128,9 @@ export const TorrClient = {
     });
   },
 
-  getCategories: async () => {
-    return await APICall.get("torrents/categories");
+  getCategories: async (): Promise<TorrCategories> => {
+    const { data } = await APICall.get("torrents/categories");
+    return data;
   },
 
   // addCategory: async (name, path) => {

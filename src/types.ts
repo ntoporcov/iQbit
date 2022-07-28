@@ -1,4 +1,6 @@
-import stateDictionary from "./utils/StateDictionary";
+export type TorrCategories = {
+  [i: string]: TorrCategory;
+};
 
 export type TorrCategory = { name: string; savePath: string };
 
@@ -111,9 +113,7 @@ export type TorrMainData = {
     [i: string]: Partial<TorrTorrentInfo>;
   };
   torrents_removed: string[];
-  categories: {
-    [i: string]: TorrCategory;
-  };
+  categories: TorrCategories;
   categories_removed: string[];
   tags: string[];
   tags_removed: string[];
