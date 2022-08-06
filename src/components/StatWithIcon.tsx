@@ -1,5 +1,5 @@
-import React, {ReactNode} from "react";
-import {Box, Flex, Spinner, Text, useColorModeValue,} from "@chakra-ui/react";
+import React, { ReactNode } from "react";
+import { Box, Flex, Spinner, Text, useColorModeValue } from "@chakra-ui/react";
 
 export const StatWithIcon = ({
   icon,

@@ -1,5 +1,10 @@
 import axios from "axios";
-import {TorrCategories, TorrMainData, TorrSettings, TorrTorrentInfo,} from "../types";
+import {
+  TorrCategories,
+  TorrMainData,
+  TorrSettings,
+  TorrTorrentInfo,
+} from "../types";
 
 let serverAddress = window.location.origin;
 

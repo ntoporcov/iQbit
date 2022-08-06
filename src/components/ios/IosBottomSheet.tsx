@@ -1,5 +1,5 @@
-import React, {PropsWithChildren} from "react";
-import {useIsLargeScreen} from "../../utils/screenSize";
+import React, { PropsWithChildren } from "react";
+import { useIsLargeScreen } from "../../utils/screenSize";
 import {
   Box,
   Divider,

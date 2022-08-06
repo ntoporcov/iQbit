@@ -1,7 +1,14 @@
 import React from "react";
-import {Button, Heading, HStack, LightMode, Text, useColorModeValue,} from "@chakra-ui/react";
-import {FaPlus} from "react-icons/fa";
-import {useIsLargeScreen} from "../utils/screenSize";
+import {
+  Button,
+  Heading,
+  HStack,
+  LightMode,
+  Text,
+  useColorModeValue,
+} from "@chakra-ui/react";
+import { FaPlus } from "react-icons/fa";
+import { useIsLargeScreen } from "../utils/screenSize";
 
 export interface PageHeaderProps {
   title: string;

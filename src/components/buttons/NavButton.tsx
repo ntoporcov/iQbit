@@ -1,7 +1,7 @@
-import React, {ReactElement} from "react";
-import {Button, ColorProps, Text} from "@chakra-ui/react";
-import {NavLink, useLocation} from "react-router-dom";
-import {useIsLargeScreen} from "../../utils/screenSize";
+import React, { ReactElement } from "react";
+import { Button, ColorProps, Text } from "@chakra-ui/react";
+import { NavLink, useLocation } from "react-router-dom";
+import { useIsLargeScreen } from "../../utils/screenSize";
 
 export interface NavButtonProps {
   path: string;

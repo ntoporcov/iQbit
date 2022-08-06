@@ -1,9 +1,9 @@
 import React from "react";
 
-import {ChakraProvider, extendTheme, ThemeConfig} from "@chakra-ui/react";
-import {QueryClient, QueryClientProvider} from "react-query";
-import {mode} from "@chakra-ui/theme-tools";
-import {AuthChecker} from "./components/Auth";
+import { ChakraProvider, extendTheme, ThemeConfig } from "@chakra-ui/react";
+import { QueryClient, QueryClientProvider } from "react-query";
+import { mode } from "@chakra-ui/theme-tools";
+import { AuthChecker } from "./components/Auth";
 
 // 2. Extend the theme to include custom colors, fonts, etc
 const colors = {

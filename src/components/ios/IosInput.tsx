@@ -1,6 +1,6 @@
 import React from "react";
-import {Input, InputGroup, InputLeftAddon} from "@chakra-ui/input";
-import {useColorModeValue} from "@chakra-ui/react";
+import { Input, InputGroup, InputLeftAddon } from "@chakra-ui/input";
+import { useColorModeValue } from "@chakra-ui/react";
 
 export interface InputProps {
   label: string;

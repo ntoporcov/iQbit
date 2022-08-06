@@ -1,5 +1,11 @@
-import React, {PropsWithChildren, ReactElement, useEffect, useMemo, useState,} from "react";
-import {SearchProviderComponentProps, YTSMovies} from "../types";
+import React, {
+  PropsWithChildren,
+  ReactElement,
+  useEffect,
+  useMemo,
+  useState,
+} from "react";
+import { SearchProviderComponentProps, YTSMovies } from "../types";
 import {
   AspectRatio,
   Box,
@@ -14,15 +20,15 @@ import {
   VStack,
 } from "@chakra-ui/react";
 import IosSearch from "../components/ios/IosSearch";
-import {useMutation} from "react-query";
-import {YTSClient} from "../utils/YTSClient";
-import {useNavigate, useParams} from "react-router-dom";
+import { useMutation } from "react-query";
+import { YTSClient } from "../utils/YTSClient";
+import { useNavigate, useParams } from "react-router-dom";
 import IosBottomSheet from "../components/ios/IosBottomSheet";
 import TorrentDownloadBox from "../components/TorrentDownloadBox";
-import {IoEarth, IoPricetags, IoTime, IoWarning,} from "react-icons/io5";
-import {StatWithIcon} from "../components/StatWithIcon";
-import {useIsLargeScreen} from "../utils/screenSize";
-import {SiRottentomatoes} from "react-icons/si";
+import { IoEarth, IoPricetags, IoTime, IoWarning } from "react-icons/io5";
+import { StatWithIcon } from "../components/StatWithIcon";
+import { useIsLargeScreen } from "../utils/screenSize";
+import { SiRottentomatoes } from "react-icons/si";
 import SeedsAndPeers from "../components/SeedsAndPeers";
 import TorrentMovieData from "../components/TorrentMovieData";
 import Filters from "../components/Filters";

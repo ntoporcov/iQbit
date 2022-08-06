@@ -1,4 +1,4 @@
-import {useWindowSize} from "usehooks-ts";
+import { useWindowSize } from "usehooks-ts";
 
 export const ScreenSize = {
   large: 992,

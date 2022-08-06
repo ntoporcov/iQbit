@@ -1,7 +1,7 @@
-import React, {useState} from "react";
+import React, { useState } from "react";
 import PageHeader from "../components/PageHeader";
-import {useMutation, useQuery} from "react-query";
-import {TorrClient} from "../utils/TorrClient";
+import { useMutation, useQuery } from "react-query";
+import { TorrClient } from "../utils/TorrClient";
 import {
   Button,
   Flex,
@@ -14,10 +14,10 @@ import {
   Text,
   useDisclosure,
 } from "@chakra-ui/react";
-import {IoPencil, IoTrash} from "react-icons/io5";
+import { IoPencil, IoTrash } from "react-icons/io5";
 import IosBottomSheet from "../components/ios/IosBottomSheet";
-import {TorrCategory} from "../types";
-import {Input} from "@chakra-ui/input";
+import { TorrCategory } from "../types";
+import { Input } from "@chakra-ui/input";
 
 const CategoriesPage = () => {
   const { data, refetch } = useQuery(

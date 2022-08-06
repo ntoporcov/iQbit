@@ -1,12 +1,12 @@
-import {SearchProviderComponentProps, TPBRecord} from "../types";
-import {Flex, VStack,} from "@chakra-ui/react";
+import { SearchProviderComponentProps, TPBRecord } from "../types";
+import { Flex, VStack } from "@chakra-ui/react";
 import IosSearch from "../components/ios/IosSearch";
-import {useMutation} from "react-query";
+import { useMutation } from "react-query";
 import axios from "axios";
 import TorrentDownloadBox from "../components/TorrentDownloadBox";
-import {useSearchFromParams} from "./yts";
+import { useSearchFromParams } from "./yts";
 import SeedsAndPeers from "../components/SeedsAndPeers";
-import React, {useEffect, useMemo} from "react";
+import React, { useEffect, useMemo } from "react";
 import TorrentMovieData from "../components/TorrentMovieData";
 import Filters from "../components/Filters";
 

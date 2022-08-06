@@ -1,7 +1,14 @@
 import React from "react";
-import {Button, Flex, Input, InputProps, LightMode, useColorModeValue,} from "@chakra-ui/react";
-import {IoSearch} from "react-icons/io5";
-import {useIsLargeScreen} from "../../utils/screenSize";
+import {
+  Button,
+  Flex,
+  Input,
+  InputProps,
+  LightMode,
+  useColorModeValue,
+} from "@chakra-ui/react";
+import { IoSearch } from "react-icons/io5";
+import { useIsLargeScreen } from "../../utils/screenSize";
 
 export interface IosSearchProps extends InputProps {
   onSearch: () => void;

@@ -1,5 +1,5 @@
-import React, {ReactElement, ReactNode} from "react";
-import {MemoryRouter, Route, Routes} from "react-router-dom";
+import React, { ReactElement, ReactNode } from "react";
+import { MemoryRouter, Route, Routes } from "react-router-dom";
 import Home from "./pages/Home";
 import DefaultLayout from "./layout/default";
 import {
@@ -12,7 +12,7 @@ import {
   IoSearch,
   IoSearchOutline,
 } from "react-icons/io5";
-import {useIsLargeScreen} from "./utils/screenSize";
+import { useIsLargeScreen } from "./utils/screenSize";
 import SearchPage from "./pages/SearchPage";
 import CategoriesPage from "./pages/CategoriesPage";
 

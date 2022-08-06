@@ -1,12 +1,18 @@
-import React, {PropsWithChildren, useEffect} from "react";
-import {Box, Flex, SimpleGrid, useColorModeValue, useTheme,} from "@chakra-ui/react";
+import React, { PropsWithChildren, useEffect } from "react";
+import {
+  Box,
+  Flex,
+  SimpleGrid,
+  useColorModeValue,
+  useTheme,
+} from "@chakra-ui/react";
 import NavButton from "../components/buttons/NavButton";
-import {IconBaseProps} from "react-icons";
-import {useLogin} from "../components/Auth";
-import {useIsLargeScreen} from "../utils/screenSize";
-import {Pages} from "../Routes";
+import { IconBaseProps } from "react-icons";
+import { useLogin } from "../components/Auth";
+import { useIsLargeScreen } from "../utils/screenSize";
+import { Pages } from "../Routes";
 import Home from "../pages/Home";
-import {useLocation} from "react-router-dom";
+import { useLocation } from "react-router-dom";
 
 export interface DefaultLayoutProps {}
 
