@@ -3,25 +3,23 @@ import {
   Button,
   ButtonGroup,
   Flex,
-  Textarea,
   FormControl,
-  useDisclosure,
+  FormErrorMessage,
   FormLabel,
-  Text,
-  VStack,
   Heading,
   LightMode,
-  FormErrorMessage,
+  Textarea,
+  useDisclosure,
+  VStack,
 } from "@chakra-ui/react";
-import { IoDocumentAttach, IoPause, IoPlay } from "react-icons/io5";
-import { useMutation, useQuery } from "react-query";
-import { TorrClient } from "../utils/TorrClient";
-import { useState } from "react";
+import {IoDocumentAttach, IoPause, IoPlay} from "react-icons/io5";
+import {useMutation, useQuery} from "react-query";
+import {TorrClient} from "../utils/TorrClient";
+import {useState} from "react";
 import TorrentBox from "../components/TorrentBox";
-import { TorrTorrentInfo } from "../types";
+import {TorrTorrentInfo} from "../types";
 import IosBottomSheet from "../components/ios/IosBottomSheet";
-import { Input, InputGroup } from "@chakra-ui/input";
-import { IoFileTray } from "react-icons/io5";
+import {Input} from "@chakra-ui/input";
 
 const Home = () => {
   const { mutate: resumeAll } = useMutation("resumeAll", TorrClient.resumeAll);
@@ -66,9 +64,7 @@ const Home = () => {
               };
 
               if ((data.torrents_removed || []).includes(hash)) {
-                console.log("cauchg", hash);
                 delete newObject[hash];
-                console.log(newObject);
               }
 
               return newObject;
@@ -109,14 +105,16 @@ const Home = () => {
   return (
     <Flex flexDirection={"column"} width={"100%"}>
       <PageHeader
-        title={"Torrents"}
+        title={"Downloads"}
         onAddButtonClick={addModalDisclosure.onOpen}
+        buttonLabel={"Add Torrent"}
+        isHomeHeader
       />
 
       <IosBottomSheet title={"Add Torrent"} disclosure={addModalDisclosure}>
         <VStack gap={4}>
           <FormControl isDisabled={!!file}>
-            <FormLabel>Magnet Link / URL</FormLabel>
+            <FormLabel>{"Magnet Link / URL"}</FormLabel>
             <Textarea
               _disabled={{ bgColor: "gray.50" }}
               value={textArea}
@@ -125,7 +123,7 @@ const Home = () => {
           </FormControl>
           <FormControl isDisabled={!!textArea} isInvalid={!!fileError}>
             <Flex justifyContent={"space-between"} alignItems={"center"} mb={2}>
-              <FormLabel mb={0}>Add with .torrent file</FormLabel>
+              <FormLabel mb={0}>{"Add with .torrent file"}</FormLabel>
               {file && (
                 <Button
                   size={"sm"}
@@ -136,7 +134,7 @@ const Home = () => {
                     setFile(undefined);
                   }}
                 >
-                  Clear
+                  {"Clear"}
                 </Button>
               )}
             </Flex>
@@ -198,7 +196,7 @@ const Home = () => {
             mt={16}
             onClick={() => attemptAddTorrent()}
           >
-            Add Torrent
+            {"Add Torrent"}
           </Button>
         </LightMode>
       </IosBottomSheet>
@@ -210,7 +208,7 @@ const Home = () => {
           onClick={() => resumeAll()}
           variant={"outline"}
         >
-          Start All
+          {"Start All"}
         </Button>
         <Button
           flexGrow={2}
@@ -218,13 +216,13 @@ const Home = () => {
           onClick={() => pauseAll()}
           variant={"outline"}
         >
-          Pause All
+          {"Pause All"}
         </Button>
       </ButtonGroup>
 
       <Flex flexDirection={"column"} gap={5}>
         {Object.entries(torrentsTx)
-          .reverse()
+          ?.sort((a, b) => b[1]?.added_on - a[1]?.added_on)
           ?.filter(([hash]) => !removedTorrs.includes(hash))
           ?.map(([hash, info]) => (
             <TorrentBox

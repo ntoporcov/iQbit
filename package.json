@@ -17,6 +17,7 @@
     "axios": "^0.26.1",
     "cors": "^2.8.5",
     "eslint": "^8.11.0",
+    "eslint-plugin-react": "^7.30.1",
     "express": "^4.18.1",
     "filesize": "^9.0.11",
     "framer-motion": "^6",
@@ -37,15 +38,20 @@
   "scripts": {
     "start": "react-scripts start",
     "startSSL": "export HTTPS=true&&SSL_CRT_FILE=cert.pem&&SSL_KEY_FILE=key.pem react-scripts start",
-    "build": "react-scripts build && rm -rf release/public && mkdir release/public && mv build ./release/public",
+    "build": "react-scripts build && rm -rf release/public && mkdir release/public && mv -v build/* ./release/public",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },
   "eslintConfig": {
     "extends": [
       "react-app",
-      "react-app/jest"
-    ]
+      "react-app/jest",
+      "plugin:react/recommended"
+    ],
+    "rules": {
+      "react/react-in-jsx-scope": [0],
+      "react/no-unescaped-entities": [0]
+    }
   },
   "browserslist": {
     "production": [

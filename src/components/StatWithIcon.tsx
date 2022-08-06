@@ -1,5 +1,5 @@
-import React, { ReactNode } from "react";
-import { Box, Flex, Spinner, Stat, StatNumber } from "@chakra-ui/react";
+import React, {ReactNode} from "react";
+import {Box, Flex, Spinner, Text, useColorModeValue,} from "@chakra-ui/react";
 
 export const StatWithIcon = ({
   icon,
@@ -12,8 +12,14 @@ export const StatWithIcon = ({
   lit?: boolean;
   loading?: boolean;
 }) => {
+  const TextColor = useColorModeValue("grayAlpha.500", "whiteAlpha.500");
+  const TextLitColor = useColorModeValue("gray.700", "whiteAlpha.900");
+
   return (
-    <Flex alignItems={"center"}>
+    <Flex
+      alignItems={"center"}
+      justifyContent={{ base: "center", lg: "flex-start" }}
+    >
       <Box
         color={
           lit ? "blue.500" : lit !== undefined ? "grayAlpha.500" : undefined
@@ -24,18 +30,19 @@ export const StatWithIcon = ({
       {loading ? (
         <Spinner size={"sm"} ml={1} />
       ) : (
-        <Stat ml={1}>
-          <StatNumber
-            fontWeight={400}
-            noOfLines={1}
-            fontSize={"md"}
-            color={
-              lit ? "gray.700" : lit !== undefined ? "grayAlpha.500" : undefined
-            }
-          >
-            {label}
-          </StatNumber>
-        </Stat>
+        <Text
+          ml={1}
+          fontWeight={400}
+          noOfLines={1}
+          fontSize={"md"}
+          color={lit ? TextLitColor : lit !== undefined ? TextColor : undefined}
+        >
+          {label || (
+            <Text as={"span"} color={TextColor}>
+              N/A
+            </Text>
+          )}
+        </Text>
       )}
     </Flex>
   );

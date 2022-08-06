@@ -1,8 +1,7 @@
-import React, { cloneElement, ReactElement } from "react";
-import { Box, Button, ColorHues, ColorProps, Text } from "@chakra-ui/react";
-import { useLocation, useNavigate } from "react-router-dom";
-import { useTheme } from "@chakra-ui/react";
-import { useIsLargeScreen } from "../../utils/screenSize";
+import React, {ReactElement} from "react";
+import {Button, ColorProps, Text} from "@chakra-ui/react";
+import {NavLink, useLocation} from "react-router-dom";
+import {useIsLargeScreen} from "../../utils/screenSize";
 
 export interface NavButtonProps {
   path: string;
@@ -15,34 +14,45 @@ export interface NavButtonProps {
 }
 
 const NavButton = (props: NavButtonProps) => {
-  // const navigate = useNavigate();
-  const location = useLocation();
-  const isActive = location.pathname === props.path;
   const isLarge = useIsLargeScreen();
+  const location = useLocation();
+  const isSearch =
+    location.pathname.includes("/search") ||
+    (isLarge && location.pathname === "/");
 
   return (
-    <Button
-      display={"flex"}
-      flexDirection={isLarge ? "row" : "column"}
-      onClick={() => console.log("going")}
-      variant={"ghost"}
-      minHeight={isLarge ? undefined : 20}
-      pb={isLarge ? undefined : 2}
-      width={"100%"}
-      rounded={isLarge ? 5 : 0}
-    >
-      {isActive ? props.icon.active : props.icon.inactive}
-      <Text
-        width={"100%"}
-        color={isActive ? props.activeColor : undefined}
-        mt={isLarge ? 0 : 1}
-        ml={isLarge ? 2 : 0}
-        fontSize={"sm"}
-        textAlign={isLarge ? "left" : "center"}
-      >
-        {props.label}
-      </Text>
-    </Button>
+    <NavLink to={props.path}>
+      {({ isActive: navActive }) => {
+        const isActive =
+          isSearch && props.label === "Search" ? true : navActive;
+
+        return (
+          <Button
+            display={"flex"}
+            flexDirection={isLarge ? "row" : "column"}
+            variant={"ghost"}
+            minHeight={isLarge ? undefined : 20}
+            pb={isLarge ? undefined : 2}
+            height={isLarge ? 8 : undefined}
+            width={"100%"}
+            rounded={isLarge ? 5 : 0}
+            bgColor={isLarge && isActive ? "grayAlpha.300" : undefined}
+          >
+            {isActive ? props.icon.active : props.icon.inactive}
+            <Text
+              width={"100%"}
+              color={isActive ? props.activeColor : undefined}
+              mt={isLarge ? 0 : 1}
+              ml={isLarge ? 2 : 0}
+              fontSize={"sm"}
+              textAlign={isLarge ? "left" : "center"}
+            >
+              {props.label}
+            </Text>
+          </Button>
+        );
+      }}
+    </NavLink>
   );
 };
 

@@ -1,5 +1,5 @@
 import axios from "axios";
-import { TorrCategories, TorrMainData, TorrTorrentInfo } from "../types";
+import {TorrCategories, TorrMainData, TorrSettings, TorrTorrentInfo,} from "../types";
 
 let serverAddress = window.location.origin;
 
@@ -107,17 +107,25 @@ export const TorrClient = {
   addTorrent: async (uploadType: "urls" | "torrents", file: string | File) => {
     const formData = new FormData();
     formData.append(uploadType, file);
-    const { data } = await APICall.post("torrents/add", formData, {
-      headers: {
-        "Content-Type": "multipart/form-data",
-      },
-    });
+    const { data } =
+      process.env.NODE_ENV === "production"
+        ? await APICall.post("torrents/add", formData, {
+            headers: {
+              "Content-Type": "multipart/form-data",
+            },
+          })
+        : await APICall.get("torrents/add", {
+            params: {
+              urls: file,
+            },
+          });
 
     return data;
   },
 
-  getPrefs: async () => {
-    return await APICall.get("app/preferences");
+  getSettings: async (): Promise<TorrSettings> => {
+    const { data } = await APICall.get("app/preferences");
+    return data;
   },
 
   updatePref: async (json = {}) => {
@@ -133,14 +141,14 @@ export const TorrClient = {
     return data;
   },
 
-  // addCategory: async (name, path) => {
-  //   return await APICall.get("torrents/createCategory", {
-  //     params: {
-  //       category: name,
-  //       savePath: path,
-  //     },
-  //   });
-  // },
+  addCategory: async (name: string, path: string) => {
+    return await APICall.get("torrents/createCategory", {
+      params: {
+        category: name,
+        savePath: path,
+      },
+    });
+  },
 
   // removeCategories: async (category) => {
   //   return await APICall.get("torrents/removeCategories", {
@@ -149,15 +157,15 @@ export const TorrClient = {
   //     },
   //   });
   // },
-  //
-  // editCategory: async (category, path) => {
-  //   return await APICall.get("torrents/editCategory", {
-  //     params: {
-  //       category,
-  //       path,
-  //     },
-  //   });
-  // },
+
+  saveCategory: async (category: string, savePath: string) => {
+    return await APICall.get("torrents/editCategory", {
+      params: {
+        category,
+        savePath,
+      },
+    });
+  },
 
   setTorrentCategory: async (hash = "", category = "") => {
     return await APICall.get("torrents/setCategory", {

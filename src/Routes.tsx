@@ -1,5 +1,5 @@
-import React, { ReactElement, ReactNode } from "react";
-import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+import React, {ReactElement, ReactNode} from "react";
+import {MemoryRouter, Route, Routes} from "react-router-dom";
 import Home from "./pages/Home";
 import DefaultLayout from "./layout/default";
 import {
@@ -12,6 +12,9 @@ import {
   IoSearch,
   IoSearchOutline,
 } from "react-icons/io5";
+import {useIsLargeScreen} from "./utils/screenSize";
+import SearchPage from "./pages/SearchPage";
+import CategoriesPage from "./pages/CategoriesPage";
 
 type PageObject = {
   url: string;
@@ -21,13 +24,13 @@ type PageObject = {
     active: (props: any) => ReactElement;
     inactive: (props: any) => ReactElement;
   };
-  visibleOn: ("sideNav" | "bottomNav")[];
+  visibleOn: ("sideNav" | "bottomNav" | "sideNavBottom")[];
   layout?: (props: any) => ReactNode;
 };
 
 export const Pages: PageObject[] = [
   {
-    label: "Torrents",
+    label: "Downloads",
     url: "/",
     component: <Home />,
     Icon: {
@@ -39,7 +42,7 @@ export const Pages: PageObject[] = [
   {
     label: "Search",
     url: "/search",
-    component: <span>search</span>,
+    component: <SearchPage />,
     Icon: {
       active: (props) => <IoSearch {...props} />,
       inactive: (props) => <IoSearchOutline {...props} />,
@@ -47,9 +50,19 @@ export const Pages: PageObject[] = [
     visibleOn: ["bottomNav", "sideNav"],
   },
   {
+    label: "Search",
+    url: "/search/:query",
+    component: <SearchPage />,
+    Icon: {
+      active: (props) => <IoSearch {...props} />,
+      inactive: (props) => <IoSearchOutline {...props} />,
+    },
+    visibleOn: [],
+  },
+  {
     label: "Categories",
     url: "/categories",
-    component: <span>categories</span>,
+    component: <CategoriesPage />,
     Icon: {
       active: (props) => <IoPricetags {...props} />,
       inactive: (props) => <IoPricetagsOutline {...props} />,
@@ -59,18 +72,20 @@ export const Pages: PageObject[] = [
   {
     label: "Settings",
     url: "/settings",
-    component: <span>settings</span>,
+    component: <span>{"settings"}</span>,
     Icon: {
       active: (props) => <IoCog {...props} />,
       inactive: (props) => <IoCogOutline {...props} />,
     },
-    visibleOn: ["bottomNav", "sideNav"],
+    visibleOn: ["bottomNav", "sideNavBottom"],
   },
 ];
 
 export const LoggedInRoutes = () => {
+  const isLarge = useIsLargeScreen();
+
   return (
-    <Router>
+    <MemoryRouter>
       <Routes>
         {Pages.map((page) => (
           <Route
@@ -80,12 +95,16 @@ export const LoggedInRoutes = () => {
               page.layout ? (
                 page.layout({ children: page.component })
               ) : (
-                <DefaultLayout>{page.component}</DefaultLayout>
+                <DefaultLayout>
+                  {isLarge && page.url === "/"
+                    ? Pages.find((page) => page.label === "Search")?.component
+                    : page.component}
+                </DefaultLayout>
               )
             }
           />
         ))}
       </Routes>
-    </Router>
+    </MemoryRouter>
   );
 };

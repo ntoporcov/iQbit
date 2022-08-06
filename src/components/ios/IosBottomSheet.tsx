@@ -1,46 +1,52 @@
-import React, { PropsWithChildren } from "react";
-import { useIsLargeScreen } from "../../utils/screenSize";
+import React, {PropsWithChildren} from "react";
+import {useIsLargeScreen} from "../../utils/screenSize";
 import {
+  Box,
+  Divider,
+  Drawer,
+  DrawerBody,
+  DrawerCloseButton,
+  DrawerContent,
+  DrawerHeader,
   DrawerOverlay,
+  Heading,
   Modal,
   ModalBody,
   ModalCloseButton,
   ModalContent,
   ModalHeader,
   ModalOverlay,
-  Drawer,
+  ModalProps,
   UseDisclosureReturn,
-  DrawerContent,
-  DrawerBody,
-  Heading,
-  DrawerHeader,
-  Flex,
-  Divider,
-  Box,
-  DrawerCloseButton,
 } from "@chakra-ui/react";
 
 export interface IosBottomSheetProps {
   title: string;
   disclosure: UseDisclosureReturn;
+  modalProps?: Partial<ModalProps>;
 }
 
 const IosBottomSheet = ({
   title,
   disclosure,
+  modalProps,
   children,
 }: PropsWithChildren<IosBottomSheetProps>) => {
   const isLarge = useIsLargeScreen();
 
   const header = (
-    <Heading size={"lg"} fontWeight={300}>
+    <Heading size={"lg"} fontWeight={300} noOfLines={1}>
       {title}
     </Heading>
   );
 
   if (isLarge) {
     return (
-      <Modal isOpen={disclosure.isOpen} onClose={disclosure.onClose}>
+      <Modal
+        isOpen={disclosure.isOpen}
+        onClose={disclosure.onClose}
+        {...modalProps}
+      >
         <ModalOverlay />
         <ModalContent>
           <ModalHeader
@@ -68,7 +74,7 @@ const IosBottomSheet = ({
       isOpen={disclosure.isOpen}
     >
       <DrawerOverlay zIndex={"modal"} />
-      <DrawerContent pb={20} roundedTop={12}>
+      <DrawerContent roundedTop={12} maxHeight={"85vh"}>
         <DrawerHeader
           display={"flex"}
           justifyContent={"space-between"}
@@ -81,7 +87,7 @@ const IosBottomSheet = ({
         <Box px={5}>
           <Divider />
         </Box>
-        <DrawerBody>{children}</DrawerBody>
+        <DrawerBody pb={48}>{children}</DrawerBody>
       </DrawerContent>
     </Drawer>
   );

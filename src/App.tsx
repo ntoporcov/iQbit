@@ -1,9 +1,9 @@
 import React from "react";
 
-import { ChakraProvider, extendTheme, ThemeConfig } from "@chakra-ui/react";
-import { QueryClient, QueryClientProvider } from "react-query";
-import { mode } from "@chakra-ui/theme-tools";
-import { AuthChecker } from "./components/Auth";
+import {ChakraProvider, extendTheme, ThemeConfig} from "@chakra-ui/react";
+import {QueryClient, QueryClientProvider} from "react-query";
+import {mode} from "@chakra-ui/theme-tools";
+import {AuthChecker} from "./components/Auth";
 
 // 2. Extend the theme to include custom colors, fonts, etc
 const colors = {
@@ -98,8 +98,17 @@ const ChakraConfig: ThemeConfig = {
   useSystemColorMode: true,
 };
 
+const breakpoints = {
+  sm: "320px",
+  md: "768px",
+  lg: "992px",
+  xl: "1200px",
+  "2xl": "1536px",
+};
+
 const theme = extendTheme({
   colors,
+  breakpoints,
   config: ChakraConfig,
   styles: {
     global: (props: any) => ({

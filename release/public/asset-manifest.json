@@ -1,0 +1,13 @@
+{
+  "files": {
+    "main.js": "/static/js/main.b9e7cfcd.js",
+    "static/media/logo_round.png": "/static/media/logo_round.48e39dcc28e956965f9e.png",
+    "static/media/logo-TPB.svg": "/static/media/logo-TPB.8707a464e30826b5b46e3f27993b2642.svg",
+    "static/media/logo-YTS.svg": "/static/media/logo-YTS.470817c4f9ca45e7040de31116c00b23.svg",
+    "index.html": "/index.html",
+    "main.b9e7cfcd.js.map": "/static/js/main.b9e7cfcd.js.map"
+  },
+  "entrypoints": [
+    "static/js/main.b9e7cfcd.js"
+  ]
+}
