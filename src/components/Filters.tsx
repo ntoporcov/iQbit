@@ -1,8 +1,17 @@
-import React, {Dispatch, SetStateAction, useEffect, useState} from "react";
-import {Box, Button, Flex, Heading, Select, Text, useColorModeValue, useDisclosure,} from "@chakra-ui/react";
-import {IoClose, IoFilter} from "react-icons/io5";
-import {smartMap} from "../utils/smartMap";
-import {Input} from "@chakra-ui/input";
+import React, { Dispatch, SetStateAction, useEffect, useState } from "react";
+import {
+  Box,
+  Button,
+  Flex,
+  Heading,
+  Select,
+  Text,
+  useColorModeValue,
+  useDisclosure,
+} from "@chakra-ui/react";
+import { IoClose, IoFilter } from "react-icons/io5";
+import { smartMap } from "../utils/smartMap";
+import { Input } from "@chakra-ui/input";
 
 const qualities = ["720p", "1080p", "2160p"] as const;
 export type videoQualities = typeof qualities[number];

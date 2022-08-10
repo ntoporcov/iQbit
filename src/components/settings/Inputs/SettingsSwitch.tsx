@@ -1,7 +1,7 @@
 import React from "react";
-import {FormControl, FormLabel, LightMode, Switch} from "@chakra-ui/react";
-import {TorrSettings} from "../../../types";
-import {useSettingsCtx} from "../useSettings";
+import { FormControl, FormLabel, LightMode, Switch } from "@chakra-ui/react";
+import { TorrSettings } from "../../../types";
+import { useSettingsCtx } from "../useSettings";
 
 export interface SettingsSwitchProps {
   label: string;

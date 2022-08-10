@@ -1,11 +1,17 @@
-import React, {ReactElement, useState} from "react";
+import React, { ReactElement, useState } from "react";
 import PageHeader from "../components/PageHeader";
-import {useIsLargeScreen} from "../utils/screenSize";
-import {IoChevronForward, IoDownload, IoLink,} from "react-icons/io5";
-import {Box, Button, Flex, SimpleGrid, useColorModeValue,} from "@chakra-ui/react";
-import {smartMap} from "../utils/smartMap";
+import { useIsLargeScreen } from "../utils/screenSize";
+import { IoChevronForward, IoDownload, IoLink } from "react-icons/io5";
+import {
+  Box,
+  Button,
+  Flex,
+  SimpleGrid,
+  useColorModeValue,
+} from "@chakra-ui/react";
+import { smartMap } from "../utils/smartMap";
 import WebUIPage from "../components/settings/WebUI/WebUIPage";
-import {SettingsProvider} from "../components/settings/useSettings";
+import { SettingsProvider } from "../components/settings/useSettings";
 import DownloadsPage from "../components/settings/Downloads/DownloadsPage";
 import SaveAndResetButtons from "../components/settings/SaveAndResetButtons";
 import ConnectionPage from "../components/settings/Connection/ConnectionPage";

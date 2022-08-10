@@ -1,8 +1,8 @@
 import React from "react";
-import {FormControl, FormLabel} from "@chakra-ui/react";
-import {TorrSettings} from "../../../types";
-import {useSettingsCtx} from "../useSettings";
-import {Input} from "@chakra-ui/input";
+import { FormControl, FormLabel } from "@chakra-ui/react";
+import { TorrSettings } from "../../../types";
+import { useSettingsCtx } from "../useSettings";
+import { Input } from "@chakra-ui/input";
 
 export interface SettingsSwitchProps {
   label: string;

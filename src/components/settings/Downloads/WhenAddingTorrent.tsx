@@ -1,6 +1,6 @@
 import React from "react";
 import SettingsBox from "../SettingsBox";
-import SettingsSelect, {SettingsSelectOption} from "../Inputs/SettingsSelect";
+import SettingsSelect, { SettingsSelectOption } from "../Inputs/SettingsSelect";
 import SettingsSwitch from "../Inputs/SettingsSwitch";
 
 export interface WhenAddingTorrentProps {}

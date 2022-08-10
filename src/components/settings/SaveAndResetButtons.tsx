@@ -1,7 +1,7 @@
 import React from "react";
-import {Button, Flex, LightMode, useColorModeValue} from "@chakra-ui/react";
-import {useIsLargeScreen} from "../../utils/screenSize";
-import {useSettingsCtx} from "./useSettings";
+import { Button, Flex, LightMode, useColorModeValue } from "@chakra-ui/react";
+import { useIsLargeScreen } from "../../utils/screenSize";
+import { useSettingsCtx } from "./useSettings";
 
 const SaveAndResetButtons = () => {
   const isLarge = useIsLargeScreen();

@@ -1,12 +1,20 @@
-import {useEffect, useState} from "react";
+import { useEffect, useState } from "react";
 import PageHeader from "../components/PageHeader";
 import YTSLogo from "../images/logo-YTS.svg";
 import PTB from "../images/logo-TPB.svg";
 import TPBSearch from "../searchAPIs/tpb";
-import {Box, Button, ButtonProps, Flex, Heading, Image, Text,} from "@chakra-ui/react";
+import {
+  Box,
+  Button,
+  ButtonProps,
+  Flex,
+  Heading,
+  Image,
+  Text,
+} from "@chakra-ui/react";
 import YTSSearch from "../searchAPIs/yts";
-import {useParams} from "react-router-dom";
-import {useFilterState} from "../components/Filters";
+import { useParams } from "react-router-dom";
+import { useFilterState } from "../components/Filters";
 
 export type ProviderKeys = "YTS" | "TPB";
 

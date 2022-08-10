@@ -1,7 +1,7 @@
 import React from "react";
 import SettingsBox from "../SettingsBox";
-import SettingsSelect, {SettingsSelectOption} from "../Inputs/SettingsSelect";
-import {TorrSettingsBitTorrentProtocol,} from "../../../types";
+import SettingsSelect, { SettingsSelectOption } from "../Inputs/SettingsSelect";
+import { TorrSettingsBitTorrentProtocol } from "../../../types";
 import SettingsTextInput from "../Inputs/SettingsTextInput";
 import SettingsSwitch from "../Inputs/SettingsSwitch";
 import ProxyServer from "./ProxyServer";

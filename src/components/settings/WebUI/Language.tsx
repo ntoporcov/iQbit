@@ -1,7 +1,7 @@
 import React from "react";
 import ISO6391 from "iso-639-1";
-import {useSettingsCtx} from "../useSettings";
-import SettingsSelect, {SettingsSelectOption} from "../Inputs/SettingsSelect";
+import { useSettingsCtx } from "../useSettings";
+import SettingsSelect, { SettingsSelectOption } from "../Inputs/SettingsSelect";
 import SettingsBox from "../SettingsBox";
 
 export interface InterfaceProps {}
