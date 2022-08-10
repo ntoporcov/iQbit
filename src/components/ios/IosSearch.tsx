@@ -1,14 +1,7 @@
 import React from "react";
-import {
-  Button,
-  Flex,
-  Input,
-  InputProps,
-  LightMode,
-  useColorModeValue,
-} from "@chakra-ui/react";
-import { IoSearch } from "react-icons/io5";
-import { useIsLargeScreen } from "../../utils/screenSize";
+import {Button, Flex, Input, InputProps, LightMode, useColorModeValue,} from "@chakra-ui/react";
+import {IoSearch} from "react-icons/io5";
+import {useIsLargeScreen} from "../../utils/screenSize";
 
 export interface IosSearchProps extends InputProps {
   onSearch: () => void;
@@ -33,7 +26,7 @@ const IosSearch = ({ onSearch, isLoading, ...props }: IosSearchProps) => {
       top={{ base: "88px", lg: -7 }}
       as={"form"}
       gap={3}
-      width={isLarge ? "calc(100% + 40px)" : "100vw"}
+      width={isLarge ? "calc(100% + (var(--chakra-space-5)) * 2)" : "100vw"}
       px={5}
       onSubmit={(e) => {
         e.preventDefault();

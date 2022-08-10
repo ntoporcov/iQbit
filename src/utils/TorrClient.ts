@@ -1,10 +1,5 @@
 import axios from "axios";
-import {
-  TorrCategories,
-  TorrMainData,
-  TorrSettings,
-  TorrTorrentInfo,
-} from "../types";
+import {TorrCategories, TorrMainData, TorrSettings, TorrTorrentInfo,} from "../types";
 
 let serverAddress = window.location.origin;
 
@@ -133,11 +128,9 @@ export const TorrClient = {
     return data;
   },
 
-  updatePref: async (json = {}) => {
+  updateSettings: async (settings: TorrSettings) => {
     return await APICall.get("app/setPreferences", {
-      params: {
-        json,
-      },
+      params: { json: settings },
     });
   },
 

@@ -46,6 +46,7 @@ const ProviderButton = (
     _focus={{
       backgroundColor: "background",
     }}
+    zIndex={150}
   >
     {props.children}
   </Button>

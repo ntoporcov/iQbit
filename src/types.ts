@@ -192,7 +192,10 @@ export enum TorrSettingsUTPTCPMixedMode {
   peerProportional,
 }
 
+export type TorrSettingContentLayout = "Original" | "Subfolder" | "NoSubfolder";
+
 export type TorrSettings = {
+  torrent_content_layout: TorrSettingContentLayout;
   embedded_tracker_port: number;
   web_ui_max_auth_fail_count: number;
   limit_lan_peers: boolean;
@@ -209,7 +212,7 @@ export type TorrSettings = {
   async_io_threads: number;
   resolve_peer_countries: boolean;
   web_ui_clickjacking_protection_enabled: boolean;
-  bypass_auth_subnet_whitelist_enabled: boolean;
+  byfpass_auth_subnet_whitelist_enabled: boolean;
   rss_auto_downloading_enabled: boolean;
   temp_path_enabled: boolean;
   pex: boolean;

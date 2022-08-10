@@ -1,5 +1,5 @@
 import React, {Dispatch, SetStateAction, useEffect, useState} from "react";
-import {Box, Button, Flex, Heading, Select, Text, useDisclosure,} from "@chakra-ui/react";
+import {Box, Button, Flex, Heading, Select, Text, useColorModeValue, useDisclosure,} from "@chakra-ui/react";
 import {IoClose, IoFilter} from "react-icons/io5";
 import {smartMap} from "../utils/smartMap";
 import {Input} from "@chakra-ui/input";
@@ -44,12 +44,13 @@ export function useFilterState(): useFilterStateReturn {
 
 const Filters = (state: useFilterStateReturn) => {
   const filterDisclosure = useDisclosure();
+  const backgroundColor = useColorModeValue("blackAlpha.50", "grayAlpha.400");
 
   const heading = (
     <Flex
       as={"button"}
       onClick={filterDisclosure.onToggle}
-      bgColor={filterDisclosure.isOpen ? undefined : "grayAlpha.400"}
+      bgColor={filterDisclosure.isOpen ? undefined : backgroundColor}
       width={"100%"}
       p={filterDisclosure.isOpen ? undefined : 3}
       rounded={6}
@@ -71,7 +72,7 @@ const Filters = (state: useFilterStateReturn) => {
   const inputSizes = { base: "md", lg: "sm" };
 
   return (
-    <Box bgColor={"grayAlpha.400"} p={3} rounded={6} width={"100%"}>
+    <Box bgColor={backgroundColor} p={3} rounded={6} width={"100%"}>
       {heading}
       <Flex mt={3} gap={5} wrap={{ base: "wrap", lg: "nowrap" }}>
         <Flex width={"100%"}>

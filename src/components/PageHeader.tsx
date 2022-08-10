@@ -1,20 +1,15 @@
 import React from "react";
-import {
-  Button,
-  Heading,
-  HStack,
-  LightMode,
-  Text,
-  useColorModeValue,
-} from "@chakra-ui/react";
-import { FaPlus } from "react-icons/fa";
-import { useIsLargeScreen } from "../utils/screenSize";
+import {Button, Flex, Heading, HStack, LightMode, Text, useColorModeValue,} from "@chakra-ui/react";
+import {FaPlus} from "react-icons/fa";
+import {useIsLargeScreen} from "../utils/screenSize";
+import {IoChevronBack} from "react-icons/io5";
 
 export interface PageHeaderProps {
   title: string;
   onAddButtonClick?: () => void;
   isHomeHeader?: boolean;
   buttonLabel?: string;
+  onBackButtonPress?: () => void;
 }
 
 const PageHeader = (props: PageHeaderProps) => {
@@ -32,11 +27,21 @@ const PageHeader = (props: PageHeaderProps) => {
       p={headerInBox ? 0 : 5}
       width={"100%"}
       justifyContent={"space-between"}
-      backdropFilter={"blur(15px)"}
       zIndex={"docked"}
+      backdropFilter={"blur(15px)"}
       bgColor={shouldBeBigHeader ? BgColor : undefined}
     >
-      <Heading size={shouldBeBigHeader ? "3xl" : "xl"}>{props.title}</Heading>
+      <Flex gap={2} alignItems={"center"} mb={3}>
+        {props.onBackButtonPress && (
+          <Button
+            variant={"ghost"}
+            onClick={() => props.onBackButtonPress && props.onBackButtonPress()}
+          >
+            <IoChevronBack size={25} />
+          </Button>
+        )}
+        <Heading size={shouldBeBigHeader ? "3xl" : "xl"}>{props.title}</Heading>
+      </Flex>
       <LightMode>
         {props?.onAddButtonClick && (
           <Button
