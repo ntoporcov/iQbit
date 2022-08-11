@@ -1,9 +1,9 @@
 import React from "react";
-import {StatWithIcon} from "./StatWithIcon";
-import {IoCube, IoFilm, IoTv} from "react-icons/io5";
+import { StatWithIcon } from "./StatWithIcon";
+import { IoCube, IoFilm, IoTv } from "react-icons/io5";
 import filesize from "filesize";
-import {SimpleGrid} from "@chakra-ui/react";
-import {torrentBoxIconProps} from "../searchAPIs/yts";
+import { SimpleGrid } from "@chakra-ui/react";
+import { torrentBoxIconProps } from "../searchAPIs/yts";
 
 export interface TorrentMovieDataProps {
   quality?: string;
@@ -13,13 +13,7 @@ export interface TorrentMovieDataProps {
 
 const TorrentMovieData = (props: TorrentMovieDataProps) => {
   return (
-    <SimpleGrid
-      gap={3}
-      width={{ base: "100%", lg: "60%" }}
-      columns={3}
-      h={"100%"}
-      mb={1}
-    >
+    <SimpleGrid gap={3} width={"100%"} columns={3} mb={1}>
       <StatWithIcon
         lit
         icon={<IoTv {...torrentBoxIconProps} />}

@@ -17,6 +17,7 @@ import {
   ModalHeader,
   ModalOverlay,
   ModalProps,
+  useColorModeValue,
   UseDisclosureReturn,
 } from "@chakra-ui/react";
 
@@ -33,6 +34,7 @@ const IosBottomSheet = ({
   children,
 }: PropsWithChildren<IosBottomSheetProps>) => {
   const isLarge = useIsLargeScreen();
+  const backgroundColor = useColorModeValue("white", "gray.900");
 
   const header = (
     <Heading size={"lg"} fontWeight={300} noOfLines={1}>
@@ -48,7 +50,7 @@ const IosBottomSheet = ({
         {...modalProps}
       >
         <ModalOverlay />
-        <ModalContent>
+        <ModalContent backgroundColor={backgroundColor}>
           <ModalHeader
             display={"flex"}
             justifyContent={"space-between"}
@@ -74,7 +76,11 @@ const IosBottomSheet = ({
       isOpen={disclosure.isOpen}
     >
       <DrawerOverlay zIndex={"modal"} />
-      <DrawerContent roundedTop={12} maxHeight={"85vh"}>
+      <DrawerContent
+        roundedTop={12}
+        maxHeight={"85vh"}
+        backgroundColor={backgroundColor}
+      >
         <DrawerHeader
           display={"flex"}
           justifyContent={"space-between"}

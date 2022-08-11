@@ -218,7 +218,7 @@ const YTSSearch = (props: SearchProviderComponentProps) => {
         disclosure={bottomSheetDisclosure}
         modalProps={{ size: "xl", scrollBehavior: "inside" }}
       >
-        <VStack gap={4} mt={2} flexGrow={2}>
+        <Flex flexDirection={"column"} gap={4}>
           <SectionSM title={"Torrents"}>
             {(selectedMovie?.torrents || []).map((torrent) => {
               return (
@@ -231,10 +231,7 @@ const YTSSearch = (props: SearchProviderComponentProps) => {
                     })` || "Title not found"
                   )}
                 >
-                  <VStack
-                    alignItems={isLarge ? "flex-start" : undefined}
-                    width={"100%"}
-                  >
+                  <Flex flexDirection={"column"} width={"100%"}>
                     <TorrentMovieData
                       quality={torrent.quality}
                       type={torrent.type}
@@ -244,7 +241,7 @@ const YTSSearch = (props: SearchProviderComponentProps) => {
                       seeds={torrent.seeds.toString()}
                       peers={torrent.peers.toString()}
                     />
-                  </VStack>
+                  </Flex>
                 </TorrentDownloadBox>
               );
             })}
@@ -293,7 +290,7 @@ const YTSSearch = (props: SearchProviderComponentProps) => {
           </SectionSM>
           {selectedMovie?.yt_trailer_code && (
             <SectionSM title={"Trailer"}>
-              <AspectRatio ratio={16 / 9}>
+              <AspectRatio ratio={16 / 9} width={"100%"}>
                 <iframe
                   width={"100%"}
                   height={"100%"}
@@ -307,7 +304,7 @@ const YTSSearch = (props: SearchProviderComponentProps) => {
               </AspectRatio>
             </SectionSM>
           )}
-        </VStack>
+        </Flex>
       </IosBottomSheet>
     </VStack>
   );
