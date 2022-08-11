@@ -1,5 +1,5 @@
-import {Dispatch, SetStateAction} from "react";
-import {useFilterStateReturn} from "./components/Filters";
+import { Dispatch, SetStateAction } from "react";
+import { useFilterStateReturn } from "./components/Filters";
 
 export type TorrCategories = {
   [i: string]: TorrCategory;
@@ -256,6 +256,7 @@ export type TorrSettings = {
   send_buffer_watermark_factor: number;
   stop_tracker_timeout: number;
   web_ui_username: string;
+  web_ui_password: string;
   current_interface_address: string;
   slow_torrent_dl_rate_threshold: number;
   max_seeding_time: number;
@@ -338,6 +339,8 @@ export type TorrSettings = {
   max_active_torrents: number;
   mail_notification_username: string;
   export_dir: string;
+  web_ui_reverse_proxy_enabled: boolean;
+  web_ui_reverse_proxies_list: string;
 };
 
 export type SearchProviderComponentProps = {

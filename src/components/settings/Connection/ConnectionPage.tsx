@@ -5,6 +5,8 @@ import { TorrSettingsBitTorrentProtocol } from "../../../types";
 import SettingsTextInput from "../Inputs/SettingsTextInput";
 import SettingsSwitch from "../Inputs/SettingsSwitch";
 import ProxyServer from "./ProxyServer";
+import ConnectionLimits from "./ConnectionLimits";
+import IpFiltering from "./IP Filtering";
 
 const ConnectionPage = () => {
   const protocolOptions: SettingsSelectOption[] = [
@@ -32,7 +34,9 @@ const ConnectionPage = () => {
           settingKey={"upnp"}
         />
       </SettingsBox>
+      <ConnectionLimits />
       <ProxyServer />
+      <IpFiltering />
     </>
   );
 };

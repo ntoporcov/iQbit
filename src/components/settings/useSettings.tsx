@@ -1,8 +1,14 @@
-import {createContext, PropsWithChildren, useContext, useMemo, useState,} from "react";
-import {TorrSettings} from "../../types";
-import {useMutation, useQuery} from "react-query";
-import {TorrClient} from "../../utils/TorrClient";
-import {deepCompare} from "../../utils/deepCompare";
+import {
+  createContext,
+  PropsWithChildren,
+  useContext,
+  useMemo,
+  useState,
+} from "react";
+import { TorrSettings } from "../../types";
+import { useMutation, useQuery } from "react-query";
+import { TorrClient } from "../../utils/TorrClient";
+import { deepCompare } from "../../utils/deepCompare";
 
 export type SettingsContextType = {
   settings?: TorrSettings;
@@ -60,6 +66,8 @@ export const SettingsProvider = (props: PropsWithChildren<{}>) => {
       return { ...curr, [key]: val };
     });
   }
+
+  console.log(settings);
 
   const reset = () => setSettings(serverSettings);
 

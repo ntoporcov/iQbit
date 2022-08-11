@@ -1,14 +1,23 @@
-import React from "react";
+import React, { useEffect } from "react";
 import SettingsBox from "../SettingsBox";
-import SettingsSelect, {SettingsSelectOption} from "../Inputs/SettingsSelect";
-import {TorrSettingsProxyType} from "../../../types";
+import SettingsSelect, { SettingsSelectOption } from "../Inputs/SettingsSelect";
+import { TorrSettingsProxyType } from "../../../types";
 import SettingsTextInput from "../Inputs/SettingsTextInput";
-import {Flex} from "@chakra-ui/react";
+import { Flex } from "@chakra-ui/react";
 import SettingsSwitch from "../Inputs/SettingsSwitch";
-import {useSettingsCtx} from "../useSettings";
+import { useSettingsCtx } from "../useSettings";
 
 const ProxyServer = () => {
-  const { settings } = useSettingsCtx();
+  const { settings, updateSetting } = useSettingsCtx();
+
+  const ProxyWithAuth =
+    settings?.proxy_type === TorrSettingsProxyType.HTTPWithAuth ||
+    settings?.proxy_type === TorrSettingsProxyType.SOCKS5WithAuth;
+
+  useEffect(() => {
+    updateSetting("proxy_auth_enabled", ProxyWithAuth);
+    // eslint-disable-next-line
+  }, [settings?.proxy_type]);
 
   const proxyTypeOptions: SettingsSelectOption[] = [
     {
@@ -60,9 +69,15 @@ const ProxyServer = () => {
           />
         </>
       )}
-      {(settings?.proxy_type === TorrSettingsProxyType.HTTPWithAuth ||
-        settings?.proxy_type === TorrSettingsProxyType.SOCKS5WithAuth) && (
-        <SettingsBox title={"Authentication"}></SettingsBox>
+      {ProxyWithAuth && (
+        <SettingsBox title={"Authentication"}>
+          <SettingsTextInput label={"Username"} settingKey={"proxy_username"} />
+          <SettingsTextInput
+            label={"Password"}
+            settingKey={"proxy_password"}
+            helperText={"The password is saved unencrypted"}
+          />
+        </SettingsBox>
       )}
     </SettingsBox>
   );

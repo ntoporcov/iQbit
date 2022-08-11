@@ -24,6 +24,7 @@ const Language = (props: InterfaceProps) => {
         label={"User Interface Language"}
         settingKey={"locale"}
         options={options}
+        helperText={"Has no effect on iQbit"}
       />
     </SettingsBox>
   );
