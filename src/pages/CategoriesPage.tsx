@@ -12,6 +12,7 @@ import {
   LightMode,
   Tag,
   Text,
+  useColorModeValue,
   useDisclosure,
 } from "@chakra-ui/react";
 import { IoPencil, IoTrash } from "react-icons/io5";
@@ -74,6 +75,8 @@ const CategoriesPage = () => {
     }
   );
 
+  const backgroundColor = useColorModeValue("white", "gray.900");
+
   return (
     <>
       <PageHeader
@@ -94,7 +97,7 @@ const CategoriesPage = () => {
           mt={4}
           justifyContent={"space-between"}
           alignItems={"center"}
-          bgColor={"background"}
+          bgColor={backgroundColor}
         >
           <Flex flexDirection={"column"}>
             <Heading size={"lg"}>{cat.name}</Heading>

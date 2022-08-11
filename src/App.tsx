@@ -96,6 +96,7 @@ const colors = {
 
 const ChakraConfig: ThemeConfig = {
   useSystemColorMode: true,
+  initialColorMode: "system",
 };
 
 const breakpoints = {

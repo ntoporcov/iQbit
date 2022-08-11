@@ -184,6 +184,7 @@ const YTSSearch = (props: SearchProviderComponentProps) => {
             shadow={"xl"}
             backgroundImage={`url(${movie.large_cover_image}), url(${movie.small_cover_image})`}
             backgroundSize={"cover"}
+            overflow={"hidden"}
           >
             <Flex position={"relative"}>
               <Flex

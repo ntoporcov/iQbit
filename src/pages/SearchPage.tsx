@@ -11,6 +11,7 @@ import {
   Heading,
   Image,
   Text,
+  useColorModeValue,
 } from "@chakra-ui/react";
 import YTSSearch from "../searchAPIs/yts";
 import { useParams } from "react-router-dom";
@@ -39,26 +40,30 @@ const providers: { [i in ProviderKeys]: Provider } = {
 
 const ProviderButton = (
   props: ButtonProps & { isSelected: boolean; small?: boolean }
-) => (
-  <Button
-    backgroundColor={"background"}
-    variant={"ghost"}
-    shadow={"lg"}
-    onClick={props.onClick}
-    py={props.small ? 3 : 3}
-    minHeight={props.small ? 12 : 16}
-    border={"solid 3px white"}
-    borderColor={props.isSelected ? "blue.500" : "background"}
-    rounded={"xl"}
-    _hover={{ backgroundColor: "background", shadow: "xl" }}
-    _focus={{
-      backgroundColor: "background",
-    }}
-    zIndex={150}
-  >
-    {props.children}
-  </Button>
-);
+) => {
+  const backgroundColor = useColorModeValue("white", "gray.900");
+
+  return (
+    <Button
+      backgroundColor={backgroundColor}
+      variant={"ghost"}
+      shadow={"lg"}
+      onClick={props.onClick}
+      py={props.small ? 3 : 3}
+      minHeight={props.small ? 12 : 16}
+      border={"solid 3px white"}
+      borderColor={props.isSelected ? "blue.500" : backgroundColor}
+      rounded={"xl"}
+      _hover={{ backgroundColor: backgroundColor, shadow: "xl" }}
+      _focus={{
+        backgroundColor: backgroundColor,
+      }}
+      zIndex={150}
+    >
+      {props.children}
+    </Button>
+  );
+};
 
 const SearchPage = () => {
   const [selectedProvider, setSelectedProvider] = useState<ProviderKeys>("YTS");

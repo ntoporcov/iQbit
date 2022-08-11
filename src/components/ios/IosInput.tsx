@@ -26,7 +26,9 @@ const IosInput = (props: InputProps) => {
         justifyContent="end"
         width={props.labelWidth}
         background="transparent"
-        borderBottom={!props.last ? "none" : undefined}
+        borderWidth={1}
+        borderColor={"grayAlpha.500"}
+        borderBottomStyle={!props.last ? "none" : undefined}
         borderBottomRadius={props.first ? 0 : undefined}
         borderTopRadius={props.last ? 0 : undefined}
         marginTop={!props.first ? -0.5 : undefined}
@@ -34,11 +36,19 @@ const IosInput = (props: InputProps) => {
         {props.label}
       </InputLeftAddon>
       <Input
+        autoCapitalize={"false"}
         value={props.value}
         onChange={(e) => props.onChange(e.target.value)}
-        _focus={{ outline: "none" }}
+        _focus={{
+          outline: "none",
+          shadow: "none",
+          borderWidth: 1,
+          borderColor: "grayAlpha.500",
+        }}
         fontSize="md"
         borderLeft="none"
+        borderWidth={1}
+        borderColor={"grayAlpha.500"}
         borderBottomRadius={props.first ? 0 : undefined}
         borderTopRadius={props.last ? 0 : undefined}
         marginTop={!props.first ? -0.5 : undefined}

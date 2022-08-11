@@ -31,8 +31,8 @@ const NavButton = (props: NavButtonProps) => {
             display={"flex"}
             flexDirection={isLarge ? "row" : "column"}
             variant={"ghost"}
-            minHeight={isLarge ? undefined : 20}
-            pb={isLarge ? undefined : 2}
+            minHeight={isLarge ? undefined : 24}
+            pb={isLarge ? undefined : 7}
             height={isLarge ? 8 : undefined}
             width={"100%"}
             rounded={isLarge ? 5 : 0}
