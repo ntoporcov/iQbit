@@ -84,7 +84,6 @@ export const torrentBoxIconProps = {
 
 const YTSSearch = (props: SearchProviderComponentProps) => {
   const navigate = useNavigate();
-  const isLarge = useIsLargeScreen();
 
   const { mutate, data, isLoading } = useMutation(
     "YTSsearch",

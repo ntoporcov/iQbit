@@ -7,7 +7,7 @@ import SettingsBox from "../SettingsBox";
 export interface InterfaceProps {}
 
 const Language = (props: InterfaceProps) => {
-  const { settings, updateSetting } = useSettingsCtx();
+  const { settings } = useSettingsCtx();
 
   console.log(settings?.locale);
 

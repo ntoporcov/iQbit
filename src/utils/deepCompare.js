@@ -1,3 +1,7 @@
+/* eslint-disable no-self-compare */
+/* eslint-disable eqeqeq */
+/* eslint-disable no-func-assign */
+
 /*  value_equals.js
 
     The MIT License (MIT)

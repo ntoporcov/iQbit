@@ -12,9 +12,8 @@ import {
   MenuList,
   useColorModeValue,
   UseDisclosureReturn,
-  VStack,
 } from "@chakra-ui/react";
-import { PropsWithChildren, ReactElement, ReactNode } from "react";
+import { PropsWithChildren, ReactElement } from "react";
 import { useIsLargeScreen } from "../../utils/screenSize";
 
 export type IosActionSheetOptions = {
