@@ -1,0 +1,3 @@
+html,body {
+    touch-action: none !important;
+}
