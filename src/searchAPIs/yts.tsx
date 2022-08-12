@@ -27,7 +27,6 @@ import IosBottomSheet from "../components/ios/IosBottomSheet";
 import TorrentDownloadBox from "../components/TorrentDownloadBox";
 import { IoEarth, IoPricetags, IoTime, IoWarning } from "react-icons/io5";
 import { StatWithIcon } from "../components/StatWithIcon";
-import { useIsLargeScreen } from "../utils/screenSize";
 import { SiRottentomatoes } from "react-icons/si";
 import SeedsAndPeers from "../components/SeedsAndPeers";
 import TorrentMovieData from "../components/TorrentMovieData";
