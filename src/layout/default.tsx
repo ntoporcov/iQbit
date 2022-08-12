@@ -63,7 +63,7 @@ const DefaultLayout = (props: PropsWithChildren<DefaultLayoutProps>) => {
       />
       {isTouchDevice && (
         <Box
-          zIndex={"1000"}
+          zIndex={scroll > 15 ? 1000 : -1}
           h={"60px"}
           top={"-60px"}
           mb={"-60px"}

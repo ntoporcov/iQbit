@@ -46,6 +46,9 @@ const PageHeader = (props: PageHeaderProps) => {
           <Button
             variant={"ghost"}
             onClick={() => props.onBackButtonPress && props.onBackButtonPress()}
+            width={12}
+            h={12}
+            p={1}
           >
             <IoChevronBack size={25} />
           </Button>
