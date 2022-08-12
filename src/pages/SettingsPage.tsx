@@ -166,7 +166,7 @@ const SettingsPage = () => {
         <SaveAndResetButtons />
       </Flex>
 
-      {!isLarge && (
+      {!isLarge && !page && (
         <Button
           width={"100%"}
           colorScheme={"red"}
