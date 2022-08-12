@@ -1,9 +1,11 @@
 import React, { useState } from "react";
 import {
+  Box,
   Button,
   FormControl,
   FormErrorMessage,
   Heading,
+  useColorModeValue,
   VStack,
 } from "@chakra-ui/react";
 import LogoHeader from "./LogoHeader";
@@ -26,6 +28,14 @@ export const AuthChecker = () => {
     return <AuthView />;
   }
 };
+
+export const logout = async () => {
+  window.localStorage.setItem(CredsLocalStorageKey, "");
+  await TorrClient.logout();
+  document.cookie = "SID=; Max-Age=0; path=/; domain=" + window.location.host;
+  window.location.reload();
+};
+
 export const useLogin = (props?: { onLogin?: () => void }) => {
   const [formError, setFormError] = useState("");
   const [retryAttempt, setRetryAttempt] = useState(false);
@@ -76,13 +86,30 @@ export const AuthView = () => {
 
   const { handleLogin, formError } = useLogin();
 
+  const fakeBodyBg = useColorModeValue("gray.50", "black");
+
   return (
-    <VStack>
+    <VStack backgroundColor={fakeBodyBg}>
+      <Box
+        backgroundColor={fakeBodyBg}
+        position={"fixed"}
+        height={"100vh"}
+        width={"100vw"}
+        zIndex={-1}
+      />
       <LogoHeader />
       <VStack pt={5} px={10}>
         <VStack mb={8} justifyContent={"center"}>
           <Heading size={"sm"}>Please Sign In</Heading>
-          <FormControl pt={3} isInvalid={!!formError}>
+          <FormControl
+            as={"form"}
+            pt={3}
+            isInvalid={!!formError}
+            onSubmit={(e) => {
+              e.preventDefault();
+              handleLogin({ username, password });
+            }}
+          >
             <IosInput
               label={"Username"}
               labelWidth={105}

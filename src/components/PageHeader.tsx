@@ -31,8 +31,8 @@ const PageHeader = (props: PageHeaderProps) => {
       position={shouldBeBigHeader ? "fixed" : undefined}
       top={0}
       left={0}
-      pt={5}
-      pb={shouldBeBigHeader ? 5 : 0}
+      pt={shouldBeBigHeader ? 5 : 2}
+      pb={shouldBeBigHeader ? 5 : 2}
       px={shouldBeBigHeader ? 5 : 0}
       width={"100%"}
       justifyContent={"space-between"}

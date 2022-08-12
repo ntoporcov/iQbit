@@ -11,13 +11,7 @@ import {
   IoLogoRss,
   IoSpeedometer,
 } from "react-icons/io5";
-import {
-  Box,
-  Button,
-  Flex,
-  SimpleGrid,
-  useColorModeValue,
-} from "@chakra-ui/react";
+import { Box, Button, Flex, Grid, useColorModeValue } from "@chakra-ui/react";
 import { smartMap } from "../utils/smartMap";
 import WebUIPage from "../components/settings/WebUI/WebUIPage";
 import { SettingsProvider } from "../components/settings/useSettings";
@@ -26,6 +20,7 @@ import SaveAndResetButtons from "../components/settings/SaveAndResetButtons";
 import ConnectionPage from "../components/settings/Connection/ConnectionPage";
 import SpeedPage from "../components/settings/Speed/SpeedPage";
 import RequestMoreSettings from "../components/settings/RequestMoreSettings";
+import { logout } from "../components/Auth";
 
 export interface SettingsPageProps {}
 
@@ -100,9 +95,16 @@ const SettingsPage = () => {
         {!page &&
           (isLarge ? (
             <Box flexGrow={2}>
-              <SimpleGrid columns={4} gap={3}>
+              <Grid
+                gap={2}
+                pt={2}
+                width={"100%"}
+                justifyContent={"flex-start"}
+                templateColumns={"repeat( auto-fit, minmax(150px, 1fr) )"}
+              >
                 {Object.entries(SettingsPages).map(([pageName, { icon }]) => (
                   <Button
+                    minW={"150px"}
                     gap={2}
                     variant={"outline"}
                     flexDirection={"column"}
@@ -117,7 +119,7 @@ const SettingsPage = () => {
                     {pageName}
                   </Button>
                 ))}
-              </SimpleGrid>
+              </Grid>
             </Box>
           ) : (
             <Box flexGrow={2}>
@@ -163,6 +165,17 @@ const SettingsPage = () => {
           ))}
         <SaveAndResetButtons />
       </Flex>
+
+      {!isLarge && (
+        <Button
+          width={"100%"}
+          colorScheme={"red"}
+          variant={"ghost"}
+          onClick={logout}
+        >
+          Log Out
+        </Button>
+      )}
     </SettingsProvider>
   );
 };

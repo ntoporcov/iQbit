@@ -1,6 +1,8 @@
 import React, { PropsWithChildren, useEffect } from "react";
 import {
   Box,
+  Button,
+  Divider,
   Flex,
   SimpleGrid,
   useColorModeValue,
@@ -8,7 +10,7 @@ import {
 } from "@chakra-ui/react";
 import NavButton from "../components/buttons/NavButton";
 import { IconBaseProps } from "react-icons";
-import { useLogin } from "../components/Auth";
+import { logout, useLogin } from "../components/Auth";
 import { useIsLargeScreen } from "../utils/screenSize";
 import { Pages } from "../Routes";
 import Home from "../pages/Home";
@@ -146,6 +148,18 @@ const DefaultLayout = (props: PropsWithChildren<DefaultLayoutProps>) => {
                     label={label}
                   />
                 ))}
+                <Divider my={2} />
+                <Button
+                  variant={"ghost"}
+                  colorScheme={"red"}
+                  size={"xs"}
+                  fontWeight={"normal"}
+                  fontSize={12}
+                  textAlign={"left"}
+                  onClick={logout}
+                >
+                  Log Out
+                </Button>
               </Flex>
             </Flex>
             <Flex

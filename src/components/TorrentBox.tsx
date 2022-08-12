@@ -115,7 +115,13 @@ const TorrentBox = ({
 
   const memoizedLoading = useMemo(
     () => (
-      <Box shadow={BoxShadow} px={5} py={4} rounded={"xl"} bgColor={BoxBg}>
+      <Box
+        shadow={BoxShadow}
+        px={5}
+        py={4}
+        rounded={"xl"}
+        bgColor={"grayAlpha.200"}
+      >
         <Skeleton
           height={5}
           width={(Math.random() * (100 - 40) + 40).toString() + "%"}
