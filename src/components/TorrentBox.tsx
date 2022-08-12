@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import {
   Box,
   Button,
@@ -8,11 +8,12 @@ import {
   HStack,
   LightMode,
   Progress,
+  Skeleton,
   Text,
   useColorModeValue,
   useDisclosure,
 } from "@chakra-ui/react";
-import { TorrCategories, TorrCategory, TorrTorrentInfo } from "../types";
+import { TorrCategory, TorrTorrentInfo } from "../types";
 import stateDictionary from "../utils/StateDictionary";
 import filesize from "filesize";
 import {
@@ -35,9 +36,15 @@ export interface TorrentBoxProps {
   torrentData: Omit<TorrTorrentInfo, "hash">;
   hash: string;
   categories: TorrCategory[];
+  loading?: boolean;
 }
 
-const TorrentBox = ({ torrentData, hash, categories }: TorrentBoxProps) => {
+const TorrentBox = ({
+  torrentData,
+  hash,
+  categories,
+  loading,
+}: TorrentBoxProps) => {
   const BoxShadow = useColorModeValue("lg", "dark-lg");
   const BoxBg = useColorModeValue("white", "gray.900");
 
@@ -105,6 +112,64 @@ const TorrentBox = ({ torrentData, hash, categories }: TorrentBoxProps) => {
   );
 
   const actionSheetDisclosure = useDisclosure();
+
+  const memoizedLoading = useMemo(
+    () => (
+      <Box shadow={BoxShadow} px={5} py={4} rounded={"xl"} bgColor={BoxBg}>
+        <Skeleton
+          height={5}
+          width={(Math.random() * (100 - 40) + 40).toString() + "%"}
+        />
+        <Flex mt={2} gap={2}>
+          <Skeleton height={4} width={24} />
+          <Skeleton height={4} width={16} />
+          <Skeleton height={4} width={12} />
+        </Flex>
+        <Flex
+          mt={4}
+          gap={2}
+          justifyContent={"space-between"}
+          alignItems={"end"}
+        >
+          <Skeleton
+            height={8}
+            width={16}
+            startColor={"blue.500"}
+            endColor={"blue.700"}
+          />
+          <Skeleton height={5} width={20} />
+        </Flex>
+        <Skeleton
+          mt={2}
+          height={3}
+          width={"100%"}
+          startColor={"blue.500"}
+          endColor={"blue.700"}
+        />
+        <Flex mt={4} justifyContent={"space-between"} alignItems={"center"}>
+          <Flex gap={2}>
+            <Skeleton height={4} width={16} />
+            <Skeleton height={4} width={24} />
+          </Flex>
+          <Flex gap={2}>
+            <Skeleton height={8} width={12} />
+            <Skeleton
+              height={8}
+              width={12}
+              startColor={"blue.500"}
+              endColor={"blue.700"}
+            />
+          </Flex>
+        </Flex>
+      </Box>
+    ),
+    //eslint-disable-next-line
+    []
+  );
+
+  if (loading) {
+    return memoizedLoading;
+  }
 
   return (
     <Box shadow={BoxShadow} px={5} py={4} rounded={"xl"} bgColor={BoxBg}>

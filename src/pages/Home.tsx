@@ -12,14 +12,16 @@ import {
   useDisclosure,
   VStack,
 } from "@chakra-ui/react";
-import {IoDocumentAttach, IoPause, IoPlay} from "react-icons/io5";
-import {useMutation, useQuery} from "react-query";
-import {TorrClient} from "../utils/TorrClient";
-import {useState} from "react";
+import { IoDocumentAttach, IoPause, IoPlay } from "react-icons/io5";
+import { useMutation, useQuery } from "react-query";
+import { TorrClient } from "../utils/TorrClient";
+import { useState } from "react";
 import TorrentBox from "../components/TorrentBox";
-import {TorrTorrentInfo} from "../types";
+import { TorrTorrentInfo } from "../types";
 import IosBottomSheet from "../components/ios/IosBottomSheet";
-import {Input} from "@chakra-ui/input";
+import { Input } from "@chakra-ui/input";
+import { useIsLargeScreen } from "../utils/screenSize";
+import { randomTorrent } from "../data";
 
 const Home = () => {
   const { mutate: resumeAll } = useMutation("resumeAll", TorrClient.resumeAll);
@@ -39,7 +41,7 @@ const Home = () => {
     TorrClient.getCategories
   );
 
-  useQuery("torrentsTxData", () => TorrClient.sync(rid), {
+  const { isLoading } = useQuery("torrentsTxData", () => TorrClient.sync(rid), {
     refetchInterval: 1000,
     refetchOnWindowFocus: false,
     async onSuccess(data) {
@@ -102,8 +104,10 @@ const Home = () => {
       { onSuccess: addModalDisclosure.onClose }
     );
 
+  const isLarge = useIsLargeScreen();
+
   return (
-    <Flex flexDirection={"column"} width={"100%"}>
+    <Flex flexDirection={"column"} width={"100%"} mt={isLarge ? 24 : 0}>
       <PageHeader
         title={"Downloads"}
         onAddButtonClick={addModalDisclosure.onOpen}
@@ -221,6 +225,17 @@ const Home = () => {
       </ButtonGroup>
 
       <Flex flexDirection={"column"} gap={5}>
+        {isLoading &&
+          Array.from(Array(10).keys()).map((key) => (
+            <TorrentBox
+              key={key}
+              torrentData={randomTorrent}
+              categories={[]}
+              hash={""}
+              loading
+            />
+          ))}
+
         {Object.entries(torrentsTx)
           ?.sort((a, b) => b[1]?.added_on - a[1]?.added_on)
           ?.filter(([hash]) => !removedTorrs.includes(hash))

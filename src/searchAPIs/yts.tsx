@@ -32,6 +32,7 @@ import { SiRottentomatoes } from "react-icons/si";
 import SeedsAndPeers from "../components/SeedsAndPeers";
 import TorrentMovieData from "../components/TorrentMovieData";
 import Filters from "../components/Filters";
+import { useIsTouchDevice } from "../hooks/useIsTouchDevice";
 
 export const useSearchFromParams = (callback: () => void) => {
   const { query } = useParams();
@@ -156,6 +157,8 @@ const YTSSearch = (props: SearchProviderComponentProps) => {
     props.filterState.minSeeds,
   ]);
 
+  const isTouch = useIsTouchDevice();
+
   return (
     <VStack>
       <IosSearch
@@ -171,13 +174,13 @@ const YTSSearch = (props: SearchProviderComponentProps) => {
         pt={2}
         width={"100%"}
         justifyContent={"flex-start"}
-        templateColumns={"repeat( auto-fit, minmax(200px, 1fr) )"}
+        templateColumns={"repeat( auto-fit, minmax(150px, 1fr) )"}
       >
         {filteredMovies.map((movie) => (
           <AspectRatio
             role={"group"}
             key={movie.id + movie.date_uploaded_unix?.toString()}
-            minWidth={"200px"}
+            minWidth={"150px"}
             ratio={2 / 3}
             flexGrow={1}
             rounded={"lg"}
@@ -197,10 +200,8 @@ const YTSSearch = (props: SearchProviderComponentProps) => {
                 height={"100%"}
                 bgGradient={"linear(to-t, blackAlpha.900, transparent)"}
                 alignItems={"flex-end"}
-                opacity={0}
-                _groupHover={{
-                  opacity: 1,
-                }}
+                opacity={isTouch ? 1 : 0}
+                _groupHover={isTouch ? undefined : { opacity: 1 }}
                 transition={"opacity .2s ease-in-out"}
                 onClick={() => selectMovie(movie)}
               >

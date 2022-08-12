@@ -30,7 +30,7 @@ const IosSearch = ({ onSearch, isLoading, ...props }: IosSearchProps) => {
       backdropFilter={"blur(15px)"}
       bgColor={stickyBgColorInTab}
       position={"sticky"}
-      top={{ base: "88px", lg: -7 }}
+      top={{ base: 0, lg: -7 }}
       as={"form"}
       gap={3}
       width={isLarge ? "calc(100% + (var(--chakra-space-5)) * 2)" : "100vw"}

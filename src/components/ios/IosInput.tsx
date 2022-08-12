@@ -36,7 +36,7 @@ const IosInput = (props: InputProps) => {
         {props.label}
       </InputLeftAddon>
       <Input
-        autoCapitalize={"false"}
+        autoCapitalize={"off"}
         value={props.value}
         onChange={(e) => props.onChange(e.target.value)}
         _focus={{

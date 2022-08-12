@@ -41,7 +41,10 @@ const providers: { [i in ProviderKeys]: Provider } = {
 const ProviderButton = (
   props: ButtonProps & { isSelected: boolean; small?: boolean }
 ) => {
-  const backgroundColor = useColorModeValue("white", "gray.900");
+  const backgroundColor = useColorModeValue("white", {
+    base: "gray.900",
+    lg: "black",
+  });
 
   return (
     <Button
@@ -58,7 +61,6 @@ const ProviderButton = (
       _focus={{
         backgroundColor: backgroundColor,
       }}
-      zIndex={150}
     >
       {props.children}
     </Button>

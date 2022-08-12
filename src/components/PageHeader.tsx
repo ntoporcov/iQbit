@@ -3,7 +3,6 @@ import {
   Button,
   Flex,
   Heading,
-  HStack,
   LightMode,
   Text,
   useColorModeValue,
@@ -24,22 +23,25 @@ const PageHeader = (props: PageHeaderProps) => {
   const BgColor = useColorModeValue("whiteAlpha.300", "blackAlpha.500");
   const isLarge = useIsLargeScreen();
 
-  const shouldBeBigHeader = props?.isHomeHeader || !isLarge;
+  const shouldBeBigHeader = props?.isHomeHeader && isLarge;
   const headerInBox = !props?.isHomeHeader && isLarge;
 
   return (
-    <HStack
+    <Flex
       position={shouldBeBigHeader ? "fixed" : undefined}
       top={0}
       left={0}
-      p={headerInBox ? 0 : 5}
+      pt={5}
+      pb={shouldBeBigHeader ? 5 : 0}
+      px={shouldBeBigHeader ? 5 : 0}
       width={"100%"}
       justifyContent={"space-between"}
       zIndex={"docked"}
-      backdropFilter={"blur(15px)"}
+      backdropFilter={shouldBeBigHeader ? "blur(15px)" : undefined}
+      alignItems={"center"}
       bgColor={shouldBeBigHeader ? BgColor : undefined}
     >
-      <Flex gap={2} alignItems={"center"} mb={3}>
+      <Flex gap={2} alignItems={"center"}>
         {props.onBackButtonPress && (
           <Button
             variant={"ghost"}
@@ -48,7 +50,9 @@ const PageHeader = (props: PageHeaderProps) => {
             <IoChevronBack size={25} />
           </Button>
         )}
-        <Heading size={shouldBeBigHeader ? "3xl" : "xl"}>{props.title}</Heading>
+        <Heading size={!headerInBox ? "3xl" : "xl"} m={0}>
+          {props.title}
+        </Heading>
       </Flex>
       <LightMode>
         {props?.onAddButtonClick && (
@@ -76,7 +80,7 @@ const PageHeader = (props: PageHeaderProps) => {
           </Button>
         )}
       </LightMode>
-    </HStack>
+    </Flex>
   );
 };
 

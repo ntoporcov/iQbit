@@ -4,6 +4,8 @@ import { ChakraProvider, extendTheme, ThemeConfig } from "@chakra-ui/react";
 import { QueryClient, QueryClientProvider } from "react-query";
 import { mode } from "@chakra-ui/theme-tools";
 import { AuthChecker } from "./components/Auth";
+import useScrollPosition from "./hooks/useScrollPosition";
+import { useIsTouchDevice } from "./hooks/useIsTouchDevice";
 
 // 2. Extend the theme to include custom colors, fonts, etc
 const colors = {
@@ -107,22 +109,28 @@ const breakpoints = {
   "2xl": "1536px",
 };
 
-const theme = extendTheme({
-  colors,
-  breakpoints,
-  config: ChakraConfig,
-  styles: {
-    global: (props: any) => ({
-      body: {
-        backgroundColor: mode("gray.50", "black")(props),
-      },
-    }),
-  },
-});
-
 const queryClient = new QueryClient();
 
 function App() {
+  const scroll = useScrollPosition();
+  const isTouch = useIsTouchDevice();
+
+  const theme = extendTheme({
+    colors,
+    breakpoints,
+    config: ChakraConfig,
+    styles: {
+      global: (props: any) => ({
+        body: {
+          backgroundColor: mode(
+            isTouch && scroll < 30 ? "gray.600" : "gray.50",
+            "black"
+          )(props),
+        },
+      }),
+    },
+  });
+
   return (
     <ChakraProvider theme={theme} cssVarsRoot={"body"}>
       <QueryClientProvider client={queryClient}>

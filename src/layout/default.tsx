@@ -13,6 +13,8 @@ import { useIsLargeScreen } from "../utils/screenSize";
 import { Pages } from "../Routes";
 import Home from "../pages/Home";
 import { useLocation } from "react-router-dom";
+import { useIsTouchDevice } from "../hooks/useIsTouchDevice";
+import useScrollPosition from "../hooks/useScrollPosition";
 
 export interface DefaultLayoutProps {}
 
@@ -46,16 +48,34 @@ const DefaultLayout = (props: PropsWithChildren<DefaultLayoutProps>) => {
   const isLarge = useIsLargeScreen();
 
   const largeWorkAreaBgColor = useColorModeValue("white", "gray.900");
+  const isTouchDevice = useIsTouchDevice();
+  const scroll = useScrollPosition();
+  const fakeBodyBg = useColorModeValue("gray.50", "black");
 
   return (
-    <>
-      <Flex
-        gap={isLarge ? 10 : undefined}
-        as={"main"}
-        mt={24}
-        mb={"30vh"}
-        px={5}
-      >
+    <Box backgroundColor={fakeBodyBg}>
+      <Box
+        backgroundColor={fakeBodyBg}
+        position={"fixed"}
+        height={"100vh"}
+        width={"100vw"}
+        zIndex={-1}
+      />
+      {isTouchDevice && (
+        <Box
+          zIndex={"1000"}
+          h={"60px"}
+          top={"-60px"}
+          mb={"-60px"}
+          // transform={"translateY(-60px)"}
+          position={"sticky"}
+          w={"100vw"}
+          backgroundColor={"blackAlpha.500"}
+          backdropFilter={"blur(15px)"}
+          opacity={isTouchDevice ? (scroll - 30) * 0.01 * 0.6 : 0}
+        />
+      )}
+      <Flex gap={isLarge ? 10 : undefined} as={"main"} mb={"30vh"} px={5}>
         <Box maxWidth={isLarge ? "400px" : undefined} width={"100%"}>
           {isLarge ? <Home /> : props.children}
         </Box>
@@ -169,7 +189,7 @@ const DefaultLayout = (props: PropsWithChildren<DefaultLayoutProps>) => {
           )}
         </SimpleGrid>
       )}
-    </>
+    </Box>
   );
 };
 
