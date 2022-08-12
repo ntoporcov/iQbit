@@ -31,7 +31,7 @@ const PageHeader = (props: PageHeaderProps) => {
       position={shouldBeBigHeader ? "fixed" : undefined}
       top={0}
       left={0}
-      pt={shouldBeBigHeader ? 5 : 2}
+      pt={!isLarge ? 5 : headerInBox ? 0 : 2}
       pb={shouldBeBigHeader ? 5 : 2}
       px={shouldBeBigHeader ? 5 : 0}
       width={"100%"}
