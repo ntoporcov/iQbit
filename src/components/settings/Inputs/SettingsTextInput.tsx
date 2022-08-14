@@ -40,7 +40,6 @@ const SettingsTextInput = (props: SettingsSwitchProps) => {
                   isChecked={enabled}
                   onChange={(event) => {
                     setEnabled(event.target.checked);
-                    console.log(event.target.checked);
                     updateSetting(
                       props?.settingKey,
                       event.target.checked

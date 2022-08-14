@@ -1,0 +1,18 @@
+{
+  "schema": {
+    "id": "string",
+    "title": "string",
+    "body": "string",
+    "type": "'success' | 'error' | 'warning' | 'info'",
+    "newUser": "Show to all new users (should be false most times)"
+  },
+  "announcements": [
+    {
+      "id": "welcome",
+      "title": "Welcome to iQbit",
+      "body": "Welcome to the new iQbit. Whenever new updates are pushed to the repo, you'll get notifications like these in the WebUI.",
+      "type": "info",
+      "newUser": true
+    }
+  ]
+}

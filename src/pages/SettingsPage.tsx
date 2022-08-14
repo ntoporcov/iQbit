@@ -3,6 +3,7 @@ import PageHeader from "../components/PageHeader";
 import { useIsLargeScreen } from "../utils/screenSize";
 import {
   IoAlbums,
+  IoChatbubble,
   IoChevronForward,
   IoCog,
   IoDownload,
@@ -21,6 +22,7 @@ import ConnectionPage from "../components/settings/Connection/ConnectionPage";
 import SpeedPage from "../components/settings/Speed/SpeedPage";
 import RequestMoreSettings from "../components/settings/RequestMoreSettings";
 import { logout } from "../components/Auth";
+import AllAnnouncementsPage from "../components/settings/AllAnnouncements";
 
 export interface SettingsPageProps {}
 
@@ -31,7 +33,8 @@ type settingsPageNames =
   | "BitTorrent"
   | "RSS"
   | "Web UI"
-  | "Advanced";
+  | "Advanced"
+  | "iQbit Updates";
 
 type SettingsPageObject = {
   icon: ReactElement;
@@ -76,6 +79,11 @@ const SettingsPages: { [i in settingsPageNames]: SettingsPageObject } = {
     icon: <IoCog size={iconSize} />,
     component: <RequestMoreSettings />,
     color: "gray.800",
+  },
+  "iQbit Updates": {
+    icon: <IoChatbubble size={iconSize} />,
+    component: <AllAnnouncementsPage />,
+    color: "telegram.600",
   },
 };
 

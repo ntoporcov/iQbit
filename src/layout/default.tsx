@@ -154,7 +154,7 @@ const DefaultLayout = (props: PropsWithChildren<DefaultLayoutProps>) => {
                   colorScheme={"red"}
                   size={"xs"}
                   fontWeight={"normal"}
-                  fontSize={12}
+                  fontSize={"sm"}
                   textAlign={"left"}
                   onClick={logout}
                 >

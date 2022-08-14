@@ -6,6 +6,7 @@ import { mode } from "@chakra-ui/theme-tools";
 import { AuthChecker } from "./components/Auth";
 import useScrollPosition from "./hooks/useScrollPosition";
 import { useIsTouchDevice } from "./hooks/useIsTouchDevice";
+import AnnouncementChecker from "./components/AnnouncementChecker";
 
 // 2. Extend the theme to include custom colors, fonts, etc
 const colors = {
@@ -134,7 +135,9 @@ function App() {
   return (
     <ChakraProvider theme={theme} cssVarsRoot={"body"}>
       <QueryClientProvider client={queryClient}>
-        <AuthChecker />
+        <AnnouncementChecker>
+          <AuthChecker />
+        </AnnouncementChecker>
       </QueryClientProvider>
     </ChakraProvider>
   );

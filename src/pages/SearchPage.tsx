@@ -1,7 +1,5 @@
 import { useEffect, useState } from "react";
 import PageHeader from "../components/PageHeader";
-import YTSLogo from "../images/logo-YTS.svg";
-import PTB from "../images/logo-TPB.svg";
 import TPBSearch from "../searchAPIs/tpb";
 import {
   Box,
@@ -9,13 +7,14 @@ import {
   ButtonProps,
   Flex,
   Heading,
-  Image,
   Text,
   useColorModeValue,
 } from "@chakra-ui/react";
 import YTSSearch from "../searchAPIs/yts";
 import { useParams } from "react-router-dom";
 import { useFilterState } from "../components/Filters";
+import YtsLogo from "../images/ytsLogo";
+import TpbLogo from "../images/TpbLogo";
 
 export type ProviderKeys = "YTS" | "TPB";
 
@@ -27,12 +26,12 @@ export type Provider = {
 
 const providers: { [i in ProviderKeys]: Provider } = {
   YTS: {
-    logo: YTSLogo,
+    logo: <YtsLogo />,
     name: "YTS",
     categories: ["Movies"],
   },
   TPB: {
-    logo: PTB,
+    logo: <TpbLogo />,
     name: "PirateBay",
     categories: ["Video", "Audio", "Applications", "Games", "Porn", "Other"],
   },
@@ -98,12 +97,7 @@ const SearchPage = () => {
             isSelected={key === selectedProvider}
             onClick={() => setSelectedProvider(key as ProviderKeys)}
           >
-            <Image
-              alt={""}
-              src={value.logo}
-              minWidth={"auto"}
-              height={"100%"}
-            />
+            {value.logo}
           </ProviderButton>
         ))}
       </Flex>

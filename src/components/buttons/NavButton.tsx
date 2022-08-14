@@ -47,7 +47,7 @@ const NavButton = (props: NavButtonProps) => {
               color={isActive ? props.activeColor : undefined}
               mt={isLarge ? 0 : 1}
               ml={isLarge ? 2 : 0}
-              fontSize={10}
+              fontSize={isLarge ? "sm" : 10}
               textAlign={isLarge ? "left" : "center"}
             >
               {props.label}

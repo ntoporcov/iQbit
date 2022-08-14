@@ -19,6 +19,7 @@ import { IoPencil, IoTrash } from "react-icons/io5";
 import IosBottomSheet from "../components/ios/IosBottomSheet";
 import { TorrCategory } from "../types";
 import { Input } from "@chakra-ui/input";
+import { useIsLargeScreen } from "../utils/screenSize";
 
 const CategoriesPage = () => {
   const { data, refetch } = useQuery(
@@ -75,7 +76,11 @@ const CategoriesPage = () => {
     }
   );
 
-  const backgroundColor = useColorModeValue("white", "gray.900");
+  const isLarge = useIsLargeScreen();
+  const backgroundColor = useColorModeValue(
+    "white",
+    isLarge ? "black" : "gray.900"
+  );
 
   return (
     <>

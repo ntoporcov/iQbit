@@ -80,12 +80,15 @@ const IosBottomSheet = ({
         roundedTop={12}
         maxHeight={"85vh"}
         backgroundColor={backgroundColor}
+        // overflow={"hidden"}
       >
         <DrawerHeader
+          // backgroundColor={backgroundColor}
           display={"flex"}
           justifyContent={"space-between"}
           alignItems={"center"}
           pb={1}
+          // shadow={"dark-lg"}
         >
           {header}
           <DrawerCloseButton position={"unset"} size={"lg"} />
@@ -93,7 +96,9 @@ const IosBottomSheet = ({
         <Box px={5}>
           <Divider />
         </Box>
-        <DrawerBody pb={48}>{children}</DrawerBody>
+        <DrawerBody pb={48} pt={6}>
+          {children}
+        </DrawerBody>
       </DrawerContent>
     </Drawer>
   );

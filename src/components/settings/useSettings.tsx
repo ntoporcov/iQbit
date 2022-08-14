@@ -22,7 +22,9 @@ export type SettingsContextType = {
 };
 
 const SettingsContext = createContext<SettingsContextType>({
-  updateSetting: (key, val) => {},
+  updateSetting: (key, val) => {
+    console.log(key, val);
+  },
   saveSettings: () => {},
   reset: () => {},
   needsSaving: false,
@@ -66,8 +68,6 @@ export const SettingsProvider = (props: PropsWithChildren<{}>) => {
       return { ...curr, [key]: val };
     });
   }
-
-  console.log(settings);
 
   const reset = () => setSettings(serverSettings);
 

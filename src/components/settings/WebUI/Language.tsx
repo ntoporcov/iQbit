@@ -1,16 +1,9 @@
 import React from "react";
 import ISO6391 from "iso-639-1";
-import { useSettingsCtx } from "../useSettings";
 import SettingsSelect, { SettingsSelectOption } from "../Inputs/SettingsSelect";
 import SettingsBox from "../SettingsBox";
 
-export interface InterfaceProps {}
-
-const Language = (props: InterfaceProps) => {
-  const { settings } = useSettingsCtx();
-
-  console.log(settings?.locale);
-
+const Language = () => {
   const options: SettingsSelectOption[] = ISO6391.getAllNativeNames().map(
     (lang) => ({
       label: lang,
