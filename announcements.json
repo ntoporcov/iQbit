@@ -10,7 +10,7 @@
       "id": "Update Jan 27",
       "title": "Welcome to iQbit",
       "body": "Welcome to the new iQbit. Whenever new updates are pushed to the repo, you'll get notifications like these in the WebUI.",
-      "type": "info",
+      "type": "info"
     },
     {
       "id": "welcome",
