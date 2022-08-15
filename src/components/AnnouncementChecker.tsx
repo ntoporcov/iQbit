@@ -3,6 +3,7 @@ import { useQuery } from "react-query";
 import axios from "axios";
 import { useToast } from "@chakra-ui/react";
 import { useLocalStorage } from "usehooks-ts";
+import { useIsLargeScreen } from "../utils/screenSize";
 
 export type Announcement = {
   id: string;
@@ -27,6 +28,11 @@ const AnnouncementChecker = ({ children }: PropsWithChildren<{}>) => {
   });
 
   const toast = useToast();
+  const isLarge = useIsLargeScreen();
+
+  const containerStyle = {
+    marginBottom: isLarge ? 10 : 24,
+  };
 
   useQuery("getAnnouncements", getAnnouncements, {
     onSuccess: (data) => {
@@ -43,6 +49,7 @@ const AnnouncementChecker = ({ children }: PropsWithChildren<{}>) => {
           status: newUserToast?.type,
           isClosable: true,
           duration: null,
+          containerStyle,
         });
       } else if (announce.lastSeen !== lastToast.id) {
         setAnnounce({ newUser: true, lastSeen: lastToast.id });
@@ -53,6 +60,7 @@ const AnnouncementChecker = ({ children }: PropsWithChildren<{}>) => {
           description: lastToast?.body,
           status: lastToast?.type,
           isClosable: true,
+          containerStyle,
         });
       }
     },

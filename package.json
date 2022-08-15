@@ -1,7 +1,7 @@
 {
   "name": "iqbit",
-  "version": "0.1.0",
-  "private": true,
+  "version": "1.0.0",
+  "private": false,
   "dependencies": {
     "@chakra-ui/react": "2.2.4",
     "@emotion/react": "^11.9.3",
