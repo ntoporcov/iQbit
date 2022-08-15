@@ -3,7 +3,8 @@
     "id": "string",
     "title": "string",
     "body": "string",
-    "type": "info | danger | warning"
+    "type": "'success' | 'error' | 'warning' | 'info'",
+    "newUser": "Show to all new users (should be false most times)"
   },
   "announcements": [
     {
