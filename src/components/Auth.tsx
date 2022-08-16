@@ -119,6 +119,7 @@ export const AuthView = () => {
             />
             <IosInput
               label={"Password"}
+              password
               labelWidth={105}
               last
               value={password}

@@ -23,12 +23,13 @@
     "js-cookie": "^3.0.1",
     "morgan": "^1.10.0",
     "prettier": "^2.6.0",
-    "react": "^18.2.0",
-    "react-dom": "^18.2.0",
+    "react": "18.2.0",
+    "react-dom": "18.2.0",
     "react-icons": "^4.3.1",
     "react-query": "^3.34.16",
     "react-router-dom": "^6.2.2",
     "react-scripts": "5.0.0",
+    "react-virtualized": "^9.22.3",
     "typescript": "^4.4.2",
     "usehooks-ts": "^2.4.2",
     "web-vitals": "^2.1.0"
@@ -66,6 +67,13 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "resolutions": {
+    "@types/react": "18.0.7",
+    "@types/react-dom": "18.0.6"
+  },
+  "devDependencies": {
+    "@types/react-virtualized": "^9.21.21"
   },
   "proxy": "http://192.168.50.100:8080"
 }

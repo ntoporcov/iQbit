@@ -37,6 +37,7 @@ export interface TorrentBoxProps {
   hash: string;
   categories: TorrCategory[];
   loading?: boolean;
+  style?: any;
 }
 
 const TorrentBox = ({
@@ -44,6 +45,7 @@ const TorrentBox = ({
   hash,
   categories,
   loading,
+  style,
 }: TorrentBoxProps) => {
   const BoxShadow = useColorModeValue("lg", "dark-lg");
   const BoxBg = useColorModeValue("white", "gray.900");
@@ -178,161 +180,170 @@ const TorrentBox = ({
   }
 
   return (
-    <Box shadow={BoxShadow} px={5} py={4} rounded={"xl"} bgColor={BoxBg}>
-      <Heading noOfLines={1} size={"lg"}>
-        {torrentData.name}
-      </Heading>
-      <HStack color={"grayAlpha.800"} gap={2}>
-        <StatWithIcon
-          icon={<IoCalendar />}
-          label={new Date(torrentData.added_on * 1000).toLocaleDateString()}
-        />
-        <StatWithIcon
-          icon={<IoServer />}
-          label={filesize(torrentData.total_size, { round: 1 })}
-        />
-        <StatWithIcon
-          loading={waiting === "category"}
-          icon={<IoPricetags />}
-          label={torrentData.category || "–"}
-        />
-      </HStack>
-      <Flex mt={5} mb={2} justifyContent={"space-between"} alignItems={"end"}>
-        <HStack alignItems={"end"}>
-          <Heading color={"blue.500"} size={"lg"}>
-            {(100 * torrentData.progress).toFixed(0)}%
-          </Heading>
-          {!isDone && (
-            <Text color={"grayAlpha.600"}>
-              {filesize(torrentData.downloaded, { round: 1 })}
-            </Text>
-          )}
-        </HStack>
-        <Heading size={"md"} opacity={0.25}>
-          {torrentData.eta !== 8640000 ? (
-            <span>{timeString}</span>
-          ) : (
-            <span>{stateDictionary[torrentData.state].short}</span>
-          )}
+    <div style={style}>
+      <Box
+        shadow={BoxShadow}
+        px={5}
+        py={4}
+        rounded={"xl"}
+        bgColor={BoxBg}
+        mb={5}
+      >
+        <Heading noOfLines={1} size={"lg"}>
+          {torrentData.name}
         </Heading>
-      </Flex>
-      <LightMode>
-        <Progress
-          rounded={100}
-          size={"sm"}
-          color={"blue.500"}
-          value={100 * torrentData.progress}
-        />
-      </LightMode>
-      <Flex justifyContent={"flex-end"} alignItems={"center"} mt={3}>
-        {isPaused || (
-          <Flex alignItems={"center"} gap={4} flexGrow={2}>
-            <StatWithIcon
-              lit={
-                isDownloading
-                  ? torrentData.num_seeds > 0
-                  : isDone
-                  ? torrentData.num_leechs > 0
-                  : false
+        <HStack color={"grayAlpha.800"} gap={2}>
+          <StatWithIcon
+            icon={<IoCalendar />}
+            label={new Date(torrentData.added_on * 1000).toLocaleDateString()}
+          />
+          <StatWithIcon
+            icon={<IoServer />}
+            label={filesize(torrentData.total_size, { round: 1 })}
+          />
+          <StatWithIcon
+            loading={waiting === "category"}
+            icon={<IoPricetags />}
+            label={torrentData.category || "–"}
+          />
+        </HStack>
+        <Flex mt={5} mb={2} justifyContent={"space-between"} alignItems={"end"}>
+          <HStack alignItems={"end"}>
+            <Heading color={"blue.500"} size={"lg"}>
+              {(100 * torrentData.progress).toFixed(0)}%
+            </Heading>
+            {!isDone && (
+              <Text color={"grayAlpha.600"}>
+                {filesize(torrentData.downloaded, { round: 1 })}
+              </Text>
+            )}
+          </HStack>
+          <Heading size={"md"} opacity={0.25}>
+            {torrentData.eta !== 8640000 ? (
+              <span>{timeString}</span>
+            ) : (
+              <span>{stateDictionary[torrentData.state].short}</span>
+            )}
+          </Heading>
+        </Flex>
+        <LightMode>
+          <Progress
+            rounded={100}
+            size={"sm"}
+            color={"blue.500"}
+            value={100 * torrentData.progress}
+          />
+        </LightMode>
+        <Flex justifyContent={"flex-end"} alignItems={"center"} mt={3}>
+          {isPaused || (
+            <Flex alignItems={"center"} gap={4} flexGrow={2}>
+              <StatWithIcon
+                lit={
+                  isDownloading
+                    ? torrentData.num_seeds > 0
+                    : isDone
+                    ? torrentData.num_leechs > 0
+                    : false
+                }
+                icon={
+                  isDownloading ? (
+                    <IoDownload size={25} />
+                  ) : (
+                    <IoCloudUpload size={20} />
+                  )
+                }
+                label={
+                  isDownloading
+                    ? torrentData.num_seeds
+                    : isDone
+                    ? torrentData.num_leechs
+                    : 0
+                }
+              />
+              <StatWithIcon
+                lit={isDone ? torrentData.upspeed > 0 : torrentData.dlspeed > 0}
+                icon={<IoSpeedometer />}
+                label={
+                  (isPaused
+                    ? 0
+                    : isDone
+                    ? filesize(torrentData.upspeed, { round: 1 })
+                    : filesize(torrentData.dlspeed, { round: 1 })) + "/s"
+                }
+              />
+            </Flex>
+          )}
+          <ButtonGroup>
+            <IosActionSheet
+              trigger={
+                <Button
+                  variant={"ghost"}
+                  size={"md"}
+                  onClick={actionSheetDisclosure.onOpen}
+                >
+                  <IoOptions size={25} />
+                </Button>
               }
-              icon={
-                isDownloading ? (
-                  <IoDownload size={25} />
-                ) : (
-                  <IoCloudUpload size={20} />
-                )
-              }
-              label={
-                isDownloading
-                  ? torrentData.num_seeds
-                  : isDone
-                  ? torrentData.num_leechs
-                  : 0
-              }
+              disclosure={actionSheetDisclosure}
+              options={[
+                {
+                  label: "Remove Torrent",
+                  onClick: () => deleteConfirmationDisclosure.onOpen(),
+                  danger: true,
+                },
+                {
+                  label: "Change Category",
+                  onClick: () => categoryChangeDisclosure.onOpen(),
+                },
+              ]}
             />
-            <StatWithIcon
-              lit={isDone ? torrentData.upspeed > 0 : torrentData.dlspeed > 0}
-              icon={<IoSpeedometer />}
-              label={
-                (isPaused
-                  ? 0
-                  : isDone
-                  ? filesize(torrentData.upspeed, { round: 1 })
-                  : filesize(torrentData.dlspeed, { round: 1 })) + "/s"
-              }
+            <IosActionSheet
+              disclosure={deleteConfirmationDisclosure}
+              options={[
+                {
+                  label: "Delete Files",
+                  onClick: () => remove(true),
+                  danger: true,
+                },
+                {
+                  label: "Remove Torrent Only",
+                  onClick: () => remove(false),
+                },
+              ]}
             />
-          </Flex>
-        )}
-        <ButtonGroup>
-          <IosActionSheet
-            trigger={
+            <IosActionSheet
+              disclosure={categoryChangeDisclosure}
+              options={categories.map((cat) => ({
+                label: cat.name,
+                onClick: () => changeCategory(cat.name),
+              }))}
+            />
+            {isPaused ? (
+              <LightMode>
+                <Button
+                  size={"md"}
+                  colorScheme={"blue"}
+                  onClick={() => resume()}
+                  isLoading={waiting === "mainBtn"}
+                >
+                  <IoPlay size={25} />
+                </Button>
+              </LightMode>
+            ) : (
               <Button
+                size={"md"}
                 variant={"ghost"}
-                size={"md"}
-                onClick={actionSheetDisclosure.onOpen}
-              >
-                <IoOptions size={25} />
-              </Button>
-            }
-            disclosure={actionSheetDisclosure}
-            options={[
-              {
-                label: "Remove Torrent",
-                onClick: () => deleteConfirmationDisclosure.onOpen(),
-                danger: true,
-              },
-              {
-                label: "Change Category",
-                onClick: () => categoryChangeDisclosure.onOpen(),
-              },
-            ]}
-          />
-          <IosActionSheet
-            disclosure={deleteConfirmationDisclosure}
-            options={[
-              {
-                label: "Delete Files",
-                onClick: () => remove(true),
-                danger: true,
-              },
-              {
-                label: "Remove Torrent Only",
-                onClick: () => remove(false),
-              },
-            ]}
-          />
-          <IosActionSheet
-            disclosure={categoryChangeDisclosure}
-            options={categories.map((cat) => ({
-              label: cat.name,
-              onClick: () => changeCategory(cat.name),
-            }))}
-          />
-          {isPaused ? (
-            <LightMode>
-              <Button
-                size={"md"}
-                colorScheme={"blue"}
-                onClick={() => resume()}
+                color={"blue.500"}
+                onClick={() => pause()}
                 isLoading={waiting === "mainBtn"}
               >
-                <IoPlay size={25} />
+                <IoPause size={25} />
               </Button>
-            </LightMode>
-          ) : (
-            <Button
-              size={"md"}
-              variant={"ghost"}
-              color={"blue.500"}
-              onClick={() => pause()}
-              isLoading={waiting === "mainBtn"}
-            >
-              <IoPause size={25} />
-            </Button>
-          )}
-        </ButtonGroup>
-      </Flex>
-    </Box>
+            )}
+          </ButtonGroup>
+        </Flex>
+      </Box>
+    </div>
   );
 };
 
