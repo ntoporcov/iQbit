@@ -77,7 +77,7 @@ const DefaultLayout = (props: PropsWithChildren<DefaultLayoutProps>) => {
           opacity={isTouchDevice ? (scroll - 30) * 0.01 * 0.6 : 0}
         />
       )}
-      <Flex gap={isLarge ? 10 : undefined} as={"main"} px={5}>
+      <Flex gap={isLarge ? 10 : undefined} as={"main"} mb={"30vh"} px={5}>
         <Box maxWidth={isLarge ? "400px" : undefined} width={"100%"}>
           {isLarge ? <Home /> : props.children}
         </Box>

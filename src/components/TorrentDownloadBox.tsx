@@ -1,9 +1,16 @@
-import React, {PropsWithChildren} from "react";
-import {Box, Button, Flex, Heading, LightMode, useColorModeValue,} from "@chakra-ui/react";
-import {useIsLargeScreen} from "../utils/screenSize";
-import {useMutation} from "react-query";
-import {TorrClient} from "../utils/TorrClient";
-import {IoCheckmark} from "react-icons/io5";
+import React, { PropsWithChildren } from "react";
+import {
+  Box,
+  Button,
+  Flex,
+  Heading,
+  LightMode,
+  useColorModeValue,
+} from "@chakra-ui/react";
+import { useIsLargeScreen } from "../utils/screenSize";
+import { useMutation } from "react-query";
+import { TorrClient } from "../utils/TorrClient";
+import { IoCheckmark } from "react-icons/io5";
 
 export interface TorrentDownloadBoxProps {
   title?: string;
@@ -36,7 +43,7 @@ const TorrentDownloadBox = ({
     >
       <Box flexGrow={2}>
         {title && (
-          <Heading noOfLines={1} wordBreak={"break-all"} size={"md"} mb={2}>
+          <Heading wordBreak={"break-all"} size={"md"} mb={2}>
             {title}
           </Heading>
         )}
