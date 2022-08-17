@@ -51,4 +51,11 @@ The env variables look like this
 Which makes some assumptions, mainly assuming that you're running this in the same computer you're running qbittorrent.
 Which isn't necessary. Since we're proxying requests, you can target a completely different IP for the host.
 
-STANDALONE_SERVER_PORT is the port that the app will use to display iQbit. 
+STANDALONE_SERVER_PORT is the port that the app will use to display iQbit.
+
+### Auto start
+
+You probably have qbittorrent auto starting when your computer boots up right. That's definitely a challenge with this
+approach. I suggest looking up how to create a service to run in your OS whenever it boots up to
+run `npm run server-start` in the root of this repo. I'm not sure I could solve this within this project :/ Ideas are
+welcome
