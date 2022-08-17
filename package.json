@@ -39,7 +39,10 @@
     "startSSL": "export HTTPS=true&&SSL_CRT_FILE=cert.pem&&SSL_KEY_FILE=key.pem react-scripts start",
     "build": "react-scripts build && rm -rf release/public && mkdir release/public && mv -v build/* ./release/public",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "server-setup": "cd server && cp .env.default .env && npm install ",
+    "server-start": "cd server && npm run serve",
+    "server-stop": "cd server && npm run stop"
   },
   "eslintConfig": {
     "extends": [

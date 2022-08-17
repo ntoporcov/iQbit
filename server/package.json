@@ -1,0 +1,20 @@
+{
+  "name": "standalone-iqbit-server",
+  "version": "1.0.0",
+  "description": "Serve iqbit on its own",
+  "main": "server.js",
+  "scripts": {
+    "dev": "nodemon server.js",
+    "serve": "pm2 start ecosystem.config.js",
+    "stop": "pm2 stop ecosystem.config.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "dotenv": "^16.0.1",
+    "express": "^4.18.1",
+    "http-proxy-middleware": "^2.0.6",
+    "nodemon": "^2.0.19",
+    "pm2": "^5.2.0"
+  }
+}

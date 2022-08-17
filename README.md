@@ -33,7 +33,7 @@ My suggestion is to do a git clone of this repo locally and then point your qbit
 should all just work. Then all you need to do to get updates would be pulling the repo. If you don't actually install
 all the dependencies for development it shouldn't be too much. You might need to install git.
 
-## Method Suggested
+## Install Method Suggested
 
 On your terminal
 
@@ -43,6 +43,16 @@ On your terminal
 
 Then in qBitTorrent you'll want to point the WebUI theme folder selection to the newly created `[...]/iqbit/release`
 folder and you should be done.
+
+## Standalone Server
+
+This project ships with a standalone server for the WebUI. It means you can run this WebUI all by itself and have it
+communicate with your qbittorrent through a proxy. Cool right?
+
+**This is useful if you want to have this WebUI running in a port being used for mobile devices, and keep the default
+WebUI in its different port for desktop clients.**
+
+[Documentation](/server/README.md)
 
 ## RoadMap
 
