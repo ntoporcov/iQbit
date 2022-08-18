@@ -8,8 +8,8 @@
   },
   "announcements": [
     {
-      "id": "Aug172022",
-      "title": "New features",
+      "id": "Aug172022b",
+      "title": "New Updates in Repo",
       "body": "Standalone server (run iQbit on its own port, cool for targeting mobile devices only), torrent rename, torrent name popover on tap",
       "type": "info"
     },
