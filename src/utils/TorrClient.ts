@@ -178,4 +178,13 @@ export const TorrClient = {
       },
     });
   },
+
+  renameTorrent: async (hash: string, name: string) => {
+    return await APICall.get("torrents/rename", {
+      params: {
+        hash,
+        name,
+      },
+    });
+  },
 };

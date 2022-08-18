@@ -4,19 +4,29 @@ import {
   Button,
   ButtonGroup,
   Flex,
+  FormControl,
+  FormHelperText,
+  FormLabel,
   Heading,
   HStack,
   LightMode,
+  Popover,
+  PopoverBody,
+  PopoverContent,
+  PopoverTrigger,
   Progress,
   Skeleton,
+  Spinner,
   Text,
   useColorModeValue,
   useDisclosure,
+  VStack,
 } from "@chakra-ui/react";
 import { TorrCategory, TorrTorrentInfo } from "../types";
 import stateDictionary from "../utils/StateDictionary";
 import filesize from "filesize";
 import {
+  IoArrowDown,
   IoCalendar,
   IoCloudUpload,
   IoDownload,
@@ -31,6 +41,8 @@ import { StatWithIcon } from "./StatWithIcon";
 import { useMutation } from "react-query";
 import { TorrClient } from "../utils/TorrClient";
 import IosActionSheet from "./ios/IosActionSheet";
+import IosBottomSheet from "./ios/IosBottomSheet";
+import { Input } from "@chakra-ui/input";
 
 export interface TorrentBoxProps {
   torrentData: Omit<TorrTorrentInfo, "hash">;
@@ -69,11 +81,13 @@ const TorrentBox = ({
   date.setSeconds(torrentData.eta); // specify value for SECONDS here
   const timeString = torrentData.eta ? date.toISOString().substr(11, 8) : 0;
 
-  const [waiting, setWaiting] = useState<"" | "mainBtn" | "category">();
+  const [waiting, setWaiting] = useState<
+    "" | "mainBtn" | "category" | "name"
+  >();
 
   useEffect(() => {
     setWaiting("");
-  }, [torrentData.state, torrentData.category]);
+  }, [torrentData.state, torrentData.category, torrentData.name]);
 
   const { mutate: pause } = useMutation(
     "pauseTorrent",
@@ -110,6 +124,18 @@ const TorrentBox = ({
     {
       onMutate: () => setWaiting("category"),
       onError: () => setWaiting(""),
+    }
+  );
+
+  const [newName, setNewName] = useState(torrentData.name);
+  const renameTorrentDisclosure = useDisclosure();
+  const { mutate: renameTorrent, isLoading: renameLoading } = useMutation(
+    "changeCategory",
+    () => TorrClient.renameTorrent(hash, newName),
+    {
+      onMutate: () => setWaiting("name"),
+      onError: () => setWaiting(""),
+      onSuccess: () => renameTorrentDisclosure.onClose(),
     }
   );
 
@@ -189,9 +215,29 @@ const TorrentBox = ({
         bgColor={BoxBg}
         mb={5}
       >
-        <Heading noOfLines={1} size={"lg"}>
-          {torrentData.name}
-        </Heading>
+        <Popover placement={"top"}>
+          <PopoverTrigger>
+            <Flex alignItems={"center"}>
+              <Heading
+                textAlign={"left"}
+                cursor={"pointer"}
+                noOfLines={1}
+                size={"lg"}
+                _hover={{ base: {}, lg: { opacity: 0.7 } }}
+              >
+                {torrentData.name}
+              </Heading>
+              {waiting === "name" && (
+                <Flex>
+                  <Spinner size={"sm"} />
+                </Flex>
+              )}
+            </Flex>
+          </PopoverTrigger>
+          <PopoverContent>
+            <PopoverBody textAlign={"center"}>{torrentData.name}</PopoverBody>
+          </PopoverContent>
+        </Popover>
         <HStack color={"grayAlpha.800"} gap={2}>
           <StatWithIcon
             icon={<IoCalendar />}
@@ -295,6 +341,10 @@ const TorrentBox = ({
                   label: "Change Category",
                   onClick: () => categoryChangeDisclosure.onOpen(),
                 },
+                {
+                  label: "Rename Torrent",
+                  onClick: () => renameTorrentDisclosure.onOpen(),
+                },
               ]}
             />
             <IosActionSheet
@@ -313,10 +363,12 @@ const TorrentBox = ({
             />
             <IosActionSheet
               disclosure={categoryChangeDisclosure}
-              options={categories.map((cat) => ({
-                label: cat.name,
-                onClick: () => changeCategory(cat.name),
-              }))}
+              options={categories
+                .filter((cat) => torrentData.category !== cat.name)
+                .map((cat) => ({
+                  label: cat.name,
+                  onClick: () => changeCategory(cat.name),
+                }))}
             />
             {isPaused ? (
               <LightMode>
@@ -343,6 +395,41 @@ const TorrentBox = ({
           </ButtonGroup>
         </Flex>
       </Box>
+      <IosBottomSheet
+        title={"Rename Torrent"}
+        disclosure={renameTorrentDisclosure}
+      >
+        <VStack gap={10}>
+          <FormControl>
+            <FormLabel>Rename Torrent</FormLabel>
+            <Input
+              disabled={renameLoading}
+              value={newName}
+              onChange={(e) => setNewName(e.target.value)}
+            />
+            {newName !== torrentData.name && (
+              <FormHelperText fontSize={"sm"} textAlign={"center"}>
+                <VStack mt={7}>
+                  <span>{torrentData.name}</span>
+                  <IoArrowDown />
+                  <span>{newName}</span>
+                </VStack>
+              </FormHelperText>
+            )}
+          </FormControl>
+          <LightMode>
+            <Button
+              disabled={newName === torrentData.name}
+              colorScheme={"blue"}
+              w={"100%"}
+              onClick={() => renameTorrent()}
+              isLoading={renameLoading}
+            >
+              Save New Name
+            </Button>
+          </LightMode>
+        </VStack>
+      </IosBottomSheet>
     </div>
   );
 };
