@@ -4,14 +4,14 @@
   "description": "Serve iqbit on its own",
   "main": "server.js",
   "scripts": {
-    "dev": "nodemon server.js",
+    "dev": "bash -c 'source config/local_env.sh && nodemon server.js'",
+    "serve:docker": "node server.js",
     "serve": "pm2 start ecosystem.config.js",
     "stop": "pm2 stop ecosystem.config.js"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "dotenv": "^16.0.1",
     "express": "^4.18.1",
     "http-proxy-middleware": "^2.0.6",
     "nodemon": "^2.0.19",

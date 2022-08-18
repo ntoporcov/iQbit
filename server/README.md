@@ -59,3 +59,17 @@ You probably have qbittorrent auto starting when your computer boots up right. T
 approach. I suggest looking up how to create a service to run in your OS whenever it boots up to
 run `npm run server-start` in the root of this repo. I'm not sure I could solve this within this project :/ Ideas are
 welcome
+
+### Docker
+For now, you must build the docker image yourself until it is uploaded to a docker registry.  To do this, first install docker on windows or mac, then:
+`docker build -t iqbit .`
+
+And to run the docker image you created:
+`docker container run -dp 8081:8081 -t iqbit`
+
+Navigate to localhost:8081
+The proxy can be set as an environment variable, for example:
+`docker container run -dp 8081:8081 -e "QBIT_HOST=http://my-domain.com" -t iqbit`
+
+docker-compose example:
+Coming soon!
