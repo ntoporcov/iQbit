@@ -40,8 +40,9 @@
     "build": "react-scripts build && rm -rf release/public && mkdir release/public && mv -v build/* ./release/public",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "server-setup": "cd server && cp .env.default .env && npm install ",
+    "server-setup": "cd server && npm install ",
     "server-start": "cd server && npm run serve",
+    "server-docker-start": "cd server && npm run serve:docker",
     "server-stop": "cd server && npm run stop"
   },
   "eslintConfig": {
