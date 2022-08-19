@@ -8,6 +8,12 @@
   },
   "announcements": [
     {
+      "id": "Aug192022",
+      "title": "Torrent Information",
+      "body": "Feast your eyes on data from your downloads. (Please request any data points that you'd like if they're not there)",
+      "type": "info"
+    },
+    {
       "id": "Aug172022b",
       "title": "New Updates in Repo",
       "body": "Standalone server (run iQbit on its own port, cool for targeting mobile devices only), torrent rename, torrent name popover on tap",

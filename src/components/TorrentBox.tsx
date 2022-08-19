@@ -43,6 +43,8 @@ import { TorrClient } from "../utils/TorrClient";
 import IosActionSheet from "./ios/IosActionSheet";
 import IosBottomSheet from "./ios/IosBottomSheet";
 import { Input } from "@chakra-ui/input";
+import TorrentInformationContent from "./TorrentInformationContent";
+import { CreateETAString } from "../utils/createETAString";
 
 export interface TorrentBoxProps {
   torrentData: Omit<TorrTorrentInfo, "hash">;
@@ -79,7 +81,7 @@ const TorrentBox = ({
 
   const date = new Date(0);
   date.setSeconds(torrentData.eta); // specify value for SECONDS here
-  const timeString = torrentData.eta ? date.toISOString().substr(11, 8) : 0;
+  const timeString = torrentData.eta ? CreateETAString(date) : "";
 
   const [waiting, setWaiting] = useState<
     "" | "mainBtn" | "category" | "name"
@@ -138,6 +140,8 @@ const TorrentBox = ({
       onSuccess: () => renameTorrentDisclosure.onClose(),
     }
   );
+
+  const TorrentInformationDisclosure = useDisclosure();
 
   const actionSheetDisclosure = useDisclosure();
 
@@ -345,6 +349,10 @@ const TorrentBox = ({
                   label: "Rename Torrent",
                   onClick: () => renameTorrentDisclosure.onOpen(),
                 },
+                {
+                  label: "Torrent Information",
+                  onClick: () => TorrentInformationDisclosure.onOpen(),
+                },
               ]}
             />
             <IosActionSheet
@@ -429,6 +437,13 @@ const TorrentBox = ({
             </Button>
           </LightMode>
         </VStack>
+      </IosBottomSheet>
+      <IosBottomSheet
+        title={"Torrent Information"}
+        disclosure={TorrentInformationDisclosure}
+        modalProps={{ size: "3xl" }}
+      >
+        <TorrentInformationContent torrentData={{ ...torrentData, hash }} />
       </IosBottomSheet>
     </div>
   );

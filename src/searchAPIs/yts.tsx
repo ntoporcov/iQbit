@@ -1,10 +1,4 @@
-import React, {
-  PropsWithChildren,
-  ReactElement,
-  useEffect,
-  useMemo,
-  useState,
-} from "react";
+import React, { PropsWithChildren, useEffect, useMemo, useState } from "react";
 import { SearchProviderComponentProps, YTSMovies } from "../types";
 import {
   AspectRatio,
@@ -26,12 +20,12 @@ import { useNavigate, useParams } from "react-router-dom";
 import IosBottomSheet from "../components/ios/IosBottomSheet";
 import TorrentDownloadBox from "../components/TorrentDownloadBox";
 import { IoEarth, IoPricetags, IoTime, IoWarning } from "react-icons/io5";
-import { StatWithIcon } from "../components/StatWithIcon";
 import { SiRottentomatoes } from "react-icons/si";
 import SeedsAndPeers from "../components/SeedsAndPeers";
 import TorrentMovieData from "../components/TorrentMovieData";
 import Filters from "../components/Filters";
 import { useIsTouchDevice } from "../hooks/useIsTouchDevice";
+import { InfoDataBox } from "../components/InfoDataBox";
 
 export const useSearchFromParams = (callback: () => void) => {
   const { query } = useParams();
@@ -61,21 +55,6 @@ export const SectionSM = ({
 
 const createMagnetLink = (hash: string, title: string) =>
   `magnet:?xt=urn:btih:${hash}&dn=${title}&udp://open.demonii.com:1337/announce&udp://tracker.openbittorrent.com:80&udp://tracker.coppersurfer.tk:6969&udp://glotorrents.pw:6969/announce&udp://tracker.opentrackr.org:1337/announce&udp://torrent.gresille.org:80/announce&udp://p4p.arenabg.com:1337&udp://tracker.leechers-paradise.org:6969`;
-
-function InfoDataBox(props: {
-  label: string;
-  icon: ReactElement;
-  title: string;
-}) {
-  return (
-    <Box flexGrow={1} bgColor={"grayAlpha.300"} p={4} rounded={"xl"}>
-      <Heading size={"xs"} fontWeight={"medium"}>
-        {props.title}
-      </Heading>
-      <StatWithIcon icon={props.icon} label={props.label} />
-    </Box>
-  );
-}
 
 export const torrentBoxIconProps = {
   size: 22,

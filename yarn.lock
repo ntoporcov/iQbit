@@ -7291,6 +7291,11 @@ path-type@^4.0.0:
   resolved "https://registry.npmjs.org/path-type/-/path-type-4.0.0.tgz"
   integrity sha512-gDKb8aZMDeD/tZWs9P6+q0J9Mwkdl6xMV8TjnGP3qJVJ06bdMgkbBlLU8IdfOsIsFz2BW1rNVT3XuNEl8zPAvw==
 
+paths-js@^0.4.10:
+  version "0.4.11"
+  resolved "https://registry.yarnpkg.com/paths-js/-/paths-js-0.4.11.tgz#b2a9d5f94ee9949aa8fee945f78a12abff44599e"
+  integrity sha512-3mqcLomDBXOo7Fo+UlaenG6f71bk1ZezPQy2JCmYHy2W2k5VKpP+Jbin9H0bjXynelTbglCqdFhSEkeIkKTYUA==
+
 performance-now@^2.1.0:
   version "2.1.0"
   resolved "https://registry.npmjs.org/performance-now/-/performance-now-2.1.0.tgz"
@@ -8039,6 +8044,13 @@ raw-body@2.5.1:
     http-errors "2.0.0"
     iconv-lite "0.4.24"
     unpipe "1.0.0"
+
+react-activity-rings@^1.1.0:
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/react-activity-rings/-/react-activity-rings-1.1.0.tgz#61486237f3f01ee3f7cfc34cb7b1d3c3551a746e"
+  integrity sha512-NEgy4zcuAHAReDuR+qje920bsMMvWqv1X9+PpL4p69WYtAIGkiUVzNk0nouoQbs2Qf9VFwGHhUm7mee8X4WcYg==
+  dependencies:
+    paths-js "^0.4.10"
 
 react-app-polyfill@^3.0.0:
   version "3.0.0"
