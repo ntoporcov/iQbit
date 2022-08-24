@@ -109,8 +109,9 @@ export const TorrClient = {
     });
   },
 
-  addTorrent: async (uploadType: "urls" | "torrents", file: string | File) => {
+  addTorrent: async (uploadType: "urls" | "torrents", file: string | File, category= "") => {
     const formData = new FormData();
+    formData.append('category', category)
     formData.append(uploadType, file);
     const { data } =
       process.env.NODE_ENV === "production"
@@ -121,6 +122,7 @@ export const TorrClient = {
           })
         : await APICall.get("torrents/add", {
             params: {
+              category,
               urls: file,
             },
           });

@@ -9,6 +9,7 @@ import {
   Heading,
   LightMode,
   Textarea,
+  Select,
   useDisclosure,
   VStack,
 } from "@chakra-ui/react";
@@ -81,6 +82,7 @@ const Home = () => {
 
   const addModalDisclosure = useDisclosure();
   const [textArea, setTextArea] = useState("");
+  const [selectedCategory, setSelectedCategory] = useState("");
   const [fileError, setFileError] = useState("");
   const [file, setFile] = useState<File>();
   const [draggingOver, setDraggingOver] = useState(false);
@@ -101,7 +103,8 @@ const Home = () => {
       () =>
         TorrClient.addTorrent(
           !!textArea ? "urls" : "torrents",
-          !!textArea ? textArea : file!
+          !!textArea ? textArea : file!,
+          selectedCategory,
         ),
       { onSuccess: addModalDisclosure.onClose }
     );
@@ -113,6 +116,10 @@ const Home = () => {
       ?.sort((a, b) => b[1]?.added_on - a[1]?.added_on)
       ?.filter(([hash]) => !removedTorrs.includes(hash));
   }, [torrentsTx, removedTorrs]);
+
+  const Categories = useMemo(() => {
+    return Object.values(categories || {}).map((c) => ({ label: c.name, value: c.name }))
+  },[categories]);
 
   return (
     <WindowScroller>
@@ -127,6 +134,18 @@ const Home = () => {
 
           <IosBottomSheet title={"Add Torrent"} disclosure={addModalDisclosure}>
             <VStack gap={4}>
+              <FormControl isDisabled={!Categories.length}>
+                <FormLabel>{"Category"}</FormLabel>
+                <Select
+                  placeholder="Select category"
+                  value={selectedCategory}
+                  onChange={(e) => setSelectedCategory(e.target.value)}
+                >
+                  {Categories.map((c) => (
+                    <option key={c.label}>{c.label}</option>
+                  ))}
+                </Select>
+              </FormControl>
               <FormControl isDisabled={!!file}>
                 <FormLabel>{"Magnet Link / URL"}</FormLabel>
                 <Textarea
