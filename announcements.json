@@ -8,6 +8,12 @@
   },
   "announcements": [
     {
+      "id": "Aug242022",
+      "title": "More Updates",
+      "body": "Added rarbg as provider. Deployed my own proxy. Added GA.",
+      "type": "info"
+    },
+    {
       "id": "Aug192022",
       "title": "Torrent Information",
       "body": "Feast your eyes on data from your downloads. (Please request any data points that you'd like if they're not there)",
