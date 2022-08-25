@@ -8,8 +8,8 @@ import {
   FormLabel,
   Heading,
   LightMode,
-  Textarea,
   Select,
+  Textarea,
   useDisclosure,
   VStack,
 } from "@chakra-ui/react";
@@ -104,7 +104,7 @@ const Home = () => {
         TorrClient.addTorrent(
           !!textArea ? "urls" : "torrents",
           !!textArea ? textArea : file!,
-          selectedCategory,
+          selectedCategory
         ),
       { onSuccess: addModalDisclosure.onClose }
     );
@@ -118,8 +118,11 @@ const Home = () => {
   }, [torrentsTx, removedTorrs]);
 
   const Categories = useMemo(() => {
-    return Object.values(categories || {}).map((c) => ({ label: c.name, value: c.name }))
-  },[categories]);
+    return Object.values(categories || {}).map((c) => ({
+      label: c.name,
+      value: c.name,
+    }));
+  }, [categories]);
 
   return (
     <WindowScroller>
@@ -134,18 +137,6 @@ const Home = () => {
 
           <IosBottomSheet title={"Add Torrent"} disclosure={addModalDisclosure}>
             <VStack gap={4}>
-              <FormControl isDisabled={!Categories.length}>
-                <FormLabel>{"Category"}</FormLabel>
-                <Select
-                  placeholder="Select category"
-                  value={selectedCategory}
-                  onChange={(e) => setSelectedCategory(e.target.value)}
-                >
-                  {Categories.map((c) => (
-                    <option key={c.label}>{c.label}</option>
-                  ))}
-                </Select>
-              </FormControl>
               <FormControl isDisabled={!!file}>
                 <FormLabel>{"Magnet Link / URL"}</FormLabel>
                 <Textarea
@@ -227,6 +218,20 @@ const Home = () => {
                 </Flex>
                 <FormErrorMessage>{fileError}</FormErrorMessage>
               </FormControl>
+              {Categories.length && (
+                <FormControl>
+                  <FormLabel>{"Category"}</FormLabel>
+                  <Select
+                    placeholder="Select category"
+                    value={selectedCategory}
+                    onChange={(e) => setSelectedCategory(e.target.value)}
+                  >
+                    {Categories.map((c) => (
+                      <option key={c.label}>{c.label}</option>
+                    ))}
+                  </Select>
+                </FormControl>
+              )}
             </VStack>
             <LightMode>
               <Button

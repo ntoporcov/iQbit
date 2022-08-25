@@ -7,6 +7,7 @@ import {
   ButtonProps,
   Flex,
   Heading,
+  LightMode,
   Text,
   useColorModeValue,
 } from "@chakra-ui/react";
@@ -15,13 +16,17 @@ import { useParams } from "react-router-dom";
 import { useFilterState } from "../components/Filters";
 import YtsLogo from "../images/ytsLogo";
 import TpbLogo from "../images/TpbLogo";
+import RarbgSearch from "../searchAPIs/rarbg";
+import RarbgLogo from "../images/RarbgLogo";
+import { RarbgCategoryDictionary } from "../utils/RarBGClient";
 
-export type ProviderKeys = "YTS" | "TPB";
+export type ProviderKeys = "YTS" | "TPB" | "rarbg";
 
 export type Provider = {
   logo: any;
   name: string;
   categories: string[];
+  experimental?: boolean;
 };
 
 const providers: { [i in ProviderKeys]: Provider } = {
@@ -35,10 +40,20 @@ const providers: { [i in ProviderKeys]: Provider } = {
     name: "PirateBay",
     categories: ["Video", "Audio", "Applications", "Games", "Porn", "Other"],
   },
+  rarbg: {
+    logo: <RarbgLogo />,
+    name: "rarbg",
+    categories: Object.keys(RarbgCategoryDictionary),
+    experimental: true,
+  },
 };
 
 const ProviderButton = (
-  props: ButtonProps & { isSelected: boolean; small?: boolean }
+  props: ButtonProps & {
+    isSelected: boolean;
+    small?: boolean;
+    experimental?: boolean;
+  }
 ) => {
   const backgroundColor = useColorModeValue("white", {
     base: "gray.900",
@@ -47,6 +62,8 @@ const ProviderButton = (
 
   return (
     <Button
+      overflow={"hidden"}
+      position={"relative"}
       backgroundColor={backgroundColor}
       variant={"ghost"}
       shadow={"lg"}
@@ -62,6 +79,19 @@ const ProviderButton = (
       }}
     >
       {props.children}
+      {props.experimental && (
+        <LightMode>
+          <Text
+            w={"100%"}
+            fontSize={"xs"}
+            position={"absolute"}
+            bottom={0}
+            bgColor={"blue.500"}
+          >
+            EXPERIMENTAL
+          </Text>
+        </LightMode>
+      )}
     </Button>
   );
 };
@@ -96,6 +126,7 @@ const SearchPage = () => {
             key={key}
             isSelected={key === selectedProvider}
             onClick={() => setSelectedProvider(key as ProviderKeys)}
+            experimental={value.experimental}
           >
             {value.logo}
           </ProviderButton>
@@ -126,6 +157,15 @@ const SearchPage = () => {
         {selectedProvider === "TPB" && (
           <TPBSearch
             category={providers[selectedProvider].categories[selectedCategory]}
+            searchState={searchState}
+            filterState={filterState}
+          />
+        )}
+        {selectedProvider === "rarbg" && (
+          <RarbgSearch
+            category={
+              providers[selectedProvider].categories?.[selectedCategory] || ""
+            }
             searchState={searchState}
             filterState={filterState}
           />

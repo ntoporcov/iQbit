@@ -17,12 +17,20 @@ const SeedsAndPeers = ({ seeds, peers }: SeedsAndPeersProps) => {
       <StatWithIcon
         lit
         icon={<IoPeople />}
-        label={<Text fontSize={"md"}>{seeds} Seeds</Text>}
+        label={
+          <Text as={"span"} fontSize={"md"}>
+            {seeds} Seeds
+          </Text>
+        }
       />
       <StatWithIcon
         lit
         icon={<IoPeople />}
-        label={<Text fontSize={"md"}>{peers} Peers</Text>}
+        label={
+          <Text as={"span"} fontSize={"md"}>
+            {peers} Peers
+          </Text>
+        }
       />
     </Flex>
   );

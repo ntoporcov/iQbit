@@ -9,10 +9,11 @@ import SeedsAndPeers from "../components/SeedsAndPeers";
 import React, { useEffect, useMemo } from "react";
 import TorrentMovieData from "../components/TorrentMovieData";
 import Filters from "../components/Filters";
+import ReactGA from "react-ga";
 
-type AliasList = { name: string; aliases?: string[] }[];
+export type AliasList = { name: string; aliases?: string[] }[];
 
-const parseFromString = (string: string, aliases: AliasList) => {
+export const parseFromString = (string: string, aliases: AliasList) => {
   return aliases.find((option) => {
     let matchFound = string.toLowerCase().includes(option.name.toLowerCase());
 
@@ -26,7 +27,7 @@ const parseFromString = (string: string, aliases: AliasList) => {
   })?.name;
 };
 
-const qualityAliases: AliasList = [
+export const qualityAliases: AliasList = [
   {
     name: "720p",
     aliases: ["720"],
@@ -41,7 +42,7 @@ const qualityAliases: AliasList = [
   },
 ];
 
-const typeAliases: AliasList = [
+export const typeAliases: AliasList = [
   {
     name: "BluRay",
     aliases: ["BluRay", "BDRip", "BrRip"],
@@ -64,6 +65,14 @@ const typeAliases: AliasList = [
   },
 ];
 
+const devURL = "http://localhost:5005/";
+const useLocalServer = false;
+
+const ApiDomain =
+  process.env.NODE_ENV === "development" && useLocalServer
+    ? devURL
+    : "https://iqbit.app/";
+
 const TPBSearch = (props: SearchProviderComponentProps) => {
   const {
     mutate: search,
@@ -74,17 +83,19 @@ const TPBSearch = (props: SearchProviderComponentProps) => {
     "tpbSearch",
     async () => {
       const { data } = await axios.get<TPBRecord[]>(
-        "https://cors-container.herokuapp.com/https://apibay.org/q.php",
+        `${ApiDomain}api/tpb/search`,
         {
           params: {
-            q: props.searchState[0],
-            cat: props.category,
+            query: props.searchState[0],
+            category: props.category,
           },
         }
       );
       return data;
     },
     {
+      onMutate: () =>
+        ReactGA.event({ action: "executed", category: "search", label: "TPB" }),
       onSuccess: (data) => {
         let sourceList = new Set();
 

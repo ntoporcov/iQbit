@@ -1,6 +1,6 @@
 {
   "name": "iqbit",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "private": false,
   "dependencies": {
     "@chakra-ui/react": "2.2.4",
@@ -26,6 +26,7 @@
     "react": "18.2.0",
     "react-activity-rings": "^1.1.0",
     "react-dom": "18.2.0",
+    "react-ga": "^3.3.1",
     "react-icons": "^4.3.1",
     "react-query": "^3.34.16",
     "react-router-dom": "^6.2.2",

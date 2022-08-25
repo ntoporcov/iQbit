@@ -8,7 +8,7 @@ import { torrentBoxIconProps } from "../searchAPIs/yts";
 export interface TorrentMovieDataProps {
   quality?: string;
   type?: string;
-  size?: number;
+  size?: number | string;
 }
 
 const TorrentMovieData = (props: TorrentMovieDataProps) => {
@@ -27,7 +27,11 @@ const TorrentMovieData = (props: TorrentMovieDataProps) => {
       <StatWithIcon
         lit
         icon={<IoCube {...torrentBoxIconProps} />}
-        label={filesize(props.size || 0, { round: 1 })}
+        label={
+          typeof props.size === "string"
+            ? props.size
+            : filesize(props.size || 0, { round: 1 })
+        }
       />
     </SimpleGrid>
   );

@@ -412,3 +412,21 @@ export type TPBRecord = {
   status: string;
   username: string;
 };
+
+export type rarbgTorrent = {
+  title: string;
+  category: string;
+  download: string;
+  seeders: number;
+  leechers: number;
+  size: number;
+  pubdate: Date;
+  episode_info: {
+    imdb?: string;
+    tvrage?: string;
+    tvdb?: string;
+    themoviedb?: string;
+  };
+  ranked: number;
+  info_page: string;
+};

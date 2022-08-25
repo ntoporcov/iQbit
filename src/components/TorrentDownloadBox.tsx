@@ -14,19 +14,30 @@ import { IoCheckmark } from "react-icons/io5";
 
 export interface TorrentDownloadBoxProps {
   title?: string;
-  magnetURL: string;
+  magnetURL?: string;
+  onSelect?: () => Promise<string>;
 }
 
 const TorrentDownloadBox = ({
   magnetURL,
   title,
+  onSelect,
   children,
 }: PropsWithChildren<TorrentDownloadBoxProps>) => {
   const isLarge = useIsLargeScreen();
 
-  const { mutate, isLoading, isSuccess } = useMutation("addBox", () =>
-    TorrClient.addTorrent("urls", magnetURL)
+  const { mutate, isLoading, isSuccess } = useMutation(
+    "addBox",
+    (magnetURLParam: string) => TorrClient.addTorrent("urls", magnetURLParam)
   );
+
+  const {
+    mutate: callbackMutation,
+    isLoading: callbackLoading,
+    isSuccess: callbackSuccess,
+  } = useMutation("addBoxWithCallback", () => onSelect!(), {
+    onSuccess: (magnetURL) => mutate(magnetURL),
+  });
 
   const bgColor = useColorModeValue("grayAlpha.200", "grayAlpha.400");
 
@@ -51,11 +62,19 @@ const TorrentDownloadBox = ({
       </Box>
       <LightMode>
         <Button
-          disabled={isSuccess || isLoading}
-          isLoading={isLoading}
+          disabled={
+            isSuccess || callbackSuccess || callbackLoading || isLoading
+          }
+          isLoading={isLoading || callbackLoading}
           colorScheme={"blue"}
           width={!isLarge ? "100%" : undefined}
-          onClick={() => mutate()}
+          onClick={() => {
+            if (magnetURL) {
+              mutate(magnetURL);
+            } else if (onSelect) {
+              callbackMutation();
+            }
+          }}
           leftIcon={isSuccess ? <IoCheckmark /> : undefined}
         >
           {isSuccess ? "Added" : "Download"}

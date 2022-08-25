@@ -26,6 +26,7 @@ import TorrentMovieData from "../components/TorrentMovieData";
 import Filters from "../components/Filters";
 import { useIsTouchDevice } from "../hooks/useIsTouchDevice";
 import { InfoDataBox } from "../components/InfoDataBox";
+import ReactGA from "react-ga";
 
 export const useSearchFromParams = (callback: () => void) => {
   const { query } = useParams();
@@ -72,6 +73,7 @@ const YTSSearch = (props: SearchProviderComponentProps) => {
       }),
     {
       onMutate: () => {
+        ReactGA.event({ action: "executed", category: "search", label: "YTS" });
         navigate(`/search/${props.searchState[0]}`, { replace: true });
       },
       onSuccess: (data) => {

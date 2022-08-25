@@ -51,6 +51,7 @@ const IosSearch = ({ onSearch, isLoading, ...props }: IosSearchProps) => {
           disabled={props.value === ""}
           onClick={onSearch}
           isLoading={isLoading}
+          isDisabled={isLoading}
           leftIcon={<IoSearch size={20} />}
           colorScheme={"blue"}
           px={8}
