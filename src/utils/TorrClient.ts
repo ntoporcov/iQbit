@@ -27,8 +27,10 @@ export const TorrClient = {
     username: string;
     password: string;
   }) => {
-    return await APICall.get("auth/login", {
-      params: { username, password },
+    return await APICall.post("auth/login", `username=${username}&password=${password}`,{
+      headers: {
+        "Content-Type":"application/x-www-form-urlencoded; charset=UTF-8"
+      },
     });
   },
 
