@@ -1,4 +1,4 @@
-import {ReactNode} from "react";
+import { ReactNode } from "react";
 
 type smartMapCallbackParams<T> = (
   item: T,
@@ -7,7 +7,14 @@ type smartMapCallbackParams<T> = (
     isFirst,
     isLast,
     isMiddle,
-  }: { index: number; isFirst: boolean; isLast: boolean; isMiddle: boolean },
+    prevItem,
+  }: {
+    index: number;
+    isFirst: boolean;
+    isLast: boolean;
+    isMiddle: boolean;
+    prevItem?: T;
+  },
   array: T[]
 ) => ReactNode;
 
@@ -20,6 +27,7 @@ export function smartMap<T>(arr: T[], callback: smartMapCallbackParams<T>) {
         isFirst: index === 0,
         isMiddle: index === array.length / 2,
         isLast: index === array.length - 1,
+        prevItem: array?.[index - 1],
       },
       array
     );

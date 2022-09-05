@@ -32,6 +32,8 @@ const RarbgSearch = (props: SearchProviderComponentProps) => {
           label: "rarbg",
         }),
       onSuccess: (data) => {
+        props.onSearch && props.onSearch();
+
         if (data?.rate_limit) {
           setTimeout(search, 2000);
           return;

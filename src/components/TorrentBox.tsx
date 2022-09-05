@@ -2,7 +2,6 @@ import React, { useEffect, useMemo, useState } from "react";
 import {
   Box,
   Button,
-  ButtonGroup,
   Flex,
   FormControl,
   FormHelperText,
@@ -323,7 +322,7 @@ const TorrentBox = ({
               />
             </Flex>
           )}
-          <ButtonGroup>
+          <Flex gap={0.5}>
             <IosActionSheet
               trigger={
                 <Button
@@ -400,7 +399,7 @@ const TorrentBox = ({
                 <IoPause size={25} />
               </Button>
             )}
-          </ButtonGroup>
+          </Flex>
         </Flex>
       </Box>
       <IosBottomSheet

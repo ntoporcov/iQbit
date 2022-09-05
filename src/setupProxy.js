@@ -1,14 +1,16 @@
-const { createProxyMiddleware } = require('http-proxy-middleware');
+const { createProxyMiddleware } = require("http-proxy-middleware");
 
-module.exports = function(app) {
+const qbittorrentHost = "http://192.168.50.100:8080";
+
+module.exports = function (app) {
   app.use(
     "/api",
     createProxyMiddleware({
-      target: 'http://localhost:8080',
+      target: qbittorrentHost,
       changeOrigin: true,
       headers: {
-        referer: 'http://localhost:8080',
-        origin: 'http://localhost:8080',
+        referer: qbittorrentHost,
+        origin: qbittorrentHost,
       },
     })
   );

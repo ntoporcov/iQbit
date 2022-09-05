@@ -77,6 +77,8 @@ const YTSSearch = (props: SearchProviderComponentProps) => {
         navigate(`/search/${props.searchState[0]}`, { replace: true });
       },
       onSuccess: (data) => {
+        props.onSearch && props.onSearch();
+
         let sourceList = new Set();
 
         data?.movies.forEach((movie) =>

@@ -1,4 +1,5 @@
 import {
+  Box,
   Button,
   ButtonProps,
   Drawer,
@@ -83,7 +84,7 @@ function IosActionSheet<Y>({
     </>
   ) : (
     <>
-      {trigger}
+      <Box onClick={disclosure.onToggle}>{trigger}</Box>
       <Drawer
         placement={"bottom"}
         onClose={disclosure.onClose}

@@ -97,6 +97,8 @@ const TPBSearch = (props: SearchProviderComponentProps) => {
       onMutate: () =>
         ReactGA.event({ action: "executed", category: "search", label: "TPB" }),
       onSuccess: (data) => {
+        props.onSearch && props.onSearch();
+
         let sourceList = new Set();
 
         data.forEach((torr) => {

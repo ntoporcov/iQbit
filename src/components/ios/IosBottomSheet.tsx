@@ -47,6 +47,7 @@ const IosBottomSheet = ({
       <Modal
         isOpen={disclosure.isOpen}
         onClose={disclosure.onClose}
+        scrollBehavior={"inside"}
         {...modalProps}
       >
         <ModalOverlay />

@@ -19,8 +19,13 @@ import TpbLogo from "../images/TpbLogo";
 import RarbgSearch from "../searchAPIs/rarbg";
 import RarbgLogo from "../images/RarbgLogo";
 import { RarbgCategoryDictionary } from "../utils/RarBGClient";
+import { useQuery } from "react-query";
+import { TorrClient } from "../utils/TorrClient";
+import QbitLogo from "../images/qbitLogo";
+import { SearchPluginsPageQuery } from "./SearchPluginsPage";
+import PluginSearch from "../searchAPIs/PluginSearch";
 
-export type ProviderKeys = "YTS" | "TPB" | "rarbg";
+export type ProviderKeys = "YTS" | "TPB" | "rarbg" | "plugin";
 
 export type Provider = {
   logo: any;
@@ -30,6 +35,11 @@ export type Provider = {
 };
 
 const providers: { [i in ProviderKeys]: Provider } = {
+  plugin: {
+    logo: <QbitLogo />,
+    name: "Plugins",
+    categories: ["all"],
+  },
   YTS: {
     logo: <YtsLogo />,
     name: "YTS",
@@ -102,6 +112,18 @@ const SearchPage = () => {
   const { query } = useParams();
   const searchState = useState((query as string) || "");
 
+  const { data: plugins } = useQuery(
+    SearchPluginsPageQuery,
+    TorrClient.getInstalledPlugins,
+    {
+      onSuccess: (plugins) => {
+        if (plugins.length) {
+          setSelectedProvider("plugin");
+        }
+      },
+    }
+  );
+
   useEffect(() => {
     if (selectedCategory >= providers[selectedProvider].categories.length) {
       setSelectedCategory(0);
@@ -121,16 +143,20 @@ const SearchPage = () => {
         Select Search Provider
       </Heading>
       <Flex gap={3}>
-        {Object.entries(providers).map(([key, value]) => (
-          <ProviderButton
-            key={key}
-            isSelected={key === selectedProvider}
-            onClick={() => setSelectedProvider(key as ProviderKeys)}
-            experimental={value.experimental}
-          >
-            {value.logo}
-          </ProviderButton>
-        ))}
+        {Object.entries(providers)
+          .filter((provider) =>
+            provider[1].name === "Plugins" ? !!plugins?.length : true
+          )
+          .map(([key, value]) => (
+            <ProviderButton
+              key={key}
+              isSelected={key === selectedProvider}
+              onClick={() => setSelectedProvider(key as ProviderKeys)}
+              experimental={value.experimental}
+            >
+              {value.logo}
+            </ProviderButton>
+          ))}
       </Flex>
       {providers[selectedProvider].categories.length > 1 && (
         <Flex gap={3} mt={3} wrap={"wrap"}>
@@ -163,6 +189,15 @@ const SearchPage = () => {
         )}
         {selectedProvider === "rarbg" && (
           <RarbgSearch
+            category={
+              providers[selectedProvider].categories?.[selectedCategory] || ""
+            }
+            searchState={searchState}
+            filterState={filterState}
+          />
+        )}
+        {selectedProvider === "plugin" && (
+          <PluginSearch
             category={
               providers[selectedProvider].categories?.[selectedCategory] || ""
             }

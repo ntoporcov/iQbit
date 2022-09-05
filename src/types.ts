@@ -123,6 +123,33 @@ export type TorrMainData = {
   server_state: TorrServerState;
 };
 
+export type TorrPlugin = {
+  enabled: boolean;
+  name: string;
+  fullName: string;
+  supportedCategories: { name: string; id: string }[];
+  url: string;
+  version: string;
+};
+
+export type TorrPublicPlugin = {
+  img?: string;
+  name: string;
+  website?: string;
+  lastUpdated?: string;
+  authors?: string[];
+  version?: string;
+  link?: string;
+  comments?: string;
+  readme?: string;
+};
+
+export type TorrSearchStatus = {
+  id: number;
+  status: "Running" | "Stopped";
+  total: number;
+};
+
 export enum TorrSettingsScanDirsEnum {
   DownloadToMonitoredFolder,
   DownloadToDefaultSavePath,
@@ -347,6 +374,7 @@ export type SearchProviderComponentProps = {
   category: string;
   searchState: [string, Dispatch<SetStateAction<string>>];
   filterState: useFilterStateReturn;
+  onSearch?: () => void;
 };
 
 export interface YTSTorrent {

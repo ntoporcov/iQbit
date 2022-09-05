@@ -10,13 +10,10 @@ import {
 } from "@chakra-ui/react";
 import LogoHeader from "./LogoHeader";
 import IosInput from "./ios/IosInput";
-import { useLocalStorage } from "usehooks-ts";
-import { useMutation } from "react-query";
 import { TorrClient } from "../utils/TorrClient";
 import { LoggedInRoutes } from "../Routes";
+import { CredsLocalStorageKey, useLogin } from "../utils/useLogin";
 
-const CredsLocalStorageKey = "iqbit_creds";
-const loginPOSTKey = "loginPOST";
 export const AuthChecker = () => {
   const { localCreds } = useLogin();
 
@@ -36,50 +33,6 @@ export const logout = async () => {
   window.location.reload();
 };
 
-export const useLogin = (props?: { onLogin?: () => void }) => {
-  const [formError, setFormError] = useState("");
-  const [retryAttempt, setRetryAttempt] = useState(false);
-
-  const [localCreds, setLocalCreds] = useLocalStorage(CredsLocalStorageKey, {
-    username: "",
-    password: "",
-  });
-
-  const { mutate: handleLogin } = useMutation(
-    loginPOSTKey,
-    ({ username, password }: { username: string; password: string }) =>
-      TorrClient.login({ username, password }),
-    {
-      onSuccess: ({ data }, { username, password }) => {
-        if (data === "Ok.") {
-          setLocalCreds({
-            username,
-            password,
-          });
-          props?.onLogin && props?.onLogin();
-        } else {
-          setFormError("Login Unauthorized");
-        }
-      },
-      onError: ({ message }) => {
-        setFormError(message);
-        if (!retryAttempt && localCreds.username && localCreds.password) {
-          setRetryAttempt(true);
-          handleLogin({
-            username: localCreds.username,
-            password: localCreds.password,
-          });
-        }
-      },
-    }
-  );
-
-  return {
-    formError,
-    localCreds,
-    handleLogin,
-  };
-};
 export const AuthView = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");

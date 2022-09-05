@@ -2,6 +2,8 @@ import axios from "axios";
 import {
   TorrCategories,
   TorrMainData,
+  TorrPlugin,
+  TorrSearchStatus,
   TorrSettings,
   TorrTorrentInfo,
 } from "../types";
@@ -27,11 +29,15 @@ export const TorrClient = {
     username: string;
     password: string;
   }) => {
-    return await APICall.post("auth/login", `username=${username}&password=${password}`,{
-      headers: {
-        "Content-Type":"application/x-www-form-urlencoded; charset=UTF-8"
-      },
-    });
+    return await APICall.post(
+      "auth/login",
+      `username=${username}&password=${password}`,
+      {
+        headers: {
+          "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
+        },
+      }
+    );
   },
 
   logout: async () => {
@@ -111,9 +117,13 @@ export const TorrClient = {
     });
   },
 
-  addTorrent: async (uploadType: "urls" | "torrents", file: string | File, category= "") => {
+  addTorrent: async (
+    uploadType: "urls" | "torrents",
+    file: string | File,
+    category = ""
+  ) => {
     const formData = new FormData();
-    formData.append('category', category)
+    formData.append("category", category);
     formData.append(uploadType, file);
     const { data } =
       process.env.NODE_ENV === "production"
@@ -190,5 +200,44 @@ export const TorrClient = {
         name,
       },
     });
+  },
+
+  getInstalledPlugins: async (): Promise<TorrPlugin[]> => {
+    const { data } = await APICall.get("search/plugins");
+    return data;
+  },
+
+  togglePluginEnabled: async (name: string, enable: boolean) => {
+    const { data } = await APICall.get("search/enablePlugin", {
+      params: { names: name, enable },
+    });
+    return data;
+  },
+
+  installPlugin: async (path: string) => {
+    await APICall.post("search/installPlugin", `sources=${path}`);
+  },
+
+  uninstallPlugin: async (name: string) => {
+    const { data } = await APICall.get("search/uninstallPlugin", {
+      params: { names: name },
+    });
+    return data;
+  },
+
+  getSearches: async (): Promise<TorrSearchStatus> => {
+    const { data } = await APICall.get("search/status");
+    return data;
+  },
+
+  createSearch: async (query: string): Promise<{ id: number }> => {
+    const { data } = await APICall.get("search/start", {
+      params: {
+        pattern: query,
+        plugins: "enabled",
+        category: "all",
+      },
+    });
+    return data;
   },
 };

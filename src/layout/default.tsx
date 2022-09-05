@@ -10,13 +10,14 @@ import {
 } from "@chakra-ui/react";
 import NavButton from "../components/buttons/NavButton";
 import { IconBaseProps } from "react-icons";
-import { logout, useLogin } from "../components/Auth";
 import { useIsLargeScreen } from "../utils/screenSize";
-import { Pages } from "../Routes";
+import { Pages } from "../Pages";
 import Home from "../pages/Home";
 import { useLocation } from "react-router-dom";
 import { useIsTouchDevice } from "../hooks/useIsTouchDevice";
 import useScrollPosition from "../hooks/useScrollPosition";
+import { useLogin } from "../utils/useLogin";
+import { logout } from "../components/Auth";
 
 export interface DefaultLayoutProps {}
 
@@ -168,6 +169,7 @@ const DefaultLayout = (props: PropsWithChildren<DefaultLayoutProps>) => {
               p={5}
               flexGrow={2}
               overflowY={"auto"}
+              overflowX={"hidden"}
             >
               {pathname === "/"
                 ? Pages.filter((page) => page.label === "Search")[0].component
