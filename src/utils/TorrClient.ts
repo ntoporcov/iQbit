@@ -148,9 +148,10 @@ export const TorrClient = {
   },
 
   updateSettings: async (settings: TorrSettings) => {
-    return await APICall.get("app/setPreferences", {
-      params: { json: settings },
-    });
+    return await APICall.post(
+      "app/setPreferences",
+      `json=${JSON.stringify(settings)}`
+    );
   },
 
   getCategories: async (): Promise<TorrCategories> => {
