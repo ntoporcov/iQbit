@@ -27,11 +27,15 @@ export const TorrClient = {
     username: string;
     password: string;
   }) => {
-    return await APICall.post("auth/login", `username=${username}&password=${password}`,{
-      headers: {
-        "Content-Type":"application/x-www-form-urlencoded; charset=UTF-8"
-      },
-    });
+    return await APICall.post(
+      "auth/login",
+      `username=${username}&password=${password}`,
+      {
+        headers: {
+          "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
+        },
+      }
+    );
   },
 
   logout: async () => {
@@ -111,9 +115,13 @@ export const TorrClient = {
     });
   },
 
-  addTorrent: async (uploadType: "urls" | "torrents", file: string | File, category= "") => {
+  addTorrent: async (
+    uploadType: "urls" | "torrents",
+    file: string | File,
+    category = ""
+  ) => {
     const formData = new FormData();
-    formData.append('category', category)
+    formData.append("category", category);
     formData.append(uploadType, file);
     const { data } =
       process.env.NODE_ENV === "production"
@@ -138,9 +146,10 @@ export const TorrClient = {
   },
 
   updateSettings: async (settings: TorrSettings) => {
-    return await APICall.get("app/setPreferences", {
-      params: { json: settings },
-    });
+    return await APICall.post(
+      "app/setPreferences",
+      `json=${JSON.stringify(settings)}`
+    );
   },
 
   getCategories: async (): Promise<TorrCategories> => {

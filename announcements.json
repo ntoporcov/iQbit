@@ -8,6 +8,12 @@
   },
   "announcements": [
     {
+      "id": "Sep052022",
+      "title": "Fixes",
+      "body": "Fixing incompatibilities with qBitTorrent 4.4.4. If you spot anything not working, please create an issue. Coming soon: Plugin Search",
+      "type": "warning"
+    },
+    {
       "id": "Aug242022",
       "title": "More Updates",
       "body": "Added rarbg as provider. Deployed my own proxy. Added GA.",
