@@ -137,7 +137,10 @@ const TPBSearch = (props: SearchProviderComponentProps) => {
       })
       .filter((Torr) => {
         if (props.filterState.minSeeds !== "0") {
-          return parseInt(Torr.seeders) >= parseInt(props.filterState.minSeeds);
+          return (
+            parseInt(Torr.seeders) >=
+            parseInt(props.filterState.minSeeds || "0")
+          );
         } else {
           return true;
         }

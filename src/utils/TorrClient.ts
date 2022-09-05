@@ -3,7 +3,7 @@ import {
   TorrCategories,
   TorrMainData,
   TorrPlugin,
-  TorrSearchStatus,
+  TorrPluginSearchResultResponse,
   TorrSettings,
   TorrTorrentInfo,
 } from "../types";
@@ -125,19 +125,11 @@ export const TorrClient = {
     const formData = new FormData();
     formData.append("category", category);
     formData.append(uploadType, file);
-    const { data } =
-      process.env.NODE_ENV === "production"
-        ? await APICall.post("torrents/add", formData, {
-            headers: {
-              "Content-Type": "multipart/form-data",
-            },
-          })
-        : await APICall.get("torrents/add", {
-            params: {
-              category,
-              urls: file,
-            },
-          });
+    const { data } = await APICall.post("torrents/add", formData, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    });
 
     return data;
   },
@@ -226,8 +218,18 @@ export const TorrClient = {
     return data;
   },
 
-  getSearches: async (): Promise<TorrSearchStatus> => {
-    const { data } = await APICall.get("search/status");
+  getResults: async (id: number): Promise<TorrPluginSearchResultResponse> => {
+    const { data } = await APICall.get("search/results", { params: { id } });
+    return data;
+  },
+
+  stopSearch: async (id: number): Promise<TorrPluginSearchResultResponse> => {
+    const { data } = await APICall.get("search/stop", { params: { id } });
+    return data;
+  },
+
+  deleteSearch: async (id: number) => {
+    const { data } = await APICall.get("search/delete", { params: { id } });
     return data;
   },
 

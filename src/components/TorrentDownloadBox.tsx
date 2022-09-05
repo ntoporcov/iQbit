@@ -62,6 +62,7 @@ const TorrentDownloadBox = ({
       </Box>
       <LightMode>
         <Button
+          minW={32}
           disabled={
             isSuccess || callbackSuccess || callbackLoading || isLoading
           }

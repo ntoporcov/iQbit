@@ -35,15 +35,15 @@ export type Provider = {
 };
 
 const providers: { [i in ProviderKeys]: Provider } = {
-  plugin: {
-    logo: <QbitLogo />,
-    name: "Plugins",
-    categories: ["all"],
-  },
   YTS: {
     logo: <YtsLogo />,
     name: "YTS",
     categories: ["Movies"],
+  },
+  plugin: {
+    logo: <QbitLogo />,
+    name: "Plugins",
+    categories: ["all"],
   },
   TPB: {
     logo: <TpbLogo />,
@@ -57,6 +57,8 @@ const providers: { [i in ProviderKeys]: Provider } = {
     experimental: true,
   },
 };
+
+const providersWidth = Object.values(providers).length * 400;
 
 const ProviderButton = (
   props: ButtonProps & {
@@ -112,16 +114,9 @@ const SearchPage = () => {
   const { query } = useParams();
   const searchState = useState((query as string) || "");
 
-  const { data: plugins } = useQuery(
+  const { data: plugins, isLoading: pluginsLoading } = useQuery(
     SearchPluginsPageQuery,
-    TorrClient.getInstalledPlugins,
-    {
-      onSuccess: (plugins) => {
-        if (plugins.length) {
-          setSelectedProvider("plugin");
-        }
-      },
-    }
+    TorrClient.getInstalledPlugins
   );
 
   useEffect(() => {
@@ -142,37 +137,64 @@ const SearchPage = () => {
       <Heading size={"md"} mb={3}>
         Select Search Provider
       </Heading>
-      <Flex gap={3}>
-        {Object.entries(providers)
-          .filter((provider) =>
-            provider[1].name === "Plugins" ? !!plugins?.length : true
-          )
-          .map(([key, value]) => (
-            <ProviderButton
-              key={key}
-              isSelected={key === selectedProvider}
-              onClick={() => setSelectedProvider(key as ProviderKeys)}
-              experimental={value.experimental}
-            >
-              {value.logo}
-            </ProviderButton>
-          ))}
+      <Flex
+        mb={3}
+        gap={3}
+        overflowX={"scroll"}
+        mx={-5}
+        pl={5}
+        className={"no-scrollbar"}
+      >
+        <Flex
+          w={{ base: providersWidth + "px", xl: "100%" }}
+          gap={3}
+          pr={{ base: 20, lg: 0 }}
+          wrap={{ lg: "wrap" }}
+        >
+          {Object.entries(providers)
+            .filter((provider) =>
+              provider[1].name === "Plugins" ? !!plugins?.length : true
+            )
+            .map(([key, value]) => (
+              <ProviderButton
+                key={key}
+                isSelected={key === selectedProvider && !pluginsLoading}
+                onClick={() => setSelectedProvider(key as ProviderKeys)}
+                experimental={value.experimental}
+              >
+                {value.logo}
+              </ProviderButton>
+            ))}
+        </Flex>
       </Flex>
       {providers[selectedProvider].categories.length > 1 && (
-        <Flex gap={3} mt={3} wrap={"wrap"}>
-          {providers[selectedProvider].categories.map((item, key) => (
-            <ProviderButton
-              key={key}
-              isSelected={key === selectedCategory}
-              onClick={() => setSelectedCategory(key)}
-              small
-            >
-              {item}
-            </ProviderButton>
-          ))}
+        <Flex
+          gap={3}
+          overflowX={"auto"}
+          mx={-5}
+          pl={5}
+          className={"no-scrollbar"}
+        >
+          <Flex
+            w={{ base: providersWidth + "px", xl: "100%" }}
+            gap={3}
+            pr={{ base: 20, lg: 0 }}
+            wrap={{ lg: "wrap" }}
+          >
+            {providers[selectedProvider].categories.map((item, key) => (
+              <ProviderButton
+                key={key}
+                isSelected={key === selectedCategory}
+                onClick={() => setSelectedCategory(key)}
+                small
+              >
+                {item}
+              </ProviderButton>
+            ))}
+          </Flex>
         </Flex>
       )}
-      <Box mt={4}>
+      <Box mt={4} height={20}>
         {selectedProvider === "YTS" && (
           <YTSSearch
             category={providers[selectedProvider].categories[selectedCategory]}

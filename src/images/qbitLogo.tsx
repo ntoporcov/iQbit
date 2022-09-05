@@ -7,8 +7,8 @@ const SvgComponent = () => (
     xmlns="http://www.w3.org/2000/svg"
     viewBox="0 0 100 100"
     style={{
-      height: "50px",
-      width: "40px",
+      height: "40px",
+      width: "100px",
     }}
   >
     <defs>

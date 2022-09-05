@@ -1,4 +1,4 @@
-import React, { Dispatch, SetStateAction, useEffect, useState } from "react";
+import React, { Dispatch, SetStateAction, useState } from "react";
 import {
   Box,
   Button,
@@ -32,12 +32,6 @@ export function useFilterState(): useFilterStateReturn {
   const [sourceList, setSourceList] = useState<string[]>([]);
   const [selectedSource, setSelectedSource] = useState<string>("");
   const [minSeeds, setMinSeeds] = useState<string>("0");
-
-  useEffect(() => {
-    if (minSeeds === "") {
-      setMinSeeds("0");
-    }
-  }, [minSeeds]);
 
   return {
     qualitySelected,

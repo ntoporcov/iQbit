@@ -144,9 +144,27 @@ export type TorrPublicPlugin = {
   readme?: string;
 };
 
+export type TorrSearchStatuses = "Running" | "Stopped";
+
 export type TorrSearchStatus = {
   id: number;
-  status: "Running" | "Stopped";
+  status: TorrSearchStatuses;
+  total: number;
+};
+
+export type TorrPluginSearchResult = {
+  descrLink: string;
+  fileName: string;
+  siteUrl: string;
+  nbLeechers: number;
+  fileSize: number;
+  nbSeeders: number;
+  fileUrl: string;
+};
+
+export type TorrPluginSearchResultResponse = {
+  results: TorrPluginSearchResult[];
+  status: TorrSearchStatuses;
   total: number;
 };
 

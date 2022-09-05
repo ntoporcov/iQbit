@@ -79,7 +79,7 @@ const RarbgSearch = (props: SearchProviderComponentProps) => {
       })
       .filter((Torr) => {
         if (props.filterState.minSeeds !== "0") {
-          return Torr.seeders >= parseInt(props.filterState.minSeeds);
+          return Torr.seeders >= parseInt(props.filterState.minSeeds || "0");
         } else {
           return true;
         }

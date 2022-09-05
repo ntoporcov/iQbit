@@ -126,7 +126,7 @@ const YTSSearch = (props: SearchProviderComponentProps) => {
       .filter((movie) => {
         if (props.filterState.minSeeds !== "0") {
           return movie.torrents.some(
-            (torr) => torr.seeds >= parseInt(props.filterState.minSeeds)
+            (torr) => torr.seeds >= parseInt(props.filterState.minSeeds || "0")
           );
         } else {
           return true;

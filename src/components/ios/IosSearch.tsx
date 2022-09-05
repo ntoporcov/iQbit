@@ -13,6 +13,7 @@ import { useIsLargeScreen } from "../../utils/screenSize";
 export interface IosSearchProps extends InputProps {
   onSearch: () => void;
   isLoading: boolean;
+  startStop?: boolean;
 }
 
 const IosSearch = ({ onSearch, isLoading, ...props }: IosSearchProps) => {
@@ -56,7 +57,7 @@ const IosSearch = ({ onSearch, isLoading, ...props }: IosSearchProps) => {
           colorScheme={"blue"}
           px={8}
         >
-          {"Search"}
+          {props.startStop && isLoading ? "Stop" : "Search"}
         </Button>
       </LightMode>
     </Flex>
