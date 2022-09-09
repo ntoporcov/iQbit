@@ -44,6 +44,7 @@ const providers: { [i in ProviderKeys]: Provider } = {
     logo: <QbitLogo />,
     name: "Plugins",
     categories: ["all"],
+    experimental: true,
   },
   TPB: {
     logo: <TpbLogo />,
@@ -54,7 +55,6 @@ const providers: { [i in ProviderKeys]: Provider } = {
     logo: <RarbgLogo />,
     name: "rarbg",
     categories: Object.keys(RarbgCategoryDictionary),
-    experimental: true,
   },
 };
 

@@ -2,7 +2,7 @@ import axios from "axios";
 import { rarbgTorrent } from "../types";
 
 const devURL = "http://localhost:5005/";
-const useLocalServer = true;
+const useLocalServer = false;
 
 const ApiDomain =
   process.env.NODE_ENV === "development" && useLocalServer

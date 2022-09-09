@@ -2,7 +2,6 @@ import React, { useMemo, useState } from "react";
 import { SearchProviderComponentProps } from "../types";
 import IosSearch from "../components/ios/IosSearch";
 import {
-  Box,
   Button,
   Flex,
   Heading,
@@ -123,13 +122,13 @@ const PluginSearch = (props: SearchProviderComponentProps) => {
         >
           <Flex alignItems={"center"} gap={4}>
             <Spinner color={"blue.500"} />
-            <Box>
+            <Flex flexDirection={"column"} alignItems={"start"}>
               <Heading size={"md"}>Search in progress...</Heading>
               <StatWithIcon
                 icon={<IoList />}
                 label={(data?.total || 0) + " Results"}
               />
-            </Box>
+            </Flex>
           </Flex>
           <LightMode>
             <Button
