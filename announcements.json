@@ -8,6 +8,12 @@
   },
   "announcements": [
     {
+      "id": "Sep082022",
+      "title": "Plugin Search",
+      "body": "qBitTorrent Plugin Search. You can also manage plugins and add public plugins directly from the WebUI.",
+      "type": "info"
+    },
+    {
       "id": "Sep052022",
       "title": "Fixes",
       "body": "Fixing incompatibilities with qBitTorrent 4.4.4. If you spot anything not working, please create an issue. Coming soon: Plugin Search",

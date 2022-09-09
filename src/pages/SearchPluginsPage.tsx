@@ -291,6 +291,11 @@ const SearchPluginsPage = () => {
         disclosure={publicPluginsDisclosure}
         modalProps={{ size: "2xl" }}
       >
+        <Text my={3}>
+          The plugins shown as ✖ or ❗ will result in the slowdown and
+          malfunction of other plugins as well, hence the use of these plugins
+          are strongly discouraged.
+        </Text>
         <Flex gap={3} flexDirection={"column"}>
           {publicPlugins?.map((plugin, key) => {
             const isInstalled = added?.some((inst) => inst === plugin.link);
