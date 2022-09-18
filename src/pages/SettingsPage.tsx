@@ -54,10 +54,6 @@ type SettingsPageObject = {
 
 const iconSize = 20;
 
-type SettingsPagesAggregate<T extends string> = {
-  [i in T]: SettingsPageObject;
-};
-
 const SettingsPages: {
   [i in string]: SettingsPageObject;
 } = {
@@ -142,8 +138,8 @@ const SettingsHeader = ({
       pt={isLarge ? 0 : 7}
       pb={5}
       width={isLarge ? "calc(100% + (var(--chakra-space-5)) * 2)" : "100vw"}
-      position={"fixed"}
-      left={0}
+      position={isLarge ? "relative" : "fixed"}
+      left={isLarge ? -5 : 0}
       borderBottomWidth={3}
       borderBottomStyle={"solid"}
       borderColor={"grayAlpha.300"}

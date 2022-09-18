@@ -13,13 +13,20 @@ import IosInput from "./ios/IosInput";
 import { TorrClient } from "../utils/TorrClient";
 import { LoggedInRoutes } from "../Routes";
 import { CredsLocalStorageKey, useLogin } from "../utils/useLogin";
+import { useQuery } from "react-query";
 
 export const AuthChecker = () => {
   const { localCreds } = useLogin();
 
+  const { isSuccess: isWhiteListed } = useQuery(
+    "versionCheck",
+    TorrClient.getVersion,
+    { retry: false }
+  );
+
   const isLoggedIn = !!localCreds.password && !!localCreds.username;
 
-  if (isLoggedIn) {
+  if (isLoggedIn || isWhiteListed) {
     return <LoggedInRoutes />;
   } else {
     return <AuthView />;

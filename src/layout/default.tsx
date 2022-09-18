@@ -14,10 +14,10 @@ import { useIsLargeScreen } from "../utils/screenSize";
 import { Pages } from "../Pages";
 import Home from "../pages/Home";
 import { useLocation } from "react-router-dom";
-import { useIsTouchDevice } from "../hooks/useIsTouchDevice";
 import useScrollPosition from "../hooks/useScrollPosition";
 import { useLogin } from "../utils/useLogin";
 import { logout } from "../components/Auth";
+import { isAndroid, isIOS } from "react-device-detect";
 
 export interface DefaultLayoutProps {}
 
@@ -51,7 +51,7 @@ const DefaultLayout = (props: PropsWithChildren<DefaultLayoutProps>) => {
   const isLarge = useIsLargeScreen();
 
   const largeWorkAreaBgColor = useColorModeValue("white", "gray.900");
-  const isTouchDevice = useIsTouchDevice();
+  const isTouchDevice = isAndroid || isIOS;
   const scroll = useScrollPosition();
   const fakeBodyBg = useColorModeValue("gray.50", "black");
 

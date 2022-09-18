@@ -22,6 +22,10 @@ const APICall = axios.create({
 });
 
 export const TorrClient = {
+  getVersion: async () => {
+    return await APICall.get("/app/version");
+  },
+
   login: async ({
     username,
     password,

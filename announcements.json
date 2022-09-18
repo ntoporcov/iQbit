@@ -8,6 +8,12 @@
   },
   "announcements": [
     {
+      "id": "Sep182022",
+      "title": "Update",
+      "body": "Pushed a couple UI fixes and an attempt at whitelisted IP authentication",
+      "type": "info"
+    },
+    {
       "id": "Sep082022",
       "title": "Plugin Search",
       "body": "qBitTorrent Plugin Search. You can also manage plugins and add public plugins directly from the WebUI.",
