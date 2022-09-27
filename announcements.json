@@ -8,6 +8,12 @@
   },
   "announcements": [
     {
+      "id": "Sep262022",
+      "title": "Trending Tab Update",
+      "body": "Added Trending Tab to show movies and tv shows currently trending according to TMDB.",
+      "type": "info"
+    },
+    {
       "id": "Sep182022",
       "title": "Update",
       "body": "Pushed a couple UI fixes and an attempt at whitelisted IP authentication",

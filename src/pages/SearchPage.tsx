@@ -12,7 +12,7 @@ import {
   useColorModeValue,
 } from "@chakra-ui/react";
 import YTSSearch from "../searchAPIs/yts";
-import { useParams } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 import { useFilterState } from "../components/Filters";
 import YtsLogo from "../images/ytsLogo";
 import TpbLogo from "../images/TpbLogo";
@@ -34,7 +34,7 @@ export type Provider = {
   experimental?: boolean;
 };
 
-const providers: { [i in ProviderKeys]: Provider } = {
+export const providers: { [i in ProviderKeys]: Provider } = {
   YTS: {
     logo: <YtsLogo />,
     name: "YTS",
@@ -109,10 +109,16 @@ const ProviderButton = (
 };
 
 const SearchPage = () => {
-  const [selectedProvider, setSelectedProvider] = useState<ProviderKeys>("YTS");
+  const location = useLocation();
+
+  const [selectedProvider, setSelectedProvider] = useState<ProviderKeys>(
+    (location?.state as any)?.provider || "YTS"
+  );
   const [selectedCategory, setSelectedCategory] = useState(0);
-  const { query } = useParams();
-  const searchState = useState((query as string) || "");
+
+  const searchState = useState(
+    ((location?.state as any)?.query as string) || ""
+  );
 
   const { data: plugins, isLoading: pluginsLoading } = useQuery(
     SearchPluginsPageQuery,

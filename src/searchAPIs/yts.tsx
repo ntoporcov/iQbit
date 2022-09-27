@@ -5,7 +5,6 @@ import {
   Box,
   Button,
   Flex,
-  Grid,
   Heading,
   HeadingProps,
   Text,
@@ -24,9 +23,9 @@ import { SiRottentomatoes } from "react-icons/si";
 import SeedsAndPeers from "../components/SeedsAndPeers";
 import TorrentMovieData from "../components/TorrentMovieData";
 import Filters from "../components/Filters";
-import { useIsTouchDevice } from "../hooks/useIsTouchDevice";
 import { InfoDataBox } from "../components/InfoDataBox";
 import ReactGA from "react-ga";
+import PosterGrid from "../components/PosterGrid";
 
 export const useSearchFromParams = (callback: () => void) => {
   const { query } = useParams();
@@ -54,7 +53,7 @@ export const SectionSM = ({
   );
 };
 
-const createMagnetLink = (hash: string, title: string) =>
+export const createYTSMagnetLink = (hash: string, title: string) =>
   `magnet:?xt=urn:btih:${hash}&dn=${title}&udp://open.demonii.com:1337/announce&udp://tracker.openbittorrent.com:80&udp://tracker.coppersurfer.tk:6969&udp://glotorrents.pw:6969/announce&udp://tracker.opentrackr.org:1337/announce&udp://torrent.gresille.org:80/announce&udp://p4p.arenabg.com:1337&udp://tracker.leechers-paradise.org:6969`;
 
 export const torrentBoxIconProps = {
@@ -138,8 +137,6 @@ const YTSSearch = (props: SearchProviderComponentProps) => {
     props.filterState.minSeeds,
   ]);
 
-  const isTouch = useIsTouchDevice();
-
   return (
     <VStack>
       <IosSearch
@@ -150,51 +147,20 @@ const YTSSearch = (props: SearchProviderComponentProps) => {
         placeholder={`Search ${props.category}...`}
       />
       {(!data?.movies?.length || true) && <Filters {...props.filterState} />}
-      <Grid
-        gap={2}
-        pt={2}
-        width={"100%"}
-        justifyContent={"flex-start"}
-        templateColumns={"repeat( auto-fit, minmax(150px, 1fr) )"}
-      >
-        {filteredMovies.map((movie) => (
-          <AspectRatio
-            role={"group"}
-            key={movie.id + movie.date_uploaded_unix?.toString()}
-            minWidth={"150px"}
-            ratio={2 / 3}
-            flexGrow={1}
-            rounded={"lg"}
-            shadow={"xl"}
-            backgroundImage={`url(${movie.large_cover_image}), url(${movie.small_cover_image})`}
-            backgroundSize={"cover"}
-            overflow={"hidden"}
-          >
-            <Flex position={"relative"}>
-              <Flex
-                as={"button"}
-                position={"absolute"}
-                width={"100%"}
-                py={4}
-                px={3}
-                bottom={0}
-                height={"100%"}
-                bgGradient={"linear(to-t, blackAlpha.900, transparent)"}
-                alignItems={"flex-end"}
-                opacity={isTouch ? 1 : 0}
-                _groupHover={isTouch ? undefined : { opacity: 1 }}
-                transition={"opacity .2s ease-in-out"}
-                onClick={() => selectMovie(movie)}
-              >
-                <Text fontSize={18} fontWeight={500} color={"white"}>
-                  {movie.title_english}
-                </Text>
-              </Flex>
-            </Flex>
-          </AspectRatio>
-        ))}
-        <Box flexGrow={1} minW={"200px"} />
-      </Grid>
+
+      <PosterGrid
+        list={filteredMovies}
+        keyExtractor={(movie) =>
+          movie.id + movie.date_uploaded_unix?.toString()
+        }
+        images={(movie) => ({
+          large: movie.large_cover_image,
+          small: movie.small_cover_image,
+        })}
+        titleExtractor={(movie) => movie.title_english}
+        onSelect={(movie) => selectMovie(movie)}
+      />
+      <Box flexGrow={1} minW={"200px"} />
       <IosBottomSheet
         title={selectedMovie?.title || ""}
         disclosure={bottomSheetDisclosure}
@@ -206,7 +172,7 @@ const YTSSearch = (props: SearchProviderComponentProps) => {
               return (
                 <TorrentDownloadBox
                   key={torrent.hash}
-                  magnetURL={createMagnetLink(
+                  magnetURL={createYTSMagnetLink(
                     torrent.hash,
                     `${selectedMovie?.title} (${
                       selectedMovie?.year || "--"

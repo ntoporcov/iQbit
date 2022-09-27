@@ -11,6 +11,7 @@ import {
   IoGitCompare,
   IoLink,
   IoLogoRss,
+  IoPricetags,
   IoSpeedometer,
 } from "react-icons/io5";
 import {
@@ -32,6 +33,7 @@ import RequestMoreSettings from "../components/settings/RequestMoreSettings";
 import { logout } from "../components/Auth";
 import AllAnnouncementsPage from "../components/settings/AllAnnouncements";
 import SearchPluginsPage from "./SearchPluginsPage";
+import CategoriesPage from "./CategoriesPage";
 
 export interface SettingsPageProps {}
 
@@ -109,6 +111,13 @@ const SettingsPages: {
     icon: <IoExtensionPuzzle size={iconSize} />,
     component: <SearchPluginsPage />,
     color: "orange.800",
+    group: "Other Settings",
+    mobileOnly: true,
+  },
+  Categories: {
+    icon: <IoPricetags size={iconSize} />,
+    component: <CategoriesPage />,
+    color: "red.900",
     group: "Other Settings",
     mobileOnly: true,
   },

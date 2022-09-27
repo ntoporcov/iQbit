@@ -11,11 +11,14 @@ import {
   IoPricetagsOutline,
   IoSearch,
   IoSearchOutline,
+  IoTrendingUp,
+  IoTrendingUpOutline,
 } from "react-icons/io5";
 import SearchPage from "./pages/SearchPage";
 import CategoriesPage from "./pages/CategoriesPage";
 import SettingsPage from "./pages/SettingsPage";
 import SearchPluginsPage from "./pages/SearchPluginsPage";
+import TrendingPage from "./pages/TrendingPage";
 
 export type PageNames =
   | "sideNav"
@@ -57,6 +60,16 @@ export const Pages: PageObject[] = [
     visibleOn: ["bottomNav", "sideNav"],
   },
   {
+    label: "Trending",
+    url: "/trending",
+    component: <TrendingPage />,
+    Icon: {
+      active: (props) => <IoTrendingUp {...props} />,
+      inactive: (props) => <IoTrendingUpOutline {...props} />,
+    },
+    visibleOn: ["bottomNav", "sideNav"],
+  },
+  {
     label: "Search",
     url: "/search/:query",
     component: <SearchPage />,
@@ -74,7 +87,7 @@ export const Pages: PageObject[] = [
       active: (props) => <IoPricetags {...props} />,
       inactive: (props) => <IoPricetagsOutline {...props} />,
     },
-    visibleOn: ["bottomNav", "sideNav"],
+    visibleOn: ["sideNav", "mobileSettingsList"],
   },
   {
     label: "Settings",

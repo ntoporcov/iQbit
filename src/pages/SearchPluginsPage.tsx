@@ -14,6 +14,7 @@ import {
   Text,
   useColorModeValue,
   useDisclosure,
+  UseDisclosureReturn,
 } from "@chakra-ui/react";
 import { useMutation, useQuery, useQueryClient } from "react-query";
 import { TorrClient } from "../utils/TorrClient";
@@ -192,6 +193,30 @@ const PublicPlugin = ({
 
 export const SearchPluginsPageQuery = "getPlugins";
 
+export function MobileSettingsAddButton(props: {
+  addPluginDisclosure: UseDisclosureReturn;
+  onClick?: () => void;
+}) {
+  return (
+    <Button
+      size={"lg"}
+      position={"fixed"}
+      top={0}
+      right={5}
+      mt={4}
+      variant={"unstyled"}
+      color={"blue.500"}
+      onClick={() => {
+        props?.onClick && props.onClick();
+        props.addPluginDisclosure.onToggle();
+      }}
+      zIndex={30}
+    >
+      Add
+    </Button>
+  );
+}
+
 const SearchPluginsPage = () => {
   const { data, refetch } = useQuery(
     SearchPluginsPageQuery,
@@ -231,19 +256,7 @@ const SearchPluginsPage = () => {
           onAddButtonClick={addPluginDisclosure.onToggle}
         />
       ) : (
-        <Button
-          size={"lg"}
-          position={"fixed"}
-          top={0}
-          right={5}
-          mt={4}
-          variant={"unstyled"}
-          color={"blue.500"}
-          onClick={addPluginDisclosure.onToggle}
-          zIndex={30}
-        >
-          Add
-        </Button>
+        <MobileSettingsAddButton addPluginDisclosure={addPluginDisclosure} />
       )}
       <Flex gap={2} mt={isLarge ? 5 : 0} w={"100%"} flexDirection={"column"}>
         {data?.map((plugin) => (

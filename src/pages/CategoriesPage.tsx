@@ -15,11 +15,12 @@ import {
   useColorModeValue,
   useDisclosure,
 } from "@chakra-ui/react";
-import { IoPencil, IoTrash } from "react-icons/io5";
+import { IoTrash } from "react-icons/io5";
 import IosBottomSheet from "../components/ios/IosBottomSheet";
 import { TorrCategory } from "../types";
 import { Input } from "@chakra-ui/input";
 import { useIsLargeScreen } from "../utils/screenSize";
+import { MobileSettingsAddButton } from "./SearchPluginsPage";
 
 const CategoriesPage = () => {
   const { data, refetch } = useQuery(
@@ -84,14 +85,23 @@ const CategoriesPage = () => {
 
   return (
     <>
-      <PageHeader
-        title={"Categories"}
-        onAddButtonClick={() => {
-          setSelectedCategory({ mode: "Add", cat: addCategoryObject });
-          editDisclosure.onOpen();
-        }}
-        buttonLabel={"Add Category"}
-      />
+      {isLarge ? (
+        <PageHeader
+          title={"Categories"}
+          onAddButtonClick={() => {
+            setSelectedCategory({ mode: "Add", cat: addCategoryObject });
+            editDisclosure.onOpen();
+          }}
+          buttonLabel={"Add Category"}
+        />
+      ) : (
+        <MobileSettingsAddButton
+          addPluginDisclosure={editDisclosure}
+          onClick={() =>
+            setSelectedCategory({ mode: "Add", cat: addCategoryObject })
+          }
+        />
+      )}
 
       {Object.values(data || {}).map((cat, index) => (
         <Flex
@@ -112,15 +122,15 @@ const CategoriesPage = () => {
           </Flex>
           <Button
             variant={"ghost"}
-            fontSize={24}
+            fontSize={"md"}
             colorScheme={"blue"}
-            height={"100%"}
+            minHeight={"100%"}
             onClick={() => {
               setSelectedCategory({ mode: "Edit", cat });
               editDisclosure.onOpen();
             }}
           >
-            <IoPencil />
+            Edit
           </Button>
         </Flex>
       ))}
