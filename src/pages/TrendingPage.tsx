@@ -83,7 +83,7 @@ const TrendingPage = (props: TrendingPageProps) => {
   return (
     <>
       <PageHeader title={"Trending"} />
-      <Text>Trendning Movies and Shows from TMDB</Text>
+      <Text color={"gray.500"}>Trendning Movies and Shows from TMDB</Text>
       <SegmentedPicker options={tabs} selected={tab} onSelect={setTab} />
       {tab === 0 ? (
         <PosterGrid

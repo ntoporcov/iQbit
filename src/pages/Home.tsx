@@ -1,5 +1,6 @@
 import PageHeader from "../components/PageHeader";
 import {
+  Box,
   Button,
   ButtonGroup,
   Flex,
@@ -10,6 +11,7 @@ import {
   LightMode,
   Select,
   Textarea,
+  useColorModeValue,
   useDisclosure,
   VStack,
 } from "@chakra-ui/react";
@@ -24,7 +26,9 @@ import { Input } from "@chakra-ui/input";
 import { useIsLargeScreen } from "../utils/screenSize";
 import { randomTorrent } from "../data";
 import { List, WindowScroller } from "react-virtualized";
-import "react-virtualized/styles.css"; // only needs to be imported once
+import "react-virtualized/styles.css";
+import { FilterHeading } from "../components/Filters";
+import stateDictionary from "../utils/StateDictionary"; // only needs to be imported once
 
 const Home = () => {
   const { mutate: resumeAll } = useMutation("resumeAll", TorrClient.resumeAll);
@@ -111,11 +115,33 @@ const Home = () => {
 
   const isLarge = useIsLargeScreen();
 
+  const filterDisclosure = useDisclosure();
+  const [filterSearch, setFilterSearch] = useState<string>("");
+  const [filterCategory, setFilterCategory] = useState<string>("Show All");
+  const [filterStatus, setFilterStatus] = useState<string>("Show All");
+  const bgColor = useColorModeValue("white", "gray.900");
+
+  const filterIndicator = useMemo(() => {
+    let indicator = 0;
+    if (filterSearch !== "") indicator++;
+    if (filterStatus !== "Show All") indicator++;
+    if (filterCategory !== "Show All") indicator++;
+
+    return indicator;
+  }, [filterCategory, filterSearch, filterStatus]);
+
   const Torrents = useMemo(() => {
     return Object.entries(torrentsTx)
       ?.sort((a, b) => b[1]?.added_on - a[1]?.added_on)
-      ?.filter(([hash]) => !removedTorrs.includes(hash));
-  }, [torrentsTx, removedTorrs]);
+      ?.filter(([hash]) => !removedTorrs.includes(hash))
+      ?.filter(([hash, torr]) =>
+        filterCategory !== "Show All" ? torr.category === filterCategory : true
+      )
+      ?.filter(([hash, torr]) =>
+        filterStatus !== "Show All" ? torr.state === filterStatus : true
+      )
+      ?.filter(([hash, torr]) => torr.name.includes(filterSearch));
+  }, [torrentsTx, removedTorrs, filterCategory, filterStatus, filterSearch]);
 
   const Categories = useMemo(() => {
     return Object.values(categories || {}).map((c) => ({
@@ -266,6 +292,50 @@ const Home = () => {
               {"Pause All"}
             </Button>
           </ButtonGroup>
+
+          <Box bgColor={bgColor} rounded={"lg"} mb={5}>
+            <FilterHeading
+              indicator={filterIndicator}
+              disclosure={filterDisclosure}
+            />
+            {filterDisclosure.isOpen && (
+              <Flex flexDirection={"column"} gap={5} px={5} pb={5}>
+                <FormControl>
+                  <FormLabel>Search</FormLabel>
+                  <Input
+                    value={filterSearch}
+                    onChange={(e) => setFilterSearch(e.target.value)}
+                  />
+                </FormControl>
+                <FormControl>
+                  <FormLabel>Category</FormLabel>
+                  <Select
+                    value={filterCategory}
+                    onChange={(e) => setFilterCategory(e.target.value)}
+                  >
+                    <option>Show All</option>
+                    {Categories.map((cat) => (
+                      <option key={cat.label}>{cat.label}</option>
+                    ))}
+                  </Select>
+                </FormControl>
+                <FormControl>
+                  <FormLabel>Status</FormLabel>
+                  <Select
+                    value={filterStatus}
+                    onChange={(e) => setFilterStatus(e.target.value)}
+                  >
+                    <option>Show All</option>
+                    {Object.entries(stateDictionary).map(([key, data]) => (
+                      <option key={key} value={key}>
+                        {data.short}
+                      </option>
+                    ))}
+                  </Select>
+                </FormControl>
+              </Flex>
+            )}
+          </Box>
 
           <Flex flexDirection={"column"} gap={5}>
             {isLoading &&

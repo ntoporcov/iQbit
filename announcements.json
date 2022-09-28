@@ -8,6 +8,12 @@
   },
   "announcements": [
     {
+      "id": "Sep272022",
+      "title": "Download Filters Update",
+      "body": "Added some filters to the download tab.",
+      "type": "info"
+    },
+    {
       "id": "Sep262022",
       "title": "Trending Tab Update",
       "body": "Added Trending Tab to show movies and tv shows currently trending according to TMDB.",

@@ -1,5 +1,5 @@
 import React from "react";
-import { Button, SimpleGrid } from "@chakra-ui/react";
+import { Button, SimpleGrid, useColorModeValue } from "@chakra-ui/react";
 
 export interface SegmentedPickerProps {
   options: string[];
@@ -8,9 +8,12 @@ export interface SegmentedPickerProps {
 }
 
 const SegmentedPicker = (props: SegmentedPickerProps) => {
+  const selectedBg = useColorModeValue("white", "blackAlpha.700");
+  const pickerBg = useColorModeValue("gray.100", "grayAlpha.400");
+
   return (
     <SimpleGrid
-      backgroundColor={"grayAlpha.400"}
+      backgroundColor={pickerBg}
       columns={props.options.length}
       mt={3}
       mb={5}
@@ -23,12 +26,11 @@ const SegmentedPicker = (props: SegmentedPickerProps) => {
     >
       {props.options.map((option, index) => (
         <Button
-          backgroundColor={
-            index === props.selected ? "grayAlpha.800" : undefined
-          }
+          backgroundColor={index === props.selected ? selectedBg : undefined}
           key={option}
           onClick={() => props.onSelect(index)}
           variant={"unstyled"}
+          shadow={index === props.selected ? "xl" : undefined}
         >
           {option}
         </Button>

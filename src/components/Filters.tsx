@@ -1,13 +1,16 @@
 import React, { Dispatch, SetStateAction, useState } from "react";
 import {
+  Badge,
   Box,
   Button,
   Flex,
   Heading,
+  LightMode,
   Select,
   Text,
   useColorModeValue,
   useDisclosure,
+  UseDisclosureReturn,
 } from "@chakra-ui/react";
 import { IoClose, IoFilter } from "react-icons/io5";
 import { smartMap } from "../utils/smartMap";
@@ -45,39 +48,54 @@ export function useFilterState(): useFilterStateReturn {
   };
 }
 
+export const FilterHeading = ({
+  disclosure,
+  indicator,
+}: {
+  disclosure: UseDisclosureReturn;
+  indicator?: number;
+}) => (
+  <Flex
+    p={5}
+    as={"button"}
+    onClick={disclosure.onToggle}
+    width={"100%"}
+    rounded={6}
+    alignItems={"center"}
+    justifyContent={"space-between"}
+    gap={2}
+  >
+    <Heading as={"span"} size={"sm"}>
+      Filters
+      <LightMode>
+        {indicator ? (
+          <Badge bgColor={"blue.500"} color={"white"} ml={3}>
+            {indicator}
+          </Badge>
+        ) : null}
+      </LightMode>
+    </Heading>
+    {disclosure.isOpen ? <IoClose /> : <IoFilter />}
+  </Flex>
+);
+
 const Filters = (state: useFilterStateReturn) => {
   const filterDisclosure = useDisclosure();
   const backgroundColor = useColorModeValue("blackAlpha.50", "grayAlpha.400");
 
-  const heading = (
-    <Flex
-      as={"button"}
-      onClick={filterDisclosure.onToggle}
-      bgColor={filterDisclosure.isOpen ? undefined : backgroundColor}
-      width={"100%"}
-      p={filterDisclosure.isOpen ? undefined : 3}
-      rounded={6}
-      alignItems={"center"}
-      justifyContent={"space-between"}
-      gap={2}
-    >
-      <Heading as={"span"} size={"sm"}>
-        Filters
-      </Heading>
-      {filterDisclosure.isOpen ? <IoClose /> : <IoFilter />}
-    </Flex>
-  );
-
-  if (!filterDisclosure.isOpen) {
-    return heading;
-  }
-
   const inputSizes = { base: "md", lg: "sm" };
 
   return (
-    <Box bgColor={backgroundColor} p={3} rounded={6} width={"100%"}>
-      {heading}
-      <Flex mt={3} gap={5} wrap={{ base: "wrap", lg: "nowrap" }}>
+    <Box bgColor={backgroundColor} rounded={6} width={"100%"}>
+      <FilterHeading disclosure={filterDisclosure} />
+      <Flex
+        px={4}
+        pb={4}
+        hidden={!filterDisclosure.isOpen}
+        mt={3}
+        gap={5}
+        wrap={{ base: "wrap", lg: "nowrap" }}
+      >
         <Flex width={"100%"}>
           {smartMap([...qualities], (qual, { isLast, isFirst }) => (
             <Button
