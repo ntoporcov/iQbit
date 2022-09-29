@@ -28,7 +28,8 @@ import { randomTorrent } from "../data";
 import { List, WindowScroller } from "react-virtualized";
 import "react-virtualized/styles.css";
 import { FilterHeading } from "../components/Filters";
-import stateDictionary from "../utils/StateDictionary"; // only needs to be imported once
+import stateDictionary from "../utils/StateDictionary";
+import { useLocalStorage } from "usehooks-ts"; // only needs to be imported once
 
 const Home = () => {
   const { mutate: resumeAll } = useMutation("resumeAll", TorrClient.resumeAll);
@@ -116,9 +117,25 @@ const Home = () => {
   const isLarge = useIsLargeScreen();
 
   const filterDisclosure = useDisclosure();
-  const [filterSearch, setFilterSearch] = useState<string>("");
-  const [filterCategory, setFilterCategory] = useState<string>("Show All");
-  const [filterStatus, setFilterStatus] = useState<string>("Show All");
+  const [filterSearch, setFilterSearch] = useLocalStorage(
+    "home-filter-search",
+    ""
+  );
+  const [filterCategory, setFilterCategory] = useLocalStorage(
+    "home-filter-category",
+    "Show All"
+  );
+  const [filterStatus, setFilterStatus] = useLocalStorage(
+    "home-filter-status",
+    "Show All"
+  );
+
+  const resetFilters = () => {
+    setFilterStatus("Show All");
+    setFilterCategory("Show All");
+    setFilterSearch("");
+  };
+
   const bgColor = useColorModeValue("white", "gray.900");
 
   const filterIndicator = useMemo(() => {
@@ -348,6 +365,17 @@ const Home = () => {
                   loading
                 />
               ))}
+
+            {Torrents.length === 0 && filterIndicator > 0 && (
+              <Flex alignItems={"center"} flexDirection={"column"} gap={4}>
+                <Heading size={"md"}>Could not find any results</Heading>
+                <LightMode>
+                  <Button onClick={resetFilters} colorScheme={"blue"}>
+                    Reset Filters
+                  </Button>
+                </LightMode>
+              </Flex>
+            )}
 
             <List
               autoWidth
