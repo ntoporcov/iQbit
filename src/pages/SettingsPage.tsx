@@ -13,6 +13,7 @@ import {
   IoLogoRss,
   IoPricetags,
   IoSpeedometer,
+  IoText,
 } from "react-icons/io5";
 import {
   Box,
@@ -34,6 +35,7 @@ import { logout } from "../components/Auth";
 import AllAnnouncementsPage from "../components/settings/AllAnnouncements";
 import SearchPluginsPage from "./SearchPluginsPage";
 import CategoriesPage from "./CategoriesPage";
+import FontSizeSelection from "./FontSizeSelection";
 
 export interface SettingsPageProps {}
 
@@ -118,6 +120,13 @@ const SettingsPages: {
     icon: <IoPricetags size={iconSize} />,
     component: <CategoriesPage />,
     color: "red.900",
+    group: "Other Settings",
+    mobileOnly: true,
+  },
+  "Font Size": {
+    icon: <IoText size={iconSize} />,
+    component: <FontSizeSelection />,
+    color: "blue.700",
     group: "Other Settings",
     mobileOnly: true,
   },

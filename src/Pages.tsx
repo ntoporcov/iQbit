@@ -11,6 +11,8 @@ import {
   IoPricetagsOutline,
   IoSearch,
   IoSearchOutline,
+  IoText,
+  IoTextOutline,
   IoTrendingUp,
   IoTrendingUpOutline,
 } from "react-icons/io5";
@@ -19,6 +21,7 @@ import CategoriesPage from "./pages/CategoriesPage";
 import SettingsPage from "./pages/SettingsPage";
 import SearchPluginsPage from "./pages/SearchPluginsPage";
 import TrendingPage from "./pages/TrendingPage";
+import FontSizeSelection from "./pages/FontSizeSelection";
 
 export type PageNames =
   | "sideNav"
@@ -87,7 +90,17 @@ export const Pages: PageObject[] = [
       active: (props) => <IoPricetags {...props} />,
       inactive: (props) => <IoPricetagsOutline {...props} />,
     },
-    visibleOn: ["sideNav", "mobileSettingsList"],
+    visibleOn: ["sideNavBottom", "mobileSettingsList"],
+  },
+  {
+    label: "Font Size",
+    url: "/font-size",
+    component: <FontSizeSelection />,
+    Icon: {
+      active: (props) => <IoText {...props} />,
+      inactive: (props) => <IoTextOutline {...props} />,
+    },
+    visibleOn: ["sideNavBottom"],
   },
   {
     label: "Settings",

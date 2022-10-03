@@ -8,6 +8,12 @@
   },
   "announcements": [
     {
+      "id": "Oct022022",
+      "title": "Font Size Update",
+      "body": "Added a setting page for adjusting the app's font size",
+      "type": "info"
+    },
+    {
       "id": "Sep272022",
       "title": "Download Filters Update",
       "body": "Added some filters to the download tab.",

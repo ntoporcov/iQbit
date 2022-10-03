@@ -78,12 +78,12 @@ const TrendingPage = (props: TrendingPageProps) => {
       .filter(([key]) =>
         (plugins?.length || 0) > 0 ? true : key !== "plugin"
       );
-  }, []);
+  }, [plugins?.length]);
 
   return (
     <>
       <PageHeader title={"Trending"} />
-      <Text color={"gray.500"}>Trendning Movies and Shows from TMDB</Text>
+      <Text color={"gray.500"}>Trending Movies and Shows from TMDB</Text>
       <SegmentedPicker options={tabs} selected={tab} onSelect={setTab} />
       {tab === 0 ? (
         <PosterGrid

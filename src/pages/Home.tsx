@@ -29,7 +29,8 @@ import { List, WindowScroller } from "react-virtualized";
 import "react-virtualized/styles.css";
 import { FilterHeading } from "../components/Filters";
 import stateDictionary from "../utils/StateDictionary";
-import { useLocalStorage } from "usehooks-ts"; // only needs to be imported once
+import { useLocalStorage } from "usehooks-ts";
+import { useFontSizeContext } from "../components/FontSizeProvider"; // only needs to be imported once
 
 const Home = () => {
   const { mutate: resumeAll } = useMutation("resumeAll", TorrClient.resumeAll);
@@ -166,6 +167,8 @@ const Home = () => {
       value: c.name,
     }));
   }, [categories]);
+
+  const fontSizeContext = useFontSizeContext();
 
   return (
     <WindowScroller>
@@ -380,7 +383,7 @@ const Home = () => {
             <List
               autoWidth
               rowCount={Torrents.length}
-              rowHeight={230}
+              rowHeight={(230 * fontSizeContext.scale) / 100}
               width={width}
               height={height}
               scrollTop={scrollTop}
@@ -394,17 +397,18 @@ const Home = () => {
                 index, // Index of row within collection
                 style, // Style object to be applied to row (to position it)
               }) => (
-                <TorrentBox
-                  key={key}
-                  torrentData={Torrents[index][1]}
-                  hash={Torrents[index][0]}
-                  categories={Object.values(categories || {})}
-                  style={{
-                    ...style,
-                    paddingBottom:
-                      index === Torrents.length - 1 ? "30vh" : undefined,
-                  }}
-                />
+                <div key={key}>
+                  <TorrentBox
+                    torrentData={Torrents[index][1]}
+                    hash={Torrents[index][0]}
+                    categories={Object.values(categories || {})}
+                    style={{
+                      ...style,
+                      paddingBottom:
+                        index === Torrents.length - 1 ? "30vh" : undefined,
+                    }}
+                  />
+                </div>
               )}
             />
 

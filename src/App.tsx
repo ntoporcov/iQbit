@@ -10,6 +10,7 @@ import AnnouncementChecker from "./components/AnnouncementChecker";
 import pckg from "../package.json";
 
 import ReactGA from "react-ga";
+import FontSizeProvider from "./components/FontSizeProvider";
 
 ReactGA.initialize("UA-60234062-3");
 ReactGA.pageview("/");
@@ -142,9 +143,11 @@ function App() {
   return (
     <ChakraProvider theme={theme} cssVarsRoot={"body"}>
       <QueryClientProvider client={queryClient}>
-        <AnnouncementChecker>
-          <AuthChecker />
-        </AnnouncementChecker>
+        <FontSizeProvider>
+          <AnnouncementChecker>
+            <AuthChecker />
+          </AnnouncementChecker>
+        </FontSizeProvider>
       </QueryClientProvider>
     </ChakraProvider>
   );
