@@ -11,13 +11,15 @@ import {
 import NavButton from "../components/buttons/NavButton";
 import { IconBaseProps } from "react-icons";
 import { useIsLargeScreen } from "../utils/screenSize";
-import { Pages } from "../Pages";
+import { PageLabels, Pages } from "../Pages";
 import Home from "../pages/Home";
 import { useLocation } from "react-router-dom";
 import useScrollPosition from "../hooks/useScrollPosition";
 import { useLogin } from "../utils/useLogin";
 import { logout } from "../components/Auth";
 import { isAndroid, isIOS } from "react-device-detect";
+import { useReadLocalStorage } from "usehooks-ts";
+import { defaultTabs } from "../pages/TabSelectorPage";
 
 export interface DefaultLayoutProps {}
 
@@ -54,6 +56,12 @@ const DefaultLayout = (props: PropsWithChildren<DefaultLayoutProps>) => {
   const isTouchDevice = isAndroid || isIOS;
   const scroll = useScrollPosition();
   const fakeBodyBg = useColorModeValue("gray.50", "black");
+
+  const storedTabs = useReadLocalStorage<(PageLabels | "")[]>("tabs");
+  const tabsSelected = storedTabs ?? defaultTabs;
+
+  const DownloadsPage = Pages.find((page) => page.label === "Downloads");
+  const SettingsPage = Pages.find((page) => page.label === "Settings");
 
   return (
     <Box backgroundColor={fakeBodyBg}>
@@ -181,7 +189,7 @@ const DefaultLayout = (props: PropsWithChildren<DefaultLayoutProps>) => {
       {!isLarge && (
         <SimpleGrid
           as={"nav"}
-          columns={4}
+          columns={(tabsSelected?.filter((curr) => !!curr).length || 0) + 2}
           width={"100%"}
           position={"fixed"}
           bottom={0}
@@ -189,8 +197,29 @@ const DefaultLayout = (props: PropsWithChildren<DefaultLayoutProps>) => {
           borderTop={"1px solid"}
           borderColor={BgBorderColor}
         >
-          {Pages.filter((page) => page.visibleOn.includes("bottomNav")).map(
-            ({ url, Icon, label }) => (
+          {DownloadsPage && (
+            <NavButton
+              key={DownloadsPage.url}
+              {...sharedNavButtonProps}
+              path={DownloadsPage.url}
+              icon={{
+                active: DownloadsPage.Icon.active({
+                  ...activeIconProps,
+                  ...iconProps,
+                }),
+                inactive: DownloadsPage.Icon.inactive({ ...iconProps }),
+              }}
+              label={DownloadsPage.label}
+            />
+          )}
+          {tabsSelected.map((tab) => {
+            const pageData = Pages.find((page) => page.label === tab);
+
+            if (!pageData) return null;
+
+            const { url, Icon, label } = pageData;
+
+            return (
               <NavButton
                 key={url}
                 {...sharedNavButtonProps}
@@ -201,7 +230,22 @@ const DefaultLayout = (props: PropsWithChildren<DefaultLayoutProps>) => {
                 }}
                 label={label}
               />
-            )
+            );
+          })}
+          {SettingsPage && (
+            <NavButton
+              key={SettingsPage.url}
+              {...sharedNavButtonProps}
+              path={SettingsPage.url}
+              icon={{
+                active: SettingsPage.Icon.active({
+                  ...activeIconProps,
+                  ...iconProps,
+                }),
+                inactive: SettingsPage.Icon.inactive({ ...iconProps }),
+              }}
+              label={SettingsPage.label}
+            />
           )}
         </SimpleGrid>
       )}

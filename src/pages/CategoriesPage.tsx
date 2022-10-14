@@ -21,12 +21,19 @@ import { TorrCategory } from "../types";
 import { Input } from "@chakra-ui/input";
 import { useIsLargeScreen } from "../utils/screenSize";
 import { MobileSettingsAddButton } from "./SearchPluginsPage";
+import { useLocation } from "react-router-dom";
+import { Pages } from "../Pages";
 
 const CategoriesPage = () => {
   const { data, refetch } = useQuery(
     "getCategoriesPage",
     TorrClient.getCategories
   );
+
+  const location = useLocation();
+  const isPage =
+    location.pathname ===
+    Pages.find((page) => page.label === "Categories")?.url;
 
   const { data: settings } = useQuery("settings", TorrClient.getSettings);
 
@@ -85,7 +92,7 @@ const CategoriesPage = () => {
 
   return (
     <>
-      {isLarge ? (
+      {isLarge || isPage ? (
         <PageHeader
           title={"Categories"}
           onAddButtonClick={() => {

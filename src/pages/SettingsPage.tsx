@@ -11,6 +11,7 @@ import {
   IoGitCompare,
   IoLink,
   IoLogoRss,
+  IoPhonePortrait,
   IoPricetags,
   IoSpeedometer,
   IoText,
@@ -36,6 +37,7 @@ import AllAnnouncementsPage from "../components/settings/AllAnnouncements";
 import SearchPluginsPage from "./SearchPluginsPage";
 import CategoriesPage from "./CategoriesPage";
 import FontSizeSelection from "./FontSizeSelection";
+import TabSelectorPage from "./TabSelectorPage";
 
 export interface SettingsPageProps {}
 
@@ -127,6 +129,13 @@ const SettingsPages: {
     icon: <IoText size={iconSize} />,
     component: <FontSizeSelection />,
     color: "blue.700",
+    group: "Other Settings",
+    mobileOnly: true,
+  },
+  "Mobile Bottom Tabs": {
+    icon: <IoPhonePortrait size={iconSize} />,
+    component: <TabSelectorPage />,
+    color: "teal.600",
     group: "Other Settings",
     mobileOnly: true,
   },

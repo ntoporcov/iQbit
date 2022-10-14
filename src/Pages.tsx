@@ -22,16 +22,18 @@ import SettingsPage from "./pages/SettingsPage";
 import SearchPluginsPage from "./pages/SearchPluginsPage";
 import TrendingPage from "./pages/TrendingPage";
 import FontSizeSelection from "./pages/FontSizeSelection";
+import TabSelectorPage from "./pages/TabSelectorPage";
 
 export type PageNames =
   | "sideNav"
   | "bottomNav"
   | "sideNavBottom"
-  | "mobileSettingsList";
+  | "mobileSettingsList"
+  | "tabSelector";
 
 type PageObject = {
   url: string;
-  label: string;
+  label: PageLabels;
   component: ReactNode;
   Icon: {
     active: (props: any) => ReactElement;
@@ -40,6 +42,16 @@ type PageObject = {
   visibleOn: PageNames[];
   layout?: (props: any) => ReactNode;
 };
+
+export type PageLabels =
+  | "Downloads"
+  | "Search"
+  | "Trending"
+  | "Categories"
+  | "Font Size"
+  | "Settings"
+  | "Search Plugins"
+  | "Tab Selector";
 
 export const Pages: PageObject[] = [
   {
@@ -60,7 +72,7 @@ export const Pages: PageObject[] = [
       active: (props) => <IoSearch {...props} />,
       inactive: (props) => <IoSearchOutline {...props} />,
     },
-    visibleOn: ["bottomNav", "sideNav"],
+    visibleOn: ["bottomNav", "sideNav", "tabSelector"],
   },
   {
     label: "Trending",
@@ -70,7 +82,7 @@ export const Pages: PageObject[] = [
       active: (props) => <IoTrendingUp {...props} />,
       inactive: (props) => <IoTrendingUpOutline {...props} />,
     },
-    visibleOn: ["bottomNav", "sideNav"],
+    visibleOn: ["bottomNav", "sideNav", "tabSelector"],
   },
   {
     label: "Search",
@@ -90,7 +102,7 @@ export const Pages: PageObject[] = [
       active: (props) => <IoPricetags {...props} />,
       inactive: (props) => <IoPricetagsOutline {...props} />,
     },
-    visibleOn: ["sideNavBottom", "mobileSettingsList"],
+    visibleOn: ["sideNavBottom", "mobileSettingsList", "tabSelector"],
   },
   {
     label: "Font Size",
@@ -121,5 +133,15 @@ export const Pages: PageObject[] = [
       inactive: (props) => <IoExtensionPuzzleOutline {...props} />,
     },
     visibleOn: ["mobileSettingsList", "sideNav"],
+  },
+  {
+    label: "Tab Selector",
+    url: "/tab-selector",
+    component: <TabSelectorPage />,
+    Icon: {
+      active: (props) => <IoExtensionPuzzle {...props} />,
+      inactive: (props) => <IoExtensionPuzzleOutline {...props} />,
+    },
+    visibleOn: ["mobileSettingsList"],
   },
 ];
