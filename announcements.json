@@ -8,6 +8,12 @@
   },
   "announcements": [
     {
+      "id": "Oct192022",
+      "title": "Custom Tabs Update",
+      "body": "Added way to hide/change the botton tabs visible on mobile",
+      "type": "info"
+    },
+    {
       "id": "Oct022022",
       "title": "Font Size Update",
       "body": "Added a setting page for adjusting the app's font size",
