@@ -7,6 +7,7 @@ import {
   TorrSettings,
   TorrTorrentInfo,
 } from "../types";
+import queryString from "query-string";
 
 let serverAddress = window.location.origin;
 
@@ -45,7 +46,7 @@ export const TorrClient = {
   },
 
   logout: async () => {
-    return await APICall.get("auth/logout");
+    return await APICall.post("auth/logout");
   },
 
   getTorrents: async (
@@ -113,7 +114,7 @@ export const TorrClient = {
   },
 
   remove: async (hash = "", deleteFiles = true) => {
-    return await APICall.get("torrents/delete", {
+    return await APICall.post("torrents/delete", {
       params: {
         hashes: hash,
         deleteFiles,
@@ -156,12 +157,10 @@ export const TorrClient = {
   },
 
   addCategory: async (name: string, path: string) => {
-    return await APICall.get("torrents/createCategory", {
-      params: {
-        category: name,
-        savePath: path,
-      },
-    });
+    return await APICall.post("torrents/createCategory", queryString.stringify({
+      category: name,
+      savePath: path
+  }));
   },
 
   // removeCategories: async (category) => {
@@ -173,30 +172,24 @@ export const TorrClient = {
   // },
 
   saveCategory: async (category: string, savePath: string) => {
-    return await APICall.get("torrents/editCategory", {
-      params: {
-        category,
-        savePath,
-      },
-    });
+    return await APICall.post("torrents/editCategory", queryString.stringify({
+      category: category,
+      savePath: savePath
+  }));
   },
 
   setTorrentCategory: async (hash = "", category = "") => {
-    return await APICall.get("torrents/setCategory", {
-      params: {
+    return await APICall.post("torrents/setCategory", queryString.stringify({
         hashes: hash,
-        category,
-      },
-    });
+        category
+    }));
   },
 
   renameTorrent: async (hash: string, name: string) => {
-    return await APICall.get("torrents/rename", {
-      params: {
+    return await APICall.post("torrents/rename", queryString.stringify({
         hash,
         name,
-      },
-    });
+    }));
   },
 
   getInstalledPlugins: async (): Promise<TorrPlugin[]> => {
