@@ -81,44 +81,26 @@ export const TorrClient = {
   },
 
   resume: async (hash = "") => {
-    return await APICall.get("torrents/resume", {
-      params: {
-        hashes: hash,
-      },
-    });
+    return await APICall.post("torrents/resume", `hashes=${hash}`);
   },
 
   resumeAll: async () => {
-    return await APICall.get("torrents/resume", {
-      params: {
-        hashes: "all",
-      },
-    });
+    return await APICall.post("torrents/resume", `hashes=all`);
   },
 
   pause: async (hash = "") => {
-    return await APICall.get("torrents/pause", {
-      params: {
-        hashes: hash,
-      },
-    });
+    return await APICall.post("torrents/pause", `hashes=${hash}`);
   },
 
   pauseAll: async () => {
-    return await APICall.get("torrents/pause", {
-      params: {
-        hashes: "all",
-      },
-    });
+    return await APICall.post("torrents/pause", `hashes=all`);
   },
 
   remove: async (hash = "", deleteFiles = true) => {
-    return await APICall.get("torrents/delete", {
-      params: {
-        hashes: hash,
-        deleteFiles,
-      },
-    });
+    return await APICall.post(
+      "torrents/delete",
+      `hashes=${hash}&deleteFiles=${deleteFiles}`
+    );
   },
 
   addTorrent: async (
@@ -156,47 +138,35 @@ export const TorrClient = {
   },
 
   addCategory: async (name: string, path: string) => {
-    return await APICall.get("torrents/createCategory", {
-      params: {
-        category: name,
-        savePath: path,
-      },
-    });
+    return await APICall.post(
+      "torrents/createCategory",
+      `category=${name}&savePath=${path}`
+    );
   },
 
-  // removeCategories: async (category) => {
-  //   return await APICall.get("torrents/removeCategories", {
-  //     params: {
-  //       categories: category,
-  //     },
-  //   });
-  // },
+  removeCategories: async (category: string) => {
+    return await APICall.post(
+      "torrents/removeCategories",
+      `categories=${category}`
+    );
+  },
 
   saveCategory: async (category: string, savePath: string) => {
-    return await APICall.get("torrents/editCategory", {
-      params: {
-        category,
-        savePath,
-      },
-    });
+    return await APICall.post(
+      "torrents/editCategory",
+      `category=${category}&savePath=${savePath}`
+    );
   },
 
   setTorrentCategory: async (hash = "", category = "") => {
-    return await APICall.get("torrents/setCategory", {
-      params: {
-        hashes: hash,
-        category,
-      },
-    });
+    return await APICall.post(
+      "torrents/setCategory",
+      `hashes=${hash}&category=${category}`
+    );
   },
 
   renameTorrent: async (hash: string, name: string) => {
-    return await APICall.get("torrents/rename", {
-      params: {
-        hash,
-        name,
-      },
-    });
+    return await APICall.post("torrents/rename", `hash=${hash}&name=${name}`);
   },
 
   getInstalledPlugins: async (): Promise<TorrPlugin[]> => {
@@ -205,9 +175,10 @@ export const TorrClient = {
   },
 
   togglePluginEnabled: async (name: string, enable: boolean) => {
-    const { data } = await APICall.get("search/enablePlugin", {
-      params: { names: name, enable },
-    });
+    const { data } = await APICall.post(
+      "search/enablePlugin",
+      `names=${name}&enable=${enable}`
+    );
     return data;
   },
 
@@ -216,9 +187,10 @@ export const TorrClient = {
   },
 
   uninstallPlugin: async (name: string) => {
-    const { data } = await APICall.get("search/uninstallPlugin", {
-      params: { names: name },
-    });
+    const { data } = await APICall.post(
+      "search/uninstallPlugin",
+      `names=${name}`
+    );
     return data;
   },
 
@@ -228,23 +200,20 @@ export const TorrClient = {
   },
 
   stopSearch: async (id: number): Promise<TorrPluginSearchResultResponse> => {
-    const { data } = await APICall.get("search/stop", { params: { id } });
+    const { data } = await APICall.post("search/stop", `id=${id}`);
     return data;
   },
 
   deleteSearch: async (id: number) => {
-    const { data } = await APICall.get("search/delete", { params: { id } });
+    const { data } = await APICall.post("search/delete", `id=${id}`);
     return data;
   },
 
   createSearch: async (query: string): Promise<{ id: number }> => {
-    const { data } = await APICall.get("search/start", {
-      params: {
-        pattern: query,
-        plugins: "enabled",
-        category: "all",
-      },
-    });
+    const { data } = await APICall.post(
+      "search/start",
+      `pattern=${query}&plugins=enabled&category=all`
+    );
     return data;
   },
 };

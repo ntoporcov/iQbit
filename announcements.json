@@ -8,6 +8,12 @@
   },
   "announcements": [
     {
+      "id": "Jan032023",
+      "title": "API Call Fixes",
+      "body": "If you were stuck on 4.4.4 because some of the functionality was broken. This update is fixing that :)",
+      "type": "info"
+    },
+    {
       "id": "Oct192022",
       "title": "Custom Tabs Update",
       "body": "Added way to hide/change the botton tabs visible on mobile",

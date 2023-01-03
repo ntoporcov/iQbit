@@ -84,6 +84,14 @@ const CategoriesPage = () => {
     }
   );
 
+  const { mutate: removeCategory, isLoading: removeCategoryLoading } =
+    useMutation("removeCategory", TorrClient.removeCategories, {
+      onSuccess: async () => {
+        await refetch();
+        editDisclosure.onClose();
+      },
+    });
+
   const isLarge = useIsLargeScreen();
   const backgroundColor = useColorModeValue(
     "white",
@@ -175,7 +183,13 @@ const CategoriesPage = () => {
           </FormControl>
           <Flex gap={3} mt={10}>
             {selectedCategory.mode === "Edit" && (
-              <Button size={"lg"} colorScheme={"red"} variant={"ghost"}>
+              <Button
+                size={"lg"}
+                colorScheme={"red"}
+                variant={"ghost"}
+                isLoading={removeCategoryLoading}
+                onClick={() => removeCategory(selectedCategory.cat.name)}
+              >
                 <IoTrash size={28} />
               </Button>
             )}
