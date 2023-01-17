@@ -151,6 +151,7 @@ const PluginSearch = (props: SearchProviderComponentProps) => {
           <SeedsAndPeers
             seeds={result.nbSeeders.toString()}
             peers={result.nbLeechers.toString()}
+            size={result.fileSize}
           />
         </TorrentDownloadBox>
       ))}
