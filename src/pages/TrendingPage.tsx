@@ -1,49 +1,37 @@
-import React, { useMemo, useState } from "react";
-import {
-    Box,
-    Button,
-    Flex,
-    LightMode,
-    Spinner,
-    Text,
-    useColorModeValue,
-    useDisclosure,
-} from "@chakra-ui/react";
+import React, {useMemo, useState} from "react";
+import {Box, Button, Flex, LightMode, Spinner, Text, useColorModeValue, useDisclosure,} from "@chakra-ui/react";
 import PageHeader from "../components/PageHeader";
-import { useMutation, useQuery } from "react-query";
-import { tmdbClient } from "../utils/tmdbClient";
+import {useMutation, useQuery} from "react-query";
+import {tmdbClient} from "../utils/tmdbClient";
 import PosterGrid from "../components/PosterGrid";
-import { MovieResult, TvResult } from "moviedb-promise";
+import {MovieResult, TvResult} from "moviedb-promise";
 import SegmentedPicker from "../components/SegmentedPicker";
 import IosBottomSheet from "../components/ios/IosBottomSheet";
-import { createYTSMagnetLink, SectionSM } from "../searchAPIs/yts";
-import { YTSClient } from "../utils/YTSClient";
+import {createYTSMagnetLink, SectionSM} from "../searchAPIs/yts";
+import {YTSClient} from "../utils/YTSClient";
 import TorrentDownloadBox from "../components/TorrentDownloadBox";
 import TorrentMovieData from "../components/TorrentMovieData";
 import SeedsAndPeers from "../components/SeedsAndPeers";
-import { providers } from "./SearchPage";
-import { useNavigate } from "react-router-dom";
-import { SearchPluginsPageQuery } from "./SearchPluginsPage";
-import { TorrClient } from "../utils/TorrClient";
-
-
-export interface TrendingPageProps {}
+import {providers} from "./SearchPage";
+import {useNavigate} from "react-router-dom";
+import {SearchPluginsPageQuery} from "./SearchPluginsPage";
+import {TorrClient} from "../utils/TorrClient";
 
 const smallImage = "http://image.tmdb.org/t/p/w200";
 const originalImage = "http://image.tmdb.org/t/p/original";
 
 
-const TrendingPage = (props: TrendingPageProps) => {
-    const tabs = ["Movies", "TV", "TOP 100"];
-    const [tab, setTab] = useState(0);
+const TrendingPage = () => {
+  const tabs = ["Movies", "TV", "TOP 100"];
+  const [tab, setTab] = useState(0);
 
-    const [selectedMovie, setSelectedMovie] = useState<MovieResult>();
-    const movieBottomSheet = useDisclosure();
-    const { data: trendingMovies } = useQuery("getTrendingMovies", async () =>
-        tmdbClient.trending({
-            media_type: "movie",
-            time_window: "day",
-        })
+  const [selectedMovie, setSelectedMovie] = useState<MovieResult>();
+  const movieBottomSheet = useDisclosure();
+  const {data: trendingMovies} = useQuery("getTrendingMovies", async () =>
+      tmdbClient.trending({
+        media_type: "movie",
+        time_window: "day",
+      })
     );
 
     const [currentPage, setCurrentPage] = useState(1);
@@ -148,27 +136,32 @@ const TrendingPage = (props: TrendingPageProps) => {
                 />
             ) : tab === 2 ? (
 
-                <><PosterGrid
-                    list={(topMoviesData as MovieResult[]) || []}
-                    keyExtractor={(item) => item?.id?.toString() || Math.random().toString()}
-                    titleExtractor={(movie) => movie?.title || "Unknown Title"}
-                    images={(movie) => ({
-                        large: originalImage + movie.poster_path || "",
-                        small: smallImage + movie.poster_path || "",
-                    })}
-                    onSelect={(movie) => {
-                        movieBottomSheet.onOpen();
-                        setSelectedMovie(movie);
-                    }}/>
-                    <Button
-                        variant={"ghost"}
-                        size={"xl"}
-                        colorScheme={"blue"}
-                        onClick={handleLoadMore}
-                    >
-                        Load More
-                    </Button>
-                </>
+              <Flex flexDir={"column"}>
+                <PosterGrid
+                  list={(topMoviesData as MovieResult[]) || []}
+                  keyExtractor={(item) => item?.id?.toString() || Math.random().toString()}
+                  titleExtractor={(movie) => movie?.title || "Unknown Title"}
+                  images={(movie) => ({
+                    large: originalImage + movie.poster_path || "",
+                    small: smallImage + movie.poster_path || "",
+                  })}
+                  onSelect={(movie) => {
+                    getTorrs(
+                      `${movie?.title} ${movie?.release_date?.split("-")?.[0] || ""}`
+                    );
+                    movieBottomSheet.onOpen();
+                    setSelectedMovie(movie);
+                  }}/>
+                <Button
+                  mt={3}
+                  width={"full"}
+                  variant={"ghost"}
+                  colorScheme={"blue"}
+                  onClick={handleLoadMore}
+                >
+                  Load More
+                </Button>
+              </Flex>
 
             ) : null}
 

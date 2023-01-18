@@ -8,6 +8,12 @@
   },
   "announcements": [
     {
+      "id": "Jan172023",
+      "title": "Thanks @AdamSEY in Github",
+      "body": "They added Top 100 tab in trending and file size info when searching with plugins",
+      "type": "info"
+    },
+    {
       "id": "Jan032023",
       "title": "API Call Fixes",
       "body": "If you were stuck on 4.4.4 because some of the functionality was broken. This update is fixing that :)",
