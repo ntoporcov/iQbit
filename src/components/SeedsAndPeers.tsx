@@ -1,15 +1,16 @@
 import React from "react";
 import { Flex, Text } from "@chakra-ui/react";
 import { StatWithIcon } from "./StatWithIcon";
-import { IoPeople } from "react-icons/io5";
+import {IoPeople, IoServer} from "react-icons/io5";
 import { useIsLargeScreen } from "../utils/screenSize";
-
+import filesize from "filesize";
 export interface SeedsAndPeersProps {
   seeds: string;
   peers: string;
+  size?: number;
 }
 
-const SeedsAndPeers = ({ seeds, peers }: SeedsAndPeersProps) => {
+const SeedsAndPeers = ({ seeds, peers, size }: SeedsAndPeersProps) => {
   const isLarge = useIsLargeScreen();
 
   return (
@@ -32,6 +33,18 @@ const SeedsAndPeers = ({ seeds, peers }: SeedsAndPeersProps) => {
           </Text>
         }
       />
+        {size && (
+        <StatWithIcon
+            lit
+            icon={<IoServer />}
+            label={
+                <Text as={"span"} fontSize={"md"}>
+                    {filesize(size, { round: 1 })}
+                </Text>
+            }
+        />)}
+
+
     </Flex>
   );
 };
