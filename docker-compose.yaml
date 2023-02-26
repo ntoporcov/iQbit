@@ -1,0 +1,14 @@
+version: '3.9'
+
+services:
+  web:
+    image: iqbit:latest
+    build: .
+    restart: unless-stopped
+    env_file:
+      - .env.default
+    # the container port is defined in the env file as
+    # the STANDALONE_SERVER_PORT variable and must match
+    ports:
+      - 8081:8081
+
