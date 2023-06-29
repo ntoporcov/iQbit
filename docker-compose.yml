@@ -1,0 +1,12 @@
+version: '3'
+services:
+  iqbit:
+    build:
+      context: .
+    container_name: iqbit
+    restart: unless-stopped
+    ports:
+      - 8081:8081
+    environment:
+      - QBIT_HOST=http://localhost:8080
+      - STANDALONE_SERVER_PORT=8081
