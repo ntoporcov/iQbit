@@ -8,6 +8,12 @@
   },
   "announcements": [
     {
+      "id": "Jul142023",
+      "title": "Thanks @VishveshC in Github",
+      "body": "Updated the build process to include a login.html file",
+      "type": "info"
+    },
+    {
       "id": "Jan172023",
       "title": "Thanks @AdamSEY in Github",
       "body": "They added Top 100 tab in trending and file size info when searching with plugins",
