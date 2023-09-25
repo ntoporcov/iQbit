@@ -43,7 +43,7 @@
   "scripts": {
     "start": "react-scripts start",
     "startSSL": "export HTTPS=true&&SSL_CRT_FILE=cert.pem&&SSL_KEY_FILE=key.pem react-scripts start",
-    "build": "react-scripts build && rm -rf release/public && mkdir release/public && mv -v build/* ./release/public",
+    "build": "react-scripts build && rm -rf release/public && mkdir release/public && mv -v build/* ./release/public && cp release/public/index.html release/public/login.html",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "server-setup": "cd server && npm install ",
