@@ -149,6 +149,10 @@ const Home = () => {
   }, [filterCategory, filterSearch, filterStatus]);
 
   const Torrents = useMemo(() => {
+    if (torrentsTx === undefined) {
+      return [];
+    }
+    
     return Object.entries(torrentsTx)
       ?.sort((a, b) => b[1]?.added_on - a[1]?.added_on)
       ?.filter(([hash]) => !removedTorrs.includes(hash))
