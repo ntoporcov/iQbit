@@ -1,16 +1,18 @@
-import React, { ReactElement } from "react";
-import { Button, ColorProps, Text } from "@chakra-ui/react";
-import { NavLink, useLocation } from "react-router-dom";
-import { useIsLargeScreen } from "../../utils/screenSize";
+import React, {ReactElement} from "react";
+import {Button, ColorProps, Text} from "@chakra-ui/react";
+import {NavLink, useLocation} from "react-router-dom";
+import {useIsLargeScreen} from "../../utils/screenSize";
 
 export interface NavButtonProps {
-  path: string;
+  path?: string;
   icon: {
     active: ReactElement;
     inactive: ReactElement;
   };
   label: string;
   activeColor: ColorProps["color"];
+  notLit?: boolean;
+  onClick?: () => void;
 }
 
 const NavButton = (props: NavButtonProps) => {
@@ -21,10 +23,12 @@ const NavButton = (props: NavButtonProps) => {
     (isLarge && location.pathname === "/");
 
   return (
-    <NavLink to={props.path}>
+    <NavLink to={props.path || ""}>
       {({ isActive: navActive }) => {
         const isActive =
-          isSearch && props.label === "Search" ? true : navActive;
+          (isSearch && props.label === "Search" ? true : navActive) &&
+          !props.notLit &&
+          props.path;
 
         return (
           <Button
@@ -40,6 +44,7 @@ const NavButton = (props: NavButtonProps) => {
             _hover={{ bgColor: !isLarge ? "transparent" : undefined }}
             _active={{ bgColor: !isLarge ? "transparent" : undefined }}
             _focus={{ bgColor: !isLarge ? "transparent" : undefined }}
+            onClick={props.onClick}
           >
             {isActive ? props.icon.active : props.icon.inactive}
             <Text

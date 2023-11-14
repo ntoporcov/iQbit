@@ -1,6 +1,6 @@
 const { createProxyMiddleware } = require("http-proxy-middleware");
 
-const qbittorrentHost = "http://192.168.50.100:8080";
+const qbittorrentHost = "http://cafofotoporcov.asuscomm.com";
 
 module.exports = function (app) {
   app.use(

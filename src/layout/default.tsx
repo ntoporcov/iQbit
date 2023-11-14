@@ -1,25 +1,27 @@
-import React, { PropsWithChildren, useEffect } from "react";
-import {
-  Box,
-  Button,
-  Divider,
-  Flex,
-  SimpleGrid,
-  useColorModeValue,
-  useTheme,
-} from "@chakra-ui/react";
+import React, {PropsWithChildren, useEffect, useState} from "react";
+import {Box, Button, Divider, Flex, SimpleGrid, useColorModeValue, useTheme,} from "@chakra-ui/react";
 import NavButton from "../components/buttons/NavButton";
-import { IconBaseProps } from "react-icons";
-import { useIsLargeScreen } from "../utils/screenSize";
-import { PageLabels, Pages } from "../Pages";
+import {IconBaseProps} from "react-icons";
+import {useIsLargeScreen} from "../utils/screenSize";
+import {PageLabels, Pages} from "../Pages";
 import Home from "../pages/Home";
-import { useLocation } from "react-router-dom";
+import {useLocation} from "react-router-dom";
 import useScrollPosition from "../hooks/useScrollPosition";
-import { useLogin } from "../utils/useLogin";
-import { logout } from "../components/Auth";
-import { isAndroid, isIOS } from "react-device-detect";
-import { useReadLocalStorage } from "usehooks-ts";
-import { defaultTabs } from "../pages/TabSelectorPage";
+import {useLogin} from "../utils/useLogin";
+import {logout} from "../components/Auth";
+import {isAndroid, isIOS} from "react-device-detect";
+import {useLocalStorage, useReadLocalStorage} from "usehooks-ts";
+import {defaultTabs} from "../pages/TabSelectorPage";
+import {IoLayersOutline, IoReorderFourOutline} from "react-icons/io5";
+
+const expandedKey = "desktop-expanded";
+
+export const useIsDesktopExpanded = () => {
+  const isLarge = useIsLargeScreen();
+  const expandedLS = useReadLocalStorage(expandedKey);
+
+  return isLarge && expandedLS;
+};
 
 export interface DefaultLayoutProps {}
 
@@ -63,6 +65,12 @@ const DefaultLayout = (props: PropsWithChildren<DefaultLayoutProps>) => {
   const DownloadsPage = Pages.find((page) => page.label === "Downloads");
   const SettingsPage = Pages.find((page) => page.label === "Settings");
 
+  const [desktopExpanded, setDesktopExpanded] = useLocalStorage(
+    expandedKey,
+    true
+  );
+  const [workArea, setWorkArea] = useState("");
+
   return (
     <Box backgroundColor={fakeBodyBg}>
       <Box
@@ -87,23 +95,33 @@ const DefaultLayout = (props: PropsWithChildren<DefaultLayoutProps>) => {
         />
       )}
       <Flex gap={isLarge ? 10 : undefined} as={"main"} mb={"30vh"} px={5}>
-        <Box maxWidth={isLarge ? "400px" : undefined} width={"100%"}>
-          {isLarge ? <Home /> : props.children}
+        <Box
+          maxWidth={
+            isLarge
+              ? desktopExpanded
+                ? "calc(100vw - 270px)"
+                : "400px"
+              : undefined
+          }
+          width={"100%"}
+          zIndex={desktopExpanded ? 10 : 0}
+          mt={desktopExpanded ? 5 : 0}
+        >
+          {isLarge ? <Home expanded={desktopExpanded}/> : props.children}
         </Box>
         {isLarge && (
           <Flex
             flexGrow={1}
             mt={6}
             as={"aside"}
-            backgroundColor={largeWorkAreaBgColor}
             height={"calc(100vh - 150px)"}
-            shadow={"lg"}
-            rounded={12}
-            overflow={"hidden"}
+            rounded={"xl"}
             position={"fixed"}
             top={"90px"}
             width={"calc(100% - 470px)"}
             left={"450px"}
+            justifyContent={"flex-end"}
+            zIndex={workArea ? 30 : 0}
           >
             <Flex
               flexDirection={"column"}
@@ -111,6 +129,9 @@ const DefaultLayout = (props: PropsWithChildren<DefaultLayoutProps>) => {
               height={"100%"}
               justifyContent={"space-between"}
               p={5}
+              order={!desktopExpanded ? 0 : 1}
+              roundedLeft={"2xl"}
+              rounded={desktopExpanded ? "2xl" : undefined}
             >
               <Flex
                 flexDirection={"column"}
@@ -131,6 +152,10 @@ const DefaultLayout = (props: PropsWithChildren<DefaultLayoutProps>) => {
                         inactive: Icon.inactive({ ...iconProps }),
                       }}
                       label={label}
+                      notLit={!workArea}
+                      onClick={() =>
+                        setWorkArea((curr) => (curr === label ? "" : label))
+                      }
                     />
                   )
                 )}
@@ -140,6 +165,24 @@ const DefaultLayout = (props: PropsWithChildren<DefaultLayoutProps>) => {
                 justifyContent={"flex-start"}
                 gap={2}
               >
+                <NavButton
+                  key={"nothing"}
+                  {...sharedNavButtonProps}
+                  icon={{
+                    active: (desktopExpanded
+                      ? IoLayersOutline
+                      : IoReorderFourOutline)({
+                      ...activeIconProps,
+                      ...iconProps,
+                    }),
+                    inactive: (desktopExpanded
+                      ? IoLayersOutline
+                      : IoReorderFourOutline)({...iconProps}),
+                  }}
+                  label={desktopExpanded ? "Show Cards" : "Show Table"}
+                  notLit={!workArea}
+                  onClick={() => setDesktopExpanded((curr) => !curr)}
+                />
                 {Pages.filter((page) =>
                   page.visibleOn.includes("sideNavBottom")
                 ).map(({ url, Icon, label }) => (
@@ -155,6 +198,10 @@ const DefaultLayout = (props: PropsWithChildren<DefaultLayoutProps>) => {
                       inactive: Icon.inactive({ ...iconProps }),
                     }}
                     label={label}
+                    notLit={!workArea}
+                    onClick={() =>
+                      setWorkArea((curr) => (curr === label ? "" : label))
+                    }
                   />
                 ))}
                 <Divider my={2} />
@@ -172,12 +219,19 @@ const DefaultLayout = (props: PropsWithChildren<DefaultLayoutProps>) => {
               </Flex>
             </Flex>
             <Flex
+              backgroundColor={largeWorkAreaBgColor}
               flexDirection={"column"}
               height={"100%"}
               p={5}
               flexGrow={2}
               overflowY={"auto"}
               overflowX={"hidden"}
+              order={!desktopExpanded ? 1 : 0}
+              mr={!desktopExpanded ? 0 : 3}
+              roundedRight={"2xl"}
+              rounded={desktopExpanded && workArea ? "2xl" : undefined}
+              display={desktopExpanded && !workArea ? "none" : undefined}
+              shadow={desktopExpanded && workArea ? "2xl" : undefined}
             >
               {pathname === "/"
                 ? Pages.filter((page) => page.label === "Search")[0].component

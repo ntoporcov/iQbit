@@ -1,5 +1,5 @@
-import { Dispatch, SetStateAction } from "react";
-import { useFilterStateReturn } from "./components/Filters";
+import {Dispatch, SetStateAction} from "react";
+import {useFilterStateReturn} from "./components/Filters";
 
 export type TorrCategories = {
   [i: string]: TorrCategory;
@@ -56,6 +56,58 @@ export const TorrTorrentInfoStates = [
   "unknown",
 ] as const;
 export type TorrTorrentInfoStateUnion = typeof TorrTorrentInfoStates[number];
+
+export const TorrInfoLabels = {
+  max_ratio: "Max Ratio",
+  infohash_v1: "Hash V1",
+  infohash_v2: "Hash V2",
+  force_start: "Force Start",
+  dl_limit: "Download Limit",
+  eta: "ETA",
+  download_path: "Download Path",
+  num_complete: "Chunks Downloaded",
+  seen_complete: "Last Seen Complete",
+  completion_on: "Completed On",
+  ratio_limit: "Ratio Limit",
+  state: "Status",
+  downloaded_session: "Downloaded in session",
+  completed: "Bytes Downloaded",
+  priority: "Priority",
+  super_seeding: "Super Seeding",
+  downloaded: "Amount Downloaded",
+  tags: "Tags",
+  size: "Size",
+  magnet_uri: "Magnet Link",
+  name: "Name",
+  content_path: "Download Path",
+  hash: "Hash",
+  amount_left: "Amount Left",
+  auto_tmm: "Auto Management",
+  seeding_time: "Seed Time",
+  trackers_count: "Trackers Count",
+  availability: "Availability",
+  num_incomplete: "Num Incomplete",
+  seeding_time_limit: "Seed Time Limit",
+  save_path: "Save Path",
+  num_seeds: "Seeds",
+  last_activity: "Last Activity",
+  num_leechs: "Leeches",
+  tracker: "Tracker",
+  uploaded: "Uploaded",
+  added_on: "Added On",
+  time_active: "Time Active",
+  total_size: "Total Size",
+  seq_dl: "Sequential",
+  f_l_piece_prio: "First Last Piece Prioritized",
+  upspeed: "Upload Speed",
+  uploaded_session: "Uploaded in Session",
+  up_limit: "Upload Limit",
+  max_seeding_time: "Max Seed Time",
+  progress: "Progress",
+  category: "Category",
+  dlspeed: "Download Speed",
+  ratio: "Ratio",
+};
 
 export type TorrTorrentInfo = {
   max_ratio: number;
