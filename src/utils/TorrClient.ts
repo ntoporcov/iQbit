@@ -169,6 +169,18 @@ export const TorrClient = {
     return await APICall.post("torrents/rename", `hash=${hash}&name=${name}`);
   },
 
+  setAutoManagement: async (hash: string, enable: string) => {
+    return await APICall.post("torrents/setAutoManagement", `hashes=${hash}&enable=${enable}`);
+  },
+
+  toggleSequentialDownload: async (hash: string) => {
+    return await APICall.post("torrents/toggleSequentialDownload", `hashes=${hash}`);
+  },
+
+  toggleFirstLastPiecePrio: async (hash: string) => {
+    return await APICall.post("torrents/toggleFirstLastPiecePrio", `hashes=${hash}`);
+  },
+
   getInstalledPlugins: async (): Promise<TorrPlugin[]> => {
     const { data } = await APICall.get("search/plugins");
     return data;
