@@ -25,12 +25,24 @@ import IosBottomSheet from "../components/ios/IosBottomSheet";
 import { Input } from "@chakra-ui/input";
 import { useIsLargeScreen } from "../utils/screenSize";
 import { randomTorrent } from "../data";
-import { List, WindowScroller } from "react-virtualized";
 import "react-virtualized/styles.css";
 import { FilterHeading } from "../components/Filters";
 import stateDictionary from "../utils/StateDictionary";
 import { useLocalStorage } from "usehooks-ts";
 import { useFontSizeContext } from "../components/FontSizeProvider"; // only needs to be imported once
+
+import { FC } from 'react';
+import {
+  AutoSizer as _AutoSizer,
+  List as _List,
+  ListProps,
+  WindowScroller as _WindowScroller,
+  WindowScrollerProps,
+} from 'react-virtualized';
+
+export const VirtualizedList = _List as unknown as FC<ListProps> & _List;
+export const VirtualizedWindowScroll = _WindowScroller as unknown as FC<WindowScrollerProps> & _WindowScroller;
+
 
 const Home = () => {
   const { mutate: resumeAll } = useMutation("resumeAll", TorrClient.resumeAll);
@@ -175,7 +187,7 @@ const Home = () => {
   const fontSizeContext = useFontSizeContext();
 
   return (
-    <WindowScroller>
+    <VirtualizedWindowScroll>
       {({ isScrolling, scrollTop, width, height }) => (
         <Flex flexDirection={"column"} width={"100%"} mt={isLarge ? 24 : 0}>
           <PageHeader
@@ -384,7 +396,7 @@ const Home = () => {
               </Flex>
             )}
 
-            <List
+            <VirtualizedList
               autoWidth
               rowCount={Torrents.length}
               rowHeight={(230 * fontSizeContext.scale) / 100}
@@ -430,7 +442,7 @@ const Home = () => {
           </Flex>
         </Flex>
       )}
-    </WindowScroller>
+    </VirtualizedWindowScroll>
   );
 };
 
