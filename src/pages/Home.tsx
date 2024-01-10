@@ -13,6 +13,7 @@ import {
   Textarea,
   useColorModeValue,
   useDisclosure,
+  Switch,
   VStack,
 } from "@chakra-ui/react";
 import { IoDocumentAttach, IoPause, IoPlay } from "react-icons/io5";
@@ -101,6 +102,10 @@ const Home = () => {
   const addModalDisclosure = useDisclosure();
   const [textArea, setTextArea] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("");
+  const [automaticManagment, setAutomaticManagment] = useState(false);
+  const [sequentialDownload, setSequentialDownload] = useState(false);
+  const [firstAndLastPiece, setFirstAndLastPiece] = useState(false);
+
   const [fileError, setFileError] = useState("");
   const [file, setFile] = useState<File>();
   const [draggingOver, setDraggingOver] = useState(false);
@@ -122,7 +127,10 @@ const Home = () => {
         TorrClient.addTorrent(
           !!textArea ? "urls" : "torrents",
           !!textArea ? textArea : file!,
-          selectedCategory
+          selectedCategory,
+          automaticManagment,
+          sequentialDownload,
+          firstAndLastPiece
         ),
       { onSuccess: addModalDisclosure.onClose }
     );
@@ -279,6 +287,33 @@ const Home = () => {
                   />
                 </Flex>
                 <FormErrorMessage>{fileError}</FormErrorMessage>
+              </FormControl>
+              <FormControl display='flex' alignItems='center'>
+                <FormLabel htmlFor='automaticManagment' mb='0'>
+                  Automatic Managment
+                </FormLabel>
+                <Switch 
+                  id='automaticManagment' 
+                  onChange={(e) => { setAutomaticManagment(e.target.checked) }}
+                />
+              </FormControl>
+              <FormControl display='flex' alignItems='center'>
+                <FormLabel htmlFor='sequentialDownload' mb='0'>
+                  Sequential Download
+                </FormLabel>
+                <Switch 
+                  id='sequentialDownload' 
+                  onChange={(e) => { setSequentialDownload(e.target.checked) }}
+                />
+              </FormControl>
+              <FormControl display='flex' alignItems='center'>
+                <FormLabel htmlFor='firstAndLastPiece' mb='0'>
+                  Download first and last piece first
+                </FormLabel>
+                <Switch 
+                  id='firstAndLastPiece' 
+                  onChange={(e) => { setFirstAndLastPiece(e.target.checked) }}
+                />
               </FormControl>
               {Categories.length && (
                 <FormControl>

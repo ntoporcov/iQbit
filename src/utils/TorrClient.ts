@@ -106,10 +106,16 @@ export const TorrClient = {
   addTorrent: async (
     uploadType: "urls" | "torrents",
     file: string | File,
-    category = ""
+    category = "",
+    autoTMM = false,
+    sequentialDownload = false,
+    firstLastPiecePrio = false,
   ) => {
     const formData = new FormData();
     formData.append("category", category);
+    formData.append("autoTMM", autoTMM.toString());
+    formData.append("sequentialDownload", sequentialDownload.toString());
+    formData.append("firstLastPiecePrio", firstLastPiecePrio.toString());
     formData.append(uploadType, file);
     const { data } = await APICall.post("torrents/add", formData, {
       headers: {
