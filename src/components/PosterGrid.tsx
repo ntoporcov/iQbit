@@ -33,11 +33,13 @@ export function PosterGrid<T>(props: PosterGridProps<T>) {
           flexGrow={1}
           rounded={"lg"}
           shadow={"xl"}
-          backgroundImage={`url(${props.images(movie).large}), url(${
-            props.images(movie).small
-          })`}
           backgroundSize={"cover"}
           overflow={"hidden"}
+          style={{
+            backgroundImage: `url(${props.images(movie).large}), url(${
+              props.images(movie).small
+            })`,
+          }}
         >
           <Flex position={"relative"}>
             <Flex

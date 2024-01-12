@@ -25,7 +25,7 @@ import QbitLogo from "../images/qbitLogo";
 import { SearchPluginsPageQuery } from "./SearchPluginsPage";
 import PluginSearch from "../searchAPIs/PluginSearch";
 
-export type ProviderKeys = "YTS" | "TPB" | "rarbg" | "plugin";
+export type ProviderKeys = "YTS" | "TPB" | "plugin";
 
 export type Provider = {
   logo: any;
@@ -50,11 +50,6 @@ export const providers: { [i in ProviderKeys]: Provider } = {
     logo: <TpbLogo />,
     name: "PirateBay",
     categories: ["Video", "Audio", "Applications", "Games", "Porn", "Other"],
-  },
-  rarbg: {
-    logo: <RarbgLogo />,
-    name: "rarbg",
-    categories: Object.keys(RarbgCategoryDictionary),
   },
 };
 
@@ -211,15 +206,6 @@ const SearchPage = () => {
         {selectedProvider === "TPB" && (
           <TPBSearch
             category={providers[selectedProvider].categories[selectedCategory]}
-            searchState={searchState}
-            filterState={filterState}
-          />
-        )}
-        {selectedProvider === "rarbg" && (
-          <RarbgSearch
-            category={
-              providers[selectedProvider].categories?.[selectedCategory] || ""
-            }
             searchState={searchState}
             filterState={filterState}
           />

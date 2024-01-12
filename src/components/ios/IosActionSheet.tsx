@@ -7,6 +7,7 @@ import {
   DrawerContent,
   DrawerOverlay,
   Flex,
+  Icon,
   Menu,
   MenuButton,
   MenuItem,
@@ -14,13 +15,15 @@ import {
   useColorModeValue,
   UseDisclosureReturn,
 } from "@chakra-ui/react";
-import { PropsWithChildren, ReactElement } from "react";
+import React, { PropsWithChildren, ReactElement } from "react";
 import { useIsLargeScreen } from "../../utils/screenSize";
+import { IoCheckmark } from "react-icons/io5";
 
 export type IosActionSheetOptions = {
   label: string;
   onClick: () => void;
   danger?: boolean;
+  checked?: boolean;
 };
 
 export interface IosActionSheetProps<Y> {
@@ -63,7 +66,12 @@ function IosActionSheet<Y>({
         placement={"left-start"}
       >
         <MenuButton position={"absolute"} />
-        <MenuList py={0} rounded={12} bgColor={DropdownButtonBgColor}>
+        <MenuList
+          py={0}
+          rounded={12}
+          overflow={"hidden"}
+          bgColor={DropdownButtonBgColor}
+        >
           {options.reverse().map((option, index, array) => (
             <MenuItem
               key={index}
@@ -75,8 +83,18 @@ function IosActionSheet<Y>({
                 option.onClick();
               }}
               color={option?.danger ? "red.500" : "blue.500"}
+              justifyContent={"space-between"}
+              bgColor={ButtonBgColor}
+              _hover={{
+                bgColor: ButtonBgColorHover,
+              }}
             >
               {option.label}
+              {option.checked && (
+                <Icon fontSize={"x-large"} ml={3}>
+                  <IoCheckmark />
+                </Icon>
+              )}
             </MenuItem>
           ))}
         </MenuList>
@@ -123,6 +141,11 @@ function IosActionSheet<Y>({
                   fontWeight={"normal"}
                 >
                   {option.label}
+                  {option.checked && (
+                    <Icon fontSize={"x-large"} ml={3}>
+                      <IoCheckmark />
+                    </Icon>
+                  )}
                 </Button>
               ))}
             </Flex>
