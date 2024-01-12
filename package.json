@@ -3,8 +3,7 @@
   "version": "1.0.1",
   "private": false,
   "dependencies": {
-    "@chakra-ui/react": "2.2.4",
-    "@chakra-ui/input": "^2.1",
+    "@chakra-ui/react": "2.8.2",
     "@emotion/react": "^11.9.3",
     "@emotion/styled": "^11.9.3",
     "@types/fuzzyset.js": "^0.0.2",
@@ -13,7 +12,7 @@
     "@types/node": "^16.7.13",
     "@types/react": "18.0.15",
     "@types/react-dom": "18.0.6",
-    "axios": "^0.26.1",
+    "axios": "^1.6.5",
     "cors": "^2.8.5",
     "eslint": "^8.11.0",
     "eslint-plugin-react": "^7.30.1",

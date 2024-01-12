@@ -27,6 +27,7 @@ import filesize from "filesize";
 import {
   IoArrowDown,
   IoCalendar,
+  IoCheckmark,
   IoCloudUpload,
   IoDownload,
   IoOptions,
@@ -83,12 +84,25 @@ const TorrentBox = ({
   const timeString = torrentData.eta ? CreateETAString(date) : "";
 
   const [waiting, setWaiting] = useState<
-    "" | "mainBtn" | "category" | "name"
+    | ""
+    | "mainBtn"
+    | "category"
+    | "name"
+    | "sequential"
+    | "firstLastPriority"
+    | "autoManagement"
   >();
 
   useEffect(() => {
     setWaiting("");
-  }, [torrentData.state, torrentData.category, torrentData.name]);
+  }, [
+    torrentData.state,
+    torrentData.category,
+    torrentData.name,
+    torrentData.seq_dl,
+    torrentData.f_l_piece_prio,
+    torrentData.auto_tmm,
+  ]);
 
   const { mutate: pause } = useMutation(
     "pauseTorrent",
@@ -140,18 +154,37 @@ const TorrentBox = ({
     }
   );
 
-  const toggleSequentialDownload = (hash: string) => {
-    TorrClient.toggleSequentialDownload(hash)
-  }
+  const { mutate: toggleSequentialDownload } = useMutation(
+    "sequential-download",
+    () => TorrClient.toggleSequentialDownload(hash),
+    {
+      onMutate: () => setWaiting("sequential"),
+      onError: () => setWaiting(""),
+    }
+  );
 
-  const toggleFirstLastPiecePrio = (hash: string) => {
-    TorrClient.toggleFirstLastPiecePrio(hash)
-  }
+  const { mutate: toggleFirstLastPiecePrio } = useMutation(
+    "first-last-priority",
+    () => TorrClient.toggleFirstLastPiecePrio(hash),
+    {
+      onMutate: () => setWaiting("firstLastPriority"),
+      onError: () => setWaiting(""),
+    }
+  );
 
-  const setAutoManagement = (hash: string, enable: boolean) => {
-    const invertCurrent = !enable
-    TorrClient.setAutoManagement(hash, invertCurrent.toString())
-  }
+  const { mutate: toggleAutoManagement } = useMutation(
+    "first-last-priority",
+    async () => {
+      return TorrClient.setAutoManagement(
+        hash,
+        (!torrentData.auto_tmm).toString()
+      );
+    },
+    {
+      onMutate: () => setWaiting("autoManagement"),
+      onError: () => setWaiting(""),
+    }
+  );
 
   const TorrentInformationDisclosure = useDisclosure();
 
@@ -358,34 +391,19 @@ const TorrentBox = ({
                   onClick: () => categoryChangeDisclosure.onOpen(),
                 },
                 {
-                  label: (
-                    torrentData.seq_dl
-                    ? 
-                    "✓ Sequential Download"
-                    : 
-                    "Sequential Download"
-                  ),
-                  onClick: () => toggleSequentialDownload(hash),
+                  label: `Sequential Download`,
+                  onClick: toggleSequentialDownload,
+                  checked: torrentData.seq_dl,
                 },
                 {
-                  label: (
-                    torrentData.f_l_piece_prio
-                    ? 
-                    "✓ First and Last piece first"
-                    : 
-                    "First and Last piece first"
-                  ),
-                  onClick: () => toggleFirstLastPiecePrio(hash),
+                  label: "First and Last piece first",
+                  onClick: toggleFirstLastPiecePrio,
+                  checked: torrentData.f_l_piece_prio,
                 },
                 {
-                  label: (
-                    torrentData.auto_tmm
-                    ? 
-                    "✓ Automatic management"
-                    : 
-                    "Automatic management"
-                  ),
-                  onClick: () => setAutoManagement(hash, torrentData.auto_tmm),
+                  label: "Automatic management",
+                  onClick: toggleAutoManagement,
+                  checked: torrentData.auto_tmm,
                 },
                 {
                   label: "Rename Torrent",
