@@ -13,6 +13,7 @@ import {
   Textarea,
   useColorModeValue,
   useDisclosure,
+  Switch,
   VStack,
 } from "@chakra-ui/react";
 import { IoDocumentAttach, IoPause, IoPlay } from "react-icons/io5";
@@ -25,12 +26,24 @@ import IosBottomSheet from "../components/ios/IosBottomSheet";
 import { Input } from "@chakra-ui/input";
 import { useIsLargeScreen } from "../utils/screenSize";
 import { randomTorrent } from "../data";
-import { List, WindowScroller } from "react-virtualized";
 import "react-virtualized/styles.css";
 import { FilterHeading } from "../components/Filters";
 import stateDictionary from "../utils/StateDictionary";
 import { useLocalStorage } from "usehooks-ts";
 import { useFontSizeContext } from "../components/FontSizeProvider"; // only needs to be imported once
+
+import { FC } from 'react';
+import {
+  AutoSizer as _AutoSizer,
+  List as _List,
+  ListProps,
+  WindowScroller as _WindowScroller,
+  WindowScrollerProps,
+} from 'react-virtualized';
+
+export const VirtualizedList = _List as unknown as FC<ListProps> & _List;
+export const VirtualizedWindowScroll = _WindowScroller as unknown as FC<WindowScrollerProps> & _WindowScroller;
+
 
 const Home = () => {
   const { mutate: resumeAll } = useMutation("resumeAll", TorrClient.resumeAll);
@@ -89,6 +102,10 @@ const Home = () => {
   const addModalDisclosure = useDisclosure();
   const [textArea, setTextArea] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("");
+  const [automaticManagment, setAutomaticManagment] = useState(false);
+  const [sequentialDownload, setSequentialDownload] = useState(false);
+  const [firstAndLastPiece, setFirstAndLastPiece] = useState(false);
+
   const [fileError, setFileError] = useState("");
   const [file, setFile] = useState<File>();
   const [draggingOver, setDraggingOver] = useState(false);
@@ -110,7 +127,10 @@ const Home = () => {
         TorrClient.addTorrent(
           !!textArea ? "urls" : "torrents",
           !!textArea ? textArea : file!,
-          selectedCategory
+          selectedCategory,
+          automaticManagment,
+          sequentialDownload,
+          firstAndLastPiece
         ),
       { onSuccess: addModalDisclosure.onClose }
     );
@@ -175,7 +195,7 @@ const Home = () => {
   const fontSizeContext = useFontSizeContext();
 
   return (
-    <WindowScroller>
+    <VirtualizedWindowScroll>
       {({ isScrolling, scrollTop, width, height }) => (
         <Flex flexDirection={"column"} width={"100%"} mt={isLarge ? 24 : 0}>
           <PageHeader
@@ -267,6 +287,33 @@ const Home = () => {
                   />
                 </Flex>
                 <FormErrorMessage>{fileError}</FormErrorMessage>
+              </FormControl>
+              <FormControl display='flex' alignItems='center'>
+                <FormLabel htmlFor='automaticManagment' mb='0'>
+                  Automatic Managment
+                </FormLabel>
+                <Switch 
+                  id='automaticManagment' 
+                  onChange={(e) => { setAutomaticManagment(e.target.checked) }}
+                />
+              </FormControl>
+              <FormControl display='flex' alignItems='center'>
+                <FormLabel htmlFor='sequentialDownload' mb='0'>
+                  Sequential Download
+                </FormLabel>
+                <Switch 
+                  id='sequentialDownload' 
+                  onChange={(e) => { setSequentialDownload(e.target.checked) }}
+                />
+              </FormControl>
+              <FormControl display='flex' alignItems='center'>
+                <FormLabel htmlFor='firstAndLastPiece' mb='0'>
+                  Download first and last piece first
+                </FormLabel>
+                <Switch 
+                  id='firstAndLastPiece' 
+                  onChange={(e) => { setFirstAndLastPiece(e.target.checked) }}
+                />
               </FormControl>
               {Categories.length && (
                 <FormControl>
@@ -384,7 +431,7 @@ const Home = () => {
               </Flex>
             )}
 
-            <List
+            <VirtualizedList
               autoWidth
               rowCount={Torrents.length}
               rowHeight={(230 * fontSizeContext.scale) / 100}
@@ -430,7 +477,7 @@ const Home = () => {
           </Flex>
         </Flex>
       )}
-    </WindowScroller>
+    </VirtualizedWindowScroll>
   );
 };
 

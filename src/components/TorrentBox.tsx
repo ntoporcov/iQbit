@@ -140,6 +140,19 @@ const TorrentBox = ({
     }
   );
 
+  const toggleSequentialDownload = (hash: string) => {
+    TorrClient.toggleSequentialDownload(hash)
+  }
+
+  const toggleFirstLastPiecePrio = (hash: string) => {
+    TorrClient.toggleFirstLastPiecePrio(hash)
+  }
+
+  const setAutoManagement = (hash: string, enable: boolean) => {
+    const invertCurrent = !enable
+    TorrClient.setAutoManagement(hash, invertCurrent.toString())
+  }
+
   const TorrentInformationDisclosure = useDisclosure();
 
   const actionSheetDisclosure = useDisclosure();
@@ -343,6 +356,36 @@ const TorrentBox = ({
                 {
                   label: "Change Category",
                   onClick: () => categoryChangeDisclosure.onOpen(),
+                },
+                {
+                  label: (
+                    torrentData.seq_dl
+                    ? 
+                    "✓ Sequential Download"
+                    : 
+                    "Sequential Download"
+                  ),
+                  onClick: () => toggleSequentialDownload(hash),
+                },
+                {
+                  label: (
+                    torrentData.f_l_piece_prio
+                    ? 
+                    "✓ First and Last piece first"
+                    : 
+                    "First and Last piece first"
+                  ),
+                  onClick: () => toggleFirstLastPiecePrio(hash),
+                },
+                {
+                  label: (
+                    torrentData.auto_tmm
+                    ? 
+                    "✓ Automatic management"
+                    : 
+                    "Automatic management"
+                  ),
+                  onClick: () => setAutoManagement(hash, torrentData.auto_tmm),
                 },
                 {
                   label: "Rename Torrent",

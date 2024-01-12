@@ -106,10 +106,16 @@ export const TorrClient = {
   addTorrent: async (
     uploadType: "urls" | "torrents",
     file: string | File,
-    category = ""
+    category = "",
+    autoTMM = false,
+    sequentialDownload = false,
+    firstLastPiecePrio = false,
   ) => {
     const formData = new FormData();
     formData.append("category", category);
+    formData.append("autoTMM", autoTMM.toString());
+    formData.append("sequentialDownload", sequentialDownload.toString());
+    formData.append("firstLastPiecePrio", firstLastPiecePrio.toString());
     formData.append(uploadType, file);
     const { data } = await APICall.post("torrents/add", formData, {
       headers: {
@@ -167,6 +173,18 @@ export const TorrClient = {
 
   renameTorrent: async (hash: string, name: string) => {
     return await APICall.post("torrents/rename", `hash=${hash}&name=${name}`);
+  },
+
+  setAutoManagement: async (hash: string, enable: string) => {
+    return await APICall.post("torrents/setAutoManagement", `hashes=${hash}&enable=${enable}`);
+  },
+
+  toggleSequentialDownload: async (hash: string) => {
+    return await APICall.post("torrents/toggleSequentialDownload", `hashes=${hash}`);
+  },
+
+  toggleFirstLastPiecePrio: async (hash: string) => {
+    return await APICall.post("torrents/toggleFirstLastPiecePrio", `hashes=${hash}`);
   },
 
   getInstalledPlugins: async (): Promise<TorrPlugin[]> => {
