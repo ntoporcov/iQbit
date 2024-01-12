@@ -32,18 +32,17 @@ import stateDictionary from "../utils/StateDictionary";
 import { useLocalStorage } from "usehooks-ts";
 import { useFontSizeContext } from "../components/FontSizeProvider"; // only needs to be imported once
 
-import { FC } from 'react';
+import { FC } from "react";
 import {
-  AutoSizer as _AutoSizer,
   List as _List,
   ListProps,
   WindowScroller as _WindowScroller,
   WindowScrollerProps,
-} from 'react-virtualized';
+} from "react-virtualized";
 
 export const VirtualizedList = _List as unknown as FC<ListProps> & _List;
-export const VirtualizedWindowScroll = _WindowScroller as unknown as FC<WindowScrollerProps> & _WindowScroller;
-
+export const VirtualizedWindowScroll =
+  _WindowScroller as unknown as FC<WindowScrollerProps> & _WindowScroller;
 
 const Home = () => {
   const { mutate: resumeAll } = useMutation("resumeAll", TorrClient.resumeAll);
@@ -172,7 +171,7 @@ const Home = () => {
     if (torrentsTx === undefined) {
       return [];
     }
-    
+
     return Object.entries(torrentsTx)
       ?.sort((a, b) => b[1]?.added_on - a[1]?.added_on)
       ?.filter(([hash]) => !removedTorrs.includes(hash))
@@ -288,31 +287,37 @@ const Home = () => {
                 </Flex>
                 <FormErrorMessage>{fileError}</FormErrorMessage>
               </FormControl>
-              <FormControl display='flex' alignItems='center'>
-                <FormLabel htmlFor='automaticManagment' mb='0'>
+              <FormControl display="flex" alignItems="center">
+                <FormLabel htmlFor="automaticManagment" mb="0">
                   Automatic Managment
                 </FormLabel>
-                <Switch 
-                  id='automaticManagment' 
-                  onChange={(e) => { setAutomaticManagment(e.target.checked) }}
+                <Switch
+                  id="automaticManagment"
+                  onChange={(e) => {
+                    setAutomaticManagment(e.target.checked);
+                  }}
                 />
               </FormControl>
-              <FormControl display='flex' alignItems='center'>
-                <FormLabel htmlFor='sequentialDownload' mb='0'>
+              <FormControl display="flex" alignItems="center">
+                <FormLabel htmlFor="sequentialDownload" mb="0">
                   Sequential Download
                 </FormLabel>
-                <Switch 
-                  id='sequentialDownload' 
-                  onChange={(e) => { setSequentialDownload(e.target.checked) }}
+                <Switch
+                  id="sequentialDownload"
+                  onChange={(e) => {
+                    setSequentialDownload(e.target.checked);
+                  }}
                 />
               </FormControl>
-              <FormControl display='flex' alignItems='center'>
-                <FormLabel htmlFor='firstAndLastPiece' mb='0'>
+              <FormControl display="flex" alignItems="center">
+                <FormLabel htmlFor="firstAndLastPiece" mb="0">
                   Download first and last piece first
                 </FormLabel>
-                <Switch 
-                  id='firstAndLastPiece' 
-                  onChange={(e) => { setFirstAndLastPiece(e.target.checked) }}
+                <Switch
+                  id="firstAndLastPiece"
+                  onChange={(e) => {
+                    setFirstAndLastPiece(e.target.checked);
+                  }}
                 />
               </FormControl>
               {Categories.length && (

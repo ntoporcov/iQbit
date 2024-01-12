@@ -8,6 +8,12 @@
   },
   "announcements": [
     {
+      "id": "Jan112024",
+      "title": "Thanks @Drun555 in Github",
+      "body": "Added some more options to Torrent download preferences for sequencing, auto management, and more.",
+      "type": "info"
+    },
+    {
       "id": "Jul142023",
       "title": "Thanks @VishveshC in Github",
       "body": "Updated the build process to include a login.html file",

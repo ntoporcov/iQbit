@@ -27,7 +27,6 @@ import filesize from "filesize";
 import {
   IoArrowDown,
   IoCalendar,
-  IoCheckmark,
   IoCloudUpload,
   IoDownload,
   IoOptions,
