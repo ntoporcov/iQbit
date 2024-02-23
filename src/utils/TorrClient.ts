@@ -33,9 +33,11 @@ export const TorrClient = {
     username: string;
     password: string;
   }) => {
+    let usernameEncode = encodeURIComponent(username)
+    let passwordEncode = encodeURIComponent(password)
     return await APICall.post(
       "auth/login",
-      `username=${username}&password=${password}`,
+      `username=${usernameEncode}&password=${passwordEncode}`,
       {
         headers: {
           "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
@@ -45,7 +47,7 @@ export const TorrClient = {
   },
 
   logout: async () => {
-    return await APICall.get("auth/logout");
+    return await APICall.post("auth/logout");
   },
 
   getTorrents: async (
