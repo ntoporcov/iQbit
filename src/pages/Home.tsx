@@ -101,6 +101,7 @@ const Home = () => {
   const addModalDisclosure = useDisclosure();
   const [textArea, setTextArea] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("");
+
   const [automaticManagment, setAutomaticManagment] = useState(false);
   const [sequentialDownload, setSequentialDownload] = useState(false);
   const [firstAndLastPiece, setFirstAndLastPiece] = useState(false);
@@ -108,6 +109,12 @@ const Home = () => {
   const [fileError, setFileError] = useState("");
   const [file, setFile] = useState<File>();
   const [draggingOver, setDraggingOver] = useState(false);
+
+  const { data: settings } = useQuery(
+    "settings-mainpage",
+    TorrClient.getSettings,
+    { refetchInterval: 30000 }
+  );
 
   const validateAndSelectFile = (file: File) => {
     if (file.name.endsWith(".torrent")) {
@@ -122,14 +129,10 @@ const Home = () => {
   const { mutate: attemptAddTorrent, isLoading: attemptAddLoading } =
     useMutation(
       "addTorrent",
-      () =>
+      (opts: { autoTmm?: boolean }) =>
         TorrClient.addTorrent(
           !!textArea ? "urls" : "torrents",
-          !!textArea ? textArea : file!,
-          selectedCategory,
-          automaticManagment,
-          sequentialDownload,
-          firstAndLastPiece
+          !!textArea ? textArea : file!
         ),
       { onSuccess: addModalDisclosure.onClose }
     );
@@ -293,6 +296,7 @@ const Home = () => {
                 </FormLabel>
                 <Switch
                   id="automaticManagment"
+                  isChecked={automaticManagment}
                   onChange={(e) => {
                     setAutomaticManagment(e.target.checked);
                   }}
@@ -304,6 +308,7 @@ const Home = () => {
                 </FormLabel>
                 <Switch
                   id="sequentialDownload"
+                  isChecked={sequentialDownload}
                   onChange={(e) => {
                     setSequentialDownload(e.target.checked);
                   }}
@@ -315,6 +320,7 @@ const Home = () => {
                 </FormLabel>
                 <Switch
                   id="firstAndLastPiece"
+                  isChecked={firstAndLastPiece}
                   onChange={(e) => {
                     setFirstAndLastPiece(e.target.checked);
                   }}
@@ -343,7 +349,9 @@ const Home = () => {
                 size={"lg"}
                 colorScheme={"blue"}
                 mt={16}
-                onClick={() => attemptAddTorrent()}
+                onClick={() =>
+                  attemptAddTorrent({ autoTmm: settings?.auto_tmm_enabled })
+                }
               >
                 {"Add Torrent"}
               </Button>

@@ -33,8 +33,8 @@ export const TorrClient = {
     username: string;
     password: string;
   }) => {
-    let usernameEncode = encodeURIComponent(username)
-    let passwordEncode = encodeURIComponent(password)
+    let usernameEncode = encodeURIComponent(username);
+    let passwordEncode = encodeURIComponent(password);
     return await APICall.post(
       "auth/login",
       `username=${usernameEncode}&password=${passwordEncode}`,
@@ -108,17 +108,12 @@ export const TorrClient = {
   addTorrent: async (
     uploadType: "urls" | "torrents",
     file: string | File,
-    category = "",
-    autoTMM = false,
-    sequentialDownload = false,
-    firstLastPiecePrio = false,
+    category = ""
   ) => {
     const formData = new FormData();
     formData.append("category", category);
-    formData.append("autoTMM", autoTMM.toString());
-    formData.append("sequentialDownload", sequentialDownload.toString());
-    formData.append("firstLastPiecePrio", firstLastPiecePrio.toString());
     formData.append(uploadType, file);
+
     const { data } = await APICall.post("torrents/add", formData, {
       headers: {
         "Content-Type": "multipart/form-data",
@@ -178,15 +173,24 @@ export const TorrClient = {
   },
 
   setAutoManagement: async (hash: string, enable: string) => {
-    return await APICall.post("torrents/setAutoManagement", `hashes=${hash}&enable=${enable}`);
+    return await APICall.post(
+      "torrents/setAutoManagement",
+      `hashes=${hash}&enable=${enable}`
+    );
   },
 
   toggleSequentialDownload: async (hash: string) => {
-    return await APICall.post("torrents/toggleSequentialDownload", `hashes=${hash}`);
+    return await APICall.post(
+      "torrents/toggleSequentialDownload",
+      `hashes=${hash}`
+    );
   },
 
   toggleFirstLastPiecePrio: async (hash: string) => {
-    return await APICall.post("torrents/toggleFirstLastPiecePrio", `hashes=${hash}`);
+    return await APICall.post(
+      "torrents/toggleFirstLastPiecePrio",
+      `hashes=${hash}`
+    );
   },
 
   getInstalledPlugins: async (): Promise<TorrPlugin[]> => {
