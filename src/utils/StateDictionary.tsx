@@ -75,6 +75,10 @@ const stateDictionary: {
     long: "Torrent is moving to another location",
     short: "Moving Location",
   },
+  stoppedUP:{
+    long: "Torrent is not uploading, but available?",
+    short: "Available for Seeding"
+  },
   unknown: {
     long: "Unknown status",
     short: "Unknown",

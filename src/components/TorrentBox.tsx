@@ -316,7 +316,7 @@ const TorrentBox = ({
             {torrentData.eta !== 8640000 ? (
               <span>{timeString}</span>
             ) : (
-              <span>{stateDictionary[torrentData.state].short}</span>
+              <span>{stateDictionary[torrentData.state]?.short ?? torrentData.state}</span>
             )}
           </Heading>
         </Flex>

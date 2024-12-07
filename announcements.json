@@ -8,6 +8,12 @@
   },
   "announcements": [
     {
+      "id": "Dec062024",
+      "title": "Bug Fix – New status broke app",
+      "body": "Fixed a bug with an unexpected status being used by qbittorrent",
+      "type": "warning"
+    },
+    {
       "id": "Mar192024",
       "title": "Bug Fix – Auto management not working",
       "body": "Fixed a bug introduced in last update where auto management was not applied for new torrents. Thanks for the reports @CharlosMartinez & @Martzki",

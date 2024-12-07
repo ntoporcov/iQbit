@@ -53,6 +53,7 @@ export const TorrTorrentInfoStates = [
   "forcedDL",
   "checkingResumeData",
   "moving",
+  "stoppedUP",
   "unknown",
 ] as const;
 export type TorrTorrentInfoStateUnion = typeof TorrTorrentInfoStates[number];
