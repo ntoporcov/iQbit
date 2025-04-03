@@ -8,6 +8,12 @@
   },
   "announcements": [
     {
+      "id": "Apr032024",
+      "title": "Bug Fix – Start/Pause",
+      "body": "Fixed a start/pause bug with an unexpected status being used by qbittorrent",
+      "type": "warning"
+    },
+    {
       "id": "Dec062024",
       "title": "Bug Fix – New status broke app",
       "body": "Fixed a bug with an unexpected status being used by qbittorrent",

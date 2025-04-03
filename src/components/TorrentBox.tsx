@@ -65,7 +65,7 @@ const TorrentBox = ({
 
   const isDone = (torrentData.progress || 0) >= 1;
 
-  const isPaused = ["pausedDL", "pausedUP"].includes(torrentData.state);
+  const isPaused = ["pausedDL", "pausedUP", "stoppedUP", "stoppedDL"].includes(torrentData.state);
 
   const isDownloading = [
     "downloading",

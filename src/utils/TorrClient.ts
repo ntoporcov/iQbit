@@ -83,19 +83,19 @@ export const TorrClient = {
   },
 
   resume: async (hash = "") => {
-    return await APICall.post("torrents/resume", `hashes=${hash}`);
+    return await APICall.post("torrents/start", `hashes=${hash}`);
   },
 
   resumeAll: async () => {
-    return await APICall.post("torrents/resume", `hashes=all`);
+    return await APICall.post("torrents/start", `hashes=all`);
   },
 
   pause: async (hash = "") => {
-    return await APICall.post("torrents/pause", `hashes=${hash}`);
+    return await APICall.post("torrents/stop", `hashes=${hash}`);
   },
 
   pauseAll: async () => {
-    return await APICall.post("torrents/pause", `hashes=all`);
+    return await APICall.post("torrents/stop", `hashes=all`);
   },
 
   remove: async (hash = "", deleteFiles = true) => {
