@@ -8,6 +8,12 @@
   },
   "announcements": [
     {
+      "id": "Apr112024",
+      "title": "Feature – Select Category on Search",
+      "body": "You can now select a category when downloading torrents from search",
+      "type": "info"
+    },
+    {
       "id": "Apr032024",
       "title": "Bug Fix – Start/Pause",
       "body": "Fixed a start/pause bug with an unexpected status being used by qbittorrent",

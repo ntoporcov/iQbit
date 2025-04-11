@@ -1,4 +1,4 @@
-import React, { PropsWithChildren, useEffect, useMemo, useState } from "react";
+import React, {PropsWithChildren, ReactNode, useEffect, useMemo, useState} from "react";
 import { SearchProviderComponentProps, YTSMovies } from "../types";
 import {
   AspectRatio,
@@ -13,12 +13,12 @@ import {
   VStack,
 } from "@chakra-ui/react";
 import IosSearch from "../components/ios/IosSearch";
-import { useMutation } from "react-query";
+import {useMutation, useQuery} from "react-query";
 import { YTSClient } from "../utils/YTSClient";
 import { useNavigate, useParams } from "react-router-dom";
 import IosBottomSheet from "../components/ios/IosBottomSheet";
 import TorrentDownloadBox from "../components/TorrentDownloadBox";
-import { IoEarth, IoPricetags, IoTime, IoWarning } from "react-icons/io5";
+import {IoChevronDown, IoEarth, IoPricetags, IoTime, IoWarning} from "react-icons/io5";
 import { SiRottentomatoes } from "react-icons/si";
 import SeedsAndPeers from "../components/SeedsAndPeers";
 import TorrentMovieData from "../components/TorrentMovieData";
@@ -26,6 +26,9 @@ import Filters from "../components/Filters";
 import { InfoDataBox } from "../components/InfoDataBox";
 import ReactGA from "react-ga";
 import PosterGrid from "../components/PosterGrid";
+import IosActionSheet from "../components/ios/IosActionSheet";
+import {TorrClient} from "../utils/TorrClient";
+import CategorySelect from "../components/CategorySelect";
 
 export const useSearchFromParams = (callback: () => void) => {
   const { query } = useParams();
@@ -42,12 +45,16 @@ export const SectionSM = ({
   title,
   titleProps,
   children,
-}: PropsWithChildren<{ title: string; titleProps?: HeadingProps }>) => {
+                            titleRight,
+}: PropsWithChildren<{ title: string; titleProps?: HeadingProps, titleRight?:ReactNode }>) => {
   return (
     <VStack alignItems={"flex-start"} w={"100%"}>
-      <Heading {...titleProps} size={"sm"}>
-        {title}
-      </Heading>
+      <Flex w={"100%"}>
+        <Heading {...titleProps} flexGrow={1} size={"sm"}>
+          {title}
+        </Heading>
+        {titleRight}
+      </Flex>
       {children}
     </VStack>
   );
@@ -137,6 +144,8 @@ const YTSSearch = (props: SearchProviderComponentProps) => {
     props.filterState.minSeeds,
   ]);
 
+  const [addToCategory, setAddToCategory] = useState<string>("");
+
   return (
     <VStack>
       <IosSearch
@@ -167,7 +176,12 @@ const YTSSearch = (props: SearchProviderComponentProps) => {
         modalProps={{ size: "xl", scrollBehavior: "inside" }}
       >
         <Flex flexDirection={"column"} gap={4}>
-          <SectionSM title={"Torrents"}>
+          <SectionSM title={"Torrents"}
+            titleRight={
+
+              <CategorySelect category={addToCategory} onSelected={setAddToCategory} />
+            }
+          >
             {(selectedMovie?.torrents || []).map((torrent) => {
               return (
                 <TorrentDownloadBox
@@ -178,6 +192,7 @@ const YTSSearch = (props: SearchProviderComponentProps) => {
                       selectedMovie?.year || "--"
                     })` || "Title not found"
                   )}
+                  category={addToCategory}
                 >
                   <Flex flexDirection={"column"} width={"100%"}>
                     <TorrentMovieData

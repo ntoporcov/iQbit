@@ -4,12 +4,14 @@ import IosSearch from "../components/ios/IosSearch";
 import { useMutation } from "react-query";
 import TorrentDownloadBox from "../components/TorrentDownloadBox";
 import SeedsAndPeers from "../components/SeedsAndPeers";
-import React, { useEffect, useMemo } from "react";
+import React, {useEffect, useMemo, useState} from "react";
 import TorrentMovieData from "../components/TorrentMovieData";
 import Filters from "../components/Filters";
 import { parseFromString, qualityAliases, typeAliases } from "./tpb";
 import { rarbgAPI, RarbgCategoryDictionary } from "../utils/RarBGClient";
 import ReactGA from "react-ga";
+import CategorySelect from "../components/CategorySelect";
+import {SectionSM} from "./yts";
 
 const RarbgSearch = (props: SearchProviderComponentProps) => {
   const {
@@ -91,6 +93,8 @@ const RarbgSearch = (props: SearchProviderComponentProps) => {
     props.filterState.qualitySelected,
   ]);
 
+  const [addToCategory, setAddToCategory] = useState<string>("");
+
   return (
     <VStack>
       <IosSearch
@@ -104,11 +108,19 @@ const RarbgSearch = (props: SearchProviderComponentProps) => {
         {(!data?.torrent_results?.length || true) && (
           <Filters {...props.filterState} />
         )}
+        {data && (
+          <SectionSM
+            title={"Results"}
+            titleRight={
+              <CategorySelect category={addToCategory} onSelected={setAddToCategory}/>
+            }
+          >
         {filteredMovies?.map((torr) => (
           <TorrentDownloadBox
             key={torr.download}
             title={torr.title}
             magnetURL={torr.download}
+            category={addToCategory}
           >
             {props.category === "Movies" && (
               <TorrentMovieData
@@ -123,6 +135,8 @@ const RarbgSearch = (props: SearchProviderComponentProps) => {
             />
           </TorrentDownloadBox>
         ))}
+            </SectionSM>
+        )}
       </Flex>
     </VStack>
   );

@@ -23,6 +23,7 @@ export function PosterGrid<T>(props: PosterGridProps<T>) {
       width={"100%"}
       justifyContent={"flex-start"}
       templateColumns={"repeat( auto-fit, minmax(150px, 1fr) )"}
+      mb={130}
     >
       {props.list.map((movie) => (
         <AspectRatio

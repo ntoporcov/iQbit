@@ -16,6 +16,7 @@ export interface TorrentDownloadBoxProps {
   title?: string;
   magnetURL?: string;
   onSelect?: () => Promise<string>;
+  category?: string;
 }
 
 const TorrentDownloadBox = ({
@@ -23,12 +24,13 @@ const TorrentDownloadBox = ({
   title,
   onSelect,
   children,
+  category,
 }: PropsWithChildren<TorrentDownloadBoxProps>) => {
   const isLarge = useIsLargeScreen();
 
   const { mutate, isLoading, isSuccess } = useMutation(
     "addBox",
-    (magnetURLParam: string) => TorrClient.addTorrent("urls", magnetURLParam)
+    (magnetURLParam: string) => TorrClient.addTorrent("urls", magnetURLParam, category)
   );
 
   const {
@@ -61,25 +63,29 @@ const TorrentDownloadBox = ({
         {children}
       </Box>
       <LightMode>
-        <Button
-          minW={32}
-          disabled={
-            isSuccess || callbackSuccess || callbackLoading || isLoading
-          }
-          isLoading={isLoading || callbackLoading}
-          colorScheme={"blue"}
-          width={!isLarge ? "100%" : undefined}
-          onClick={() => {
-            if (magnetURL) {
-              mutate(magnetURL);
-            } else if (onSelect) {
-              callbackMutation();
+        <Flex width="100%">
+          <Button
+            minW={32}
+            disabled={
+              isSuccess || callbackSuccess || callbackLoading || isLoading
             }
-          }}
-          leftIcon={isSuccess ? <IoCheckmark /> : undefined}
-        >
-          {isSuccess ? "Added" : "Download"}
-        </Button>
+            isLoading={isLoading || callbackLoading}
+            colorScheme={"blue"}
+            width={!isLarge ? "100%" : undefined}
+            onClick={() => {
+              if (magnetURL) {
+                mutate(magnetURL);
+              } else if (onSelect) {
+                callbackMutation();
+              }
+            }}
+            leftIcon={isSuccess ? <IoCheckmark /> : undefined}
+            flexGrow={1}
+            roundedRight={0}
+          >
+            {isSuccess ? "Added" : "Download"}
+          </Button>
+        </Flex>
       </LightMode>
     </Flex>
   );

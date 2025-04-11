@@ -1,15 +1,16 @@
-import { SearchProviderComponentProps, TPBRecord } from "../types";
-import { Flex, VStack } from "@chakra-ui/react";
+import {SearchProviderComponentProps, TPBRecord} from "../types";
+import {Flex, VStack} from "@chakra-ui/react";
 import IosSearch from "../components/ios/IosSearch";
-import { useMutation } from "react-query";
+import {useMutation} from "react-query";
 import axios from "axios";
 import TorrentDownloadBox from "../components/TorrentDownloadBox";
-import { useSearchFromParams } from "./yts";
+import {SectionSM, useSearchFromParams} from "./yts";
 import SeedsAndPeers from "../components/SeedsAndPeers";
-import React, { useEffect, useMemo } from "react";
+import React, {useEffect, useMemo, useState} from "react";
 import TorrentMovieData from "../components/TorrentMovieData";
 import Filters from "../components/Filters";
 import ReactGA from "react-ga";
+import CategorySelect from "../components/CategorySelect";
 
 export type AliasList = { name: string; aliases?: string[] }[];
 
@@ -82,7 +83,7 @@ const TPBSearch = (props: SearchProviderComponentProps) => {
   } = useMutation(
     "tpbSearch",
     async () => {
-      const { data } = await axios.get<TPBRecord[]>(
+      const {data} = await axios.get<TPBRecord[]>(
         `${ApiDomain}api/tpb/search`,
         {
           params: {
@@ -95,7 +96,7 @@ const TPBSearch = (props: SearchProviderComponentProps) => {
     },
     {
       onMutate: () =>
-        ReactGA.event({ action: "executed", category: "search", label: "TPB" }),
+        ReactGA.event({action: "executed", category: "search", label: "TPB"}),
       onSuccess: (data) => {
         props.onSearch && props.onSearch();
 
@@ -152,6 +153,8 @@ const TPBSearch = (props: SearchProviderComponentProps) => {
     props.filterState.qualitySelected,
   ]);
 
+  const [addToCategory, setAddToCategory] = useState<string>("");
+
   return (
     <VStack>
       <IosSearch
@@ -163,22 +166,32 @@ const TPBSearch = (props: SearchProviderComponentProps) => {
       />
       <Flex flexDirection={"column"} gap={2} width={"100%"}>
         {(!data?.length || true) && <Filters {...props.filterState} />}
-        {filteredMovies.map((torr) => (
-          <TorrentDownloadBox
-            key={torr.info_hash}
-            title={torr.name}
-            magnetURL={torr.info_hash}
-          >
-            {props.category === "Video" && (
-              <TorrentMovieData
-                quality={parseFromString(torr.name, qualityAliases)}
-                type={parseFromString(torr.name, typeAliases)}
-                size={parseInt(torr.size)}
-              />
-            )}
-            <SeedsAndPeers seeds={torr.seeders} peers={torr.leechers} />
-          </TorrentDownloadBox>
-        ))}
+        {data && (
+          <SectionSM
+            title={"Results"}
+             titleRight={
+               <CategorySelect category={addToCategory} onSelected={setAddToCategory}/>
+             }
+        >
+          {filteredMovies.map((torr) => (
+            <TorrentDownloadBox
+              key={torr.info_hash}
+              title={torr.name}
+              magnetURL={torr.info_hash}
+              category={addToCategory}
+            >
+              {props.category === "Video" && (
+                <TorrentMovieData
+                  quality={parseFromString(torr.name, qualityAliases)}
+                  type={parseFromString(torr.name, typeAliases)}
+                  size={parseInt(torr.size)}
+                />
+              )}
+              <SeedsAndPeers seeds={torr.seeders} peers={torr.leechers}/>
+            </TorrentDownloadBox>
+          ))}
+        </SectionSM>
+        )}
       </Flex>
     </VStack>
   );
