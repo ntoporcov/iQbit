@@ -8,7 +8,7 @@ import {
   TorrTorrentInfo,
 } from "../types";
 
-let serverAddress = window.location.origin;
+let serverAddress = new URL(".", window.location.href).href
 
 if (serverAddress.substring(serverAddress.length - 1) !== "/") {
   serverAddress = `${serverAddress}/`;
