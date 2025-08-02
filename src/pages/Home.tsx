@@ -34,15 +34,11 @@ import { useFontSizeContext } from "../components/FontSizeProvider"; // only nee
 
 import { FC } from "react";
 import {
-  List as _List,
+  List,
   ListProps,
-  WindowScroller as _WindowScroller,
+  WindowScroller,
   WindowScrollerProps,
 } from "react-virtualized";
-
-export const VirtualizedList = _List as unknown as FC<ListProps> & _List;
-export const VirtualizedWindowScroll =
-  _WindowScroller as unknown as FC<WindowScrollerProps> & _WindowScroller;
 
 const Home = () => {
   const { mutate: resumeAll } = useMutation("resumeAll", TorrClient.resumeAll);
@@ -197,7 +193,7 @@ const Home = () => {
   const fontSizeContext = useFontSizeContext();
 
   return (
-    <VirtualizedWindowScroll>
+    <WindowScroller>
       {({ isScrolling, scrollTop, width, height }) => (
         <Flex flexDirection={"column"} width={"100%"} mt={isLarge ? 24 : 0}>
           <PageHeader
@@ -444,7 +440,7 @@ const Home = () => {
               </Flex>
             )}
 
-            <VirtualizedList
+            <List
               autoWidth
               rowCount={Torrents.length}
               rowHeight={(230 * fontSizeContext.scale) / 100}
@@ -490,7 +486,7 @@ const Home = () => {
           </Flex>
         </Flex>
       )}
-    </VirtualizedWindowScroll>
+    </WindowScroller>
   );
 };
 

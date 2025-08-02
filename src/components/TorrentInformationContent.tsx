@@ -13,11 +13,10 @@ import {
   useDisclosure,
   useTheme,
 } from "@chakra-ui/react";
-//@ts-ignore
-import ActivityRings from "react-activity-rings";
 import filesize from "filesize";
 import SwarmVisualizer from "./SwarmVisualizer";
 import { CreateETAString } from "../utils/createETAString";
+import ActivityRing from "./ActivityRing";
 
 export interface TorrentInformationContentProps {
   torrentData: TorrTorrentInfo;
@@ -54,7 +53,6 @@ const TorrentInformationContent = ({
 }: TorrentInformationContentProps) => {
   const { colors } = useTheme();
 
-  const lastRatioFraction = torrentData.ratio % 1;
   const fullRatios = Math.floor(torrentData.ratio);
   const RatioRowAmount = fullRatios - 1;
   const showFullRatio = useDisclosure();
@@ -76,13 +74,16 @@ const TorrentInformationContent = ({
           gap={0}
           pt={-2}
         >
-          <Flex alignItems={"center"}>
-            <ActivityRings
-              data={[
-                { value: lastRatioFraction, color: colors.blue[500] },
-                fullRatios >= 1 ? { value: 1, color: colors.green[500] } : {},
+          <Flex alignItems={"center"} gap={5} my={4}>
+            <ActivityRing
+              rings={[
+                {
+                  value: torrentData.ratio * 100,
+                  color: colors.blue[500],
+                },
               ]}
-              config={{ width: 200, height: 200 }}
+              size={100}
+              strokeWidth={15}
             />
             <Heading>{torrentData.ratio.toFixed(2)} Ratio</Heading>
           </Flex>

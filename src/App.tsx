@@ -17,7 +17,7 @@ ReactGA.pageview("/");
 ReactGA.set({ version: pckg.version });
 
 // 2. Extend the theme to include custom colors, fonts, etc
-const colors = {
+export const colors = {
   cyan: {
     "50": "#E7F7FE",
     "100": "#BBE8FC",
