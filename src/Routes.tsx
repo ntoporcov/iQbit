@@ -1,5 +1,5 @@
-import React from "react";
-import { MemoryRouter, Route, Routes } from "react-router-dom";
+import React, { useEffect, useRef } from "react";
+import { MemoryRouter, Route, Routes, useLocation } from "react-router-dom";
 import DefaultLayout from "./layout/default";
 import { useIsLargeScreen } from "./utils/screenSize";
 import { Pages } from "./Pages";
@@ -9,6 +9,7 @@ export const LoggedInRoutes = () => {
 
   return (
     <MemoryRouter>
+      <Rescroller />
       <Routes>
         {Pages.map((page) => (
           <Route
@@ -30,4 +31,23 @@ export const LoggedInRoutes = () => {
       </Routes>
     </MemoryRouter>
   );
+};
+
+export const Rescroller = () => {
+  const router = useLocation();
+  const lastPathname = useRef(router.pathname);
+
+  useEffect(() => {
+    if (lastPathname.current === router.pathname) return;
+
+    lastPathname.current = router.pathname;
+
+    const scrollToTop = () => {
+      window.scrollTo(0, 0);
+    };
+
+    scrollToTop();
+  }, [router.pathname]);
+
+  return null;
 };

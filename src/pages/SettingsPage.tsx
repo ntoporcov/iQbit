@@ -38,6 +38,7 @@ import SearchPluginsPage from "./SearchPluginsPage";
 import CategoriesPage from "./CategoriesPage";
 import FontSizeSelection from "./FontSizeSelection";
 import TabSelectorPage from "./TabSelectorPage";
+import { GlassContainer } from "../components/GlassContainer";
 
 export interface SettingsPageProps {}
 
@@ -167,26 +168,27 @@ const SettingsHeader = ({
       width={isLarge ? "calc(100% + (var(--chakra-space-5)) * 2)" : "100vw"}
       position={isLarge ? "relative" : "fixed"}
       left={isLarge ? -5 : 0}
-      borderBottomWidth={3}
-      borderBottomStyle={"solid"}
-      borderColor={"grayAlpha.300"}
-      bgColor={"gray.900"}
-      backdropFilter={"blur(15px)"}
       zIndex={20}
+      data-group
     >
-      <Button
-        size={"lg"}
-        variant={"unstyled"}
-        display={"flex"}
-        alignItems={"center"}
-        position={"absolute"}
-        left={5}
-        onClick={onBackButtonPress}
-        color={"blue.500"}
-      >
-        <IoChevronBack size={18} />
-        Back
-      </Button>
+      <GlassContainer position={"absolute"} left={5} px={3} rounded={99999}>
+        <Button
+          size={"lg"}
+          variant={"unstyled"}
+          display={"flex"}
+          alignItems={"center"}
+          onClick={onBackButtonPress}
+          color={"text"}
+          _groupActive={{
+            transform: "scale(1.15)",
+            opacity: 1,
+            background: "transparent",
+          }}
+        >
+          <IoChevronBack size={18} />
+          Back
+        </Button>
+      </GlassContainer>
       <Heading size={"md"} alignItems={"center"}>
         {title}
       </Heading>
@@ -197,7 +199,7 @@ const SettingsHeader = ({
 const SettingsPage = () => {
   const isLarge = useIsLargeScreen();
   const [page, setPage] = useState<string>();
-  const mobileButtonBackground = useColorModeValue("white", "black");
+  const mobileButtonBackground = useColorModeValue("white", "gray.900");
 
   return (
     <SettingsProvider>
@@ -250,8 +252,11 @@ const SettingsPage = () => {
                   Object.entries(SettingsPages),
                   (
                     [pageName, { icon, color, group }],
-                    { isFirst, isLast, prevItem }
+                    { isFirst, isLast, prevItem, nextItem }
                   ) => {
+                    const groupFirst = isFirst || group !== prevItem?.[1].group;
+                    const groupLast = isLast || group !== nextItem?.[1].group;
+
                     return (
                       <Fragment key={pageName}>
                         {group !== prevItem?.[1].group && (
@@ -270,9 +275,12 @@ const SettingsPage = () => {
                           height={"100%"}
                           onClick={() => setPage(pageName as settingsPageNames)}
                           rounded={0}
-                          roundedTop={isFirst ? "lg" : undefined}
-                          roundedBottom={isLast ? "lg" : undefined}
+                          roundedTop={groupFirst ? "lg" : undefined}
+                          roundedBottom={groupLast ? "lg" : undefined}
                           backgroundColor={mobileButtonBackground}
+                          border={"none"}
+                          borderTop={groupFirst ? 0 : "1px"}
+                          borderTopColor={"grayAlpha.300"}
                         >
                           <Flex as={"span"} alignItems={"center"}>
                             <Box

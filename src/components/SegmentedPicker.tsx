@@ -1,5 +1,12 @@
 import React from "react";
-import { Button, SimpleGrid, useColorModeValue } from "@chakra-ui/react";
+import {
+  Box,
+  Button,
+  Flex,
+  SimpleGrid,
+  useColorModeValue,
+} from "@chakra-ui/react";
+import { GlassContainer } from "./GlassContainer";
 
 export interface SegmentedPickerProps {
   options: string[];
@@ -8,34 +15,41 @@ export interface SegmentedPickerProps {
 }
 
 const SegmentedPicker = (props: SegmentedPickerProps) => {
-  const selectedBg = useColorModeValue("white", "blackAlpha.700");
-  const pickerBg = useColorModeValue("gray.100", "grayAlpha.400");
-
   return (
-    <SimpleGrid
-      backgroundColor={pickerBg}
-      columns={props.options.length}
+    <GlassContainer
+      noTint
+      rounded={9999999}
+      p={2}
       mt={3}
       mb={5}
-      p={2}
-      rounded={"lg"}
       position={"sticky"}
-      top={2}
-      zIndex={"sticky"}
-      backdropFilter={"blur(15px)"}
+      top={"max(5px, env(safe-area-inset-top))"}
+      zIndex={2}
     >
-      {props.options.map((option, index) => (
-        <Button
-          backgroundColor={index === props.selected ? selectedBg : undefined}
-          key={option}
-          onClick={() => props.onSelect(index)}
-          variant={"unstyled"}
-          shadow={index === props.selected ? "xl" : undefined}
-        >
-          {option}
-        </Button>
-      ))}
-    </SimpleGrid>
+      <SimpleGrid columns={props.options.length} rounded={"lg"}>
+        {props.options.map((option, index) => (
+          <Flex
+            alignItems={"center"}
+            justifyContent={"center"}
+            key={option}
+            pos={"relative"}
+          >
+            {index === props.selected && (
+              <GlassContainer
+                pos={"absolute"}
+                width={"calc(100% - 2px)"}
+                height={"calc(100% - 2px)"}
+                rounded={9999999}
+                zIndex={0}
+              />
+            )}
+            <Button onClick={() => props.onSelect(index)} variant={"unstyled"}>
+              {option}
+            </Button>
+          </Flex>
+        ))}
+      </SimpleGrid>
+    </GlassContainer>
   );
 };
 

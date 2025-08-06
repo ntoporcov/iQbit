@@ -1,4 +1,4 @@
-import React from "react";
+import React, { ReactNode } from "react";
 import {
   Button,
   Flex,
@@ -10,6 +10,7 @@ import {
 import { FaPlus } from "react-icons/fa";
 import { useIsLargeScreen } from "../utils/screenSize";
 import { IoChevronBack } from "react-icons/io5";
+import { GlassContainer } from "./GlassContainer";
 
 export interface PageHeaderProps {
   title: string;
@@ -17,31 +18,24 @@ export interface PageHeaderProps {
   isHomeHeader?: boolean;
   buttonLabel?: string;
   onBackButtonPress?: () => void;
+  rightSlot?: ReactNode;
 }
 
 const PageHeader = (props: PageHeaderProps) => {
-  const BgColor = useColorModeValue("whiteAlpha.300", "blackAlpha.500");
   const isLarge = useIsLargeScreen();
-
-  const shouldBeBigHeader = props?.isHomeHeader && isLarge;
-  const headerInBox = !props?.isHomeHeader && isLarge;
 
   return (
     <Flex
-      position={shouldBeBigHeader ? "fixed" : undefined}
-      top={0}
+      position={props.isHomeHeader ? "sticky" : "unset"}
+      top="max(20px, env(safe-area-inset-top))"
       left={0}
-      pt={!isLarge ? 5 : headerInBox ? 0 : 5}
-      pb={shouldBeBigHeader ? 5 : 2}
-      px={shouldBeBigHeader ? 5 : 0}
+      pb={2}
       width={"100%"}
       justifyContent={"space-between"}
       zIndex={"docked"}
-      backdropFilter={shouldBeBigHeader ? "blur(15px)" : undefined}
       alignItems={"center"}
-      bgColor={shouldBeBigHeader ? BgColor : undefined}
     >
-      <Flex gap={2} alignItems={"center"}>
+      <Flex gap={2} grow={1} alignItems={"center"}>
         {props.onBackButtonPress && (
           <Button
             variant={"ghost"}
@@ -53,10 +47,15 @@ const PageHeader = (props: PageHeaderProps) => {
             <IoChevronBack size={25} />
           </Button>
         )}
-        <Heading size={!headerInBox ? "3xl" : "xl"} m={0}>
+        <Heading size={"xl"} m={0}>
           {props.title}
         </Heading>
       </Flex>
+      {props.rightSlot && (
+        <GlassContainer rounded={9999} p={1} mr={2} noTint>
+          <LightMode>{props.rightSlot}</LightMode>
+        </GlassContainer>
+      )}
       <LightMode>
         {props?.onAddButtonClick && (
           <Button

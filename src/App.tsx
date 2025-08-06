@@ -1,6 +1,11 @@
-import React from "react";
+import React, { useEffect } from "react";
 
-import { ChakraProvider, extendTheme, ThemeConfig } from "@chakra-ui/react";
+import {
+  Box,
+  ChakraProvider,
+  extendTheme,
+  ThemeConfig,
+} from "@chakra-ui/react";
 import { QueryClient, QueryClientProvider } from "react-query";
 import { mode } from "@chakra-ui/theme-tools";
 import { AuthChecker } from "./components/Auth";
@@ -121,9 +126,6 @@ const breakpoints = {
 const queryClient = new QueryClient();
 
 function App() {
-  const scroll = useScrollPosition();
-  const isTouch = useIsTouchDevice();
-
   const theme = extendTheme({
     colors,
     breakpoints,
@@ -131,10 +133,8 @@ function App() {
     styles: {
       global: (props: any) => ({
         body: {
-          backgroundColor: mode(
-            isTouch && scroll < 30 ? "gray.600" : "gray.50",
-            "black"
-          )(props),
+          backgroundColor: mode("gray.50", "black")(props),
+          minHeight: "100vh",
         },
       }),
     },

@@ -21,8 +21,8 @@ to have native features in the WebUI. Including:
 * Camera support (maybe) - My idea is to use iOS live text feature to add a torrent by just pointing your phone into its
   hash id
 
-![Screenshot](public/images/devices-pichi.png)
-![Screenshot](public/images/iphones-pichi.png)
+![Screenshot](public/images/ios26light.png)
+![Screenshot](public/images/ios26dark.png)
 
 ## Releases And Installing
 

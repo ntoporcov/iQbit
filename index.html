@@ -1,15 +1,15 @@
 <!DOCTYPE html>
-<html lang="en">
-<html lang="en">
+<html lang="en" style="min-height: 100%">
 <head>
     <meta charset="utf-8" />
     <link rel="icon" href="/favicon.ico" />
-    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
-    <meta name="theme-color" content="#000000" />
-    <meta
-            name="description"
-            content="iQbit WebUI for qBitTorrent"
-    />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no" />
+    <meta name="theme-color" content="blue" />
+
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+
+    <meta name="description" content="iQbit WebUI for qBitTorrent" />
     <!--
       manifest.json provides metadata used when your web app is installed on a
       user's mobile device or desktop. See https://developers.google.com/web/fundamentals/web-app-manifest/
@@ -61,7 +61,9 @@
 
 </head>
 <body>
-    <div id="root"></div>
+    <div id="root"
+         style="padding-top: env(safe-area-inset-top);padding-bottom: env(safe-area-inset-bottom);"
+    ></div>
     <script type="module" src="/src/index.tsx"></script>
 </body>
 </html>

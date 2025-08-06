@@ -8,6 +8,12 @@
   },
   "announcements": [
     {
+      "id": "Aug062025",
+      "title": "UI – iOS26",
+      "body": "Ahead of the iOS26 release, the UI has been updated to match the new design language.",
+      "type": "info"
+    },
+    {
       "id": "Apr112024",
       "title": "Feature – Select Category on Search",
       "body": "You can now select a category when downloading torrents from search",

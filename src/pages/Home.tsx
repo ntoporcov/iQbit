@@ -15,11 +15,12 @@ import {
   useDisclosure,
   Switch,
   VStack,
+  IconButton,
 } from "@chakra-ui/react";
 import { IoDocumentAttach, IoPause, IoPlay } from "react-icons/io5";
 import { useMutation, useQuery } from "react-query";
 import { TorrClient } from "../utils/TorrClient";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import TorrentBox from "../components/TorrentBox";
 import { TorrTorrentInfo } from "../types";
 import IosBottomSheet from "../components/ios/IosBottomSheet";
@@ -29,16 +30,10 @@ import { randomTorrent } from "../data";
 import "react-virtualized/styles.css";
 import { FilterHeading } from "../components/Filters";
 import stateDictionary from "../utils/StateDictionary";
-import { useLocalStorage } from "usehooks-ts";
-import { useFontSizeContext } from "../components/FontSizeProvider"; // only needs to be imported once
+import { useLocalStorage, useTernaryDarkMode } from "usehooks-ts";
+import { useFontSizeContext } from "../components/FontSizeProvider";
 
-import { FC } from "react";
-import {
-  List,
-  ListProps,
-  WindowScroller,
-  WindowScrollerProps,
-} from "react-virtualized";
+import { List, WindowScroller } from "react-virtualized";
 
 const Home = () => {
   const { mutate: resumeAll } = useMutation("resumeAll", TorrClient.resumeAll);
@@ -58,41 +53,45 @@ const Home = () => {
     TorrClient.getCategories
   );
 
-  const { isLoading } = useQuery("torrentsTxData", () => TorrClient.sync(rid), {
-    refetchInterval: 1000,
-    refetchOnWindowFocus: false,
-    async onSuccess(data) {
-      setRid(data.rid);
-      setRemovedTorrs((curr) => [...curr, ...(data.torrents_removed || [])]);
+  const { isLoading, isFetching } = useQuery(
+    "torrentsTxData",
+    () => TorrClient.sync(rid),
+    {
+      refetchInterval: 1000,
+      refetchOnWindowFocus: false,
+      async onSuccess(data) {
+        setRid(data.rid);
+        setRemovedTorrs((curr) => [...curr, ...(data.torrents_removed || [])]);
 
-      if (data.full_update) {
-        // await refetch();
-        setTorrentsTx(data.torrents as any);
-      } else {
-        if (!data.torrents) return;
+        if (data.full_update) {
+          // await refetch();
+          setTorrentsTx(data.torrents as any);
+        } else {
+          if (!data.torrents) return;
 
-        Object.entries(data.torrents).forEach(([hash, info]) => {
-          Object.entries(info).forEach(([key, val]) => {
-            setTorrentsTx((curr) => {
-              const newObject = {
-                ...curr,
-                [hash]: {
-                  ...curr[hash],
-                  [key]: val,
-                },
-              };
+          Object.entries(data.torrents).forEach(([hash, info]) => {
+            Object.entries(info).forEach(([key, val]) => {
+              setTorrentsTx((curr) => {
+                const newObject = {
+                  ...curr,
+                  [hash]: {
+                    ...curr[hash],
+                    [key]: val,
+                  },
+                };
 
-              if ((data.torrents_removed || []).includes(hash)) {
-                delete newObject[hash];
-              }
+                if ((data.torrents_removed || []).includes(hash)) {
+                  delete newObject[hash];
+                }
 
-              return newObject;
+                return newObject;
+              });
             });
           });
-        });
-      }
-    },
-  });
+        }
+      },
+    }
+  );
 
   const addModalDisclosure = useDisclosure();
   const [textArea, setTextArea] = useState("");
@@ -156,6 +155,7 @@ const Home = () => {
   };
 
   const bgColor = useColorModeValue("white", "gray.900");
+  const { isDarkMode } = useTernaryDarkMode();
 
   const filterIndicator = useMemo(() => {
     let indicator = 0;
@@ -195,11 +195,40 @@ const Home = () => {
   return (
     <WindowScroller>
       {({ isScrolling, scrollTop, width, height }) => (
-        <Flex flexDirection={"column"} width={"100%"} mt={isLarge ? 24 : 0}>
+        <Flex flexDirection={"column"} width={"100%"}>
           <PageHeader
             title={"Downloads"}
             onAddButtonClick={addModalDisclosure.onOpen}
-            buttonLabel={"Add Torrent"}
+            rightSlot={
+              <>
+                <IconButton
+                  onClick={() => resumeAll()}
+                  variant={"ghost"}
+                  aspectRatio={"1 / 1"}
+                  rounded={9999}
+                  aria-label={"Resume All"}
+                  color={"text"}
+                  _hover={{
+                    bgColor: "grayAlpha.400",
+                  }}
+                >
+                  <IoPlay />
+                </IconButton>
+                <IconButton
+                  onClick={() => pauseAll()}
+                  variant={"ghost"}
+                  aspectRatio={"1 / 1"}
+                  rounded={9999}
+                  aria-label={"Pause All"}
+                  color={"text"}
+                  _hover={{
+                    bgColor: "grayAlpha.400",
+                  }}
+                >
+                  <IoPause />
+                </IconButton>
+              </>
+            }
             isHomeHeader
           />
 
@@ -354,26 +383,7 @@ const Home = () => {
             </LightMode>
           </IosBottomSheet>
 
-          <ButtonGroup my={5} size={"lg"} width={"100%"}>
-            <Button
-              flexGrow={2}
-              leftIcon={<IoPlay />}
-              onClick={() => resumeAll()}
-              variant={"outline"}
-            >
-              {"Start All"}
-            </Button>
-            <Button
-              flexGrow={2}
-              leftIcon={<IoPause />}
-              onClick={() => pauseAll()}
-              variant={"outline"}
-            >
-              {"Pause All"}
-            </Button>
-          </ButtonGroup>
-
-          <Box bgColor={bgColor} rounded={"lg"} mb={5}>
+          <Box bgColor={bgColor} rounded={"lg"} mb={5} mt={isLarge ? 10 : 0}>
             <FilterHeading
               indicator={filterIndicator}
               disclosure={filterDisclosure}
@@ -418,7 +428,8 @@ const Home = () => {
           </Box>
 
           <Flex flexDirection={"column"} gap={5}>
-            {isLoading &&
+            {!Torrents?.length &&
+              isFetching &&
               Array.from(Array(10).keys()).map((key) => (
                 <TorrentBox
                   key={key}

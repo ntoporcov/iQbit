@@ -1,6 +1,7 @@
-import React, { useEffect, useMemo, useState } from "react";
+import React, { memo, useEffect, useMemo, useState } from "react";
 import {
   Box,
+  BoxProps,
   Button,
   Flex,
   FormControl,
@@ -44,6 +45,9 @@ import IosBottomSheet from "./ios/IosBottomSheet";
 import { Input } from "@chakra-ui/input";
 import TorrentInformationContent from "./TorrentInformationContent";
 import { CreateETAString } from "../utils/createETAString";
+import { useIsLargeScreen } from "../utils/screenSize";
+import { GlassContainer } from "./GlassContainer";
+import { colors } from "../App";
 
 export interface TorrentBoxProps {
   torrentData: Omit<TorrTorrentInfo, "hash">;
@@ -60,12 +64,13 @@ const TorrentBox = ({
   loading,
   style,
 }: TorrentBoxProps) => {
-  const BoxShadow = useColorModeValue("lg", "dark-lg");
   const BoxBg = useColorModeValue("white", "gray.900");
 
   const isDone = (torrentData.progress || 0) >= 1;
 
-  const isPaused = ["pausedDL", "pausedUP", "stoppedUP", "stoppedDL"].includes(torrentData.state);
+  const isPaused = ["pausedDL", "pausedUP", "stoppedUP", "stoppedDL"].includes(
+    torrentData.state
+  );
 
   const isDownloading = [
     "downloading",
@@ -189,80 +194,13 @@ const TorrentBox = ({
 
   const actionSheetDisclosure = useDisclosure();
 
-  const memoizedLoading = useMemo(
-    () => (
-      <Box
-        shadow={BoxShadow}
-        px={5}
-        py={4}
-        rounded={"xl"}
-        bgColor={"grayAlpha.200"}
-      >
-        <Skeleton
-          height={5}
-          width={(Math.random() * (100 - 40) + 40).toString() + "%"}
-        />
-        <Flex mt={2} gap={2}>
-          <Skeleton height={4} width={24} />
-          <Skeleton height={4} width={16} />
-          <Skeleton height={4} width={12} />
-        </Flex>
-        <Flex
-          mt={4}
-          gap={2}
-          justifyContent={"space-between"}
-          alignItems={"end"}
-        >
-          <Skeleton
-            height={8}
-            width={16}
-            startColor={"blue.500"}
-            endColor={"blue.700"}
-          />
-          <Skeleton height={5} width={20} />
-        </Flex>
-        <Skeleton
-          mt={2}
-          height={3}
-          width={"100%"}
-          startColor={"blue.500"}
-          endColor={"blue.700"}
-        />
-        <Flex mt={4} justifyContent={"space-between"} alignItems={"center"}>
-          <Flex gap={2}>
-            <Skeleton height={4} width={16} />
-            <Skeleton height={4} width={24} />
-          </Flex>
-          <Flex gap={2}>
-            <Skeleton height={8} width={12} />
-            <Skeleton
-              height={8}
-              width={12}
-              startColor={"blue.500"}
-              endColor={"blue.700"}
-            />
-          </Flex>
-        </Flex>
-      </Box>
-    ),
-    //eslint-disable-next-line
-    []
-  );
-
   if (loading) {
-    return memoizedLoading;
+    return <LoadingCard style={style} />;
   }
 
   return (
     <div style={style}>
-      <Box
-        shadow={BoxShadow}
-        px={5}
-        py={4}
-        rounded={"xl"}
-        bgColor={BoxBg}
-        mb={5}
-      >
+      <Box px={5} py={4} rounded={"xl"} bgColor={BoxBg} mb={5}>
         <Popover placement={"top"}>
           <PopoverTrigger>
             <Flex alignItems={"center"}>
@@ -316,7 +254,9 @@ const TorrentBox = ({
             {torrentData.eta !== 8640000 ? (
               <span>{timeString}</span>
             ) : (
-              <span>{stateDictionary[torrentData.state]?.short ?? torrentData.state}</span>
+              <span>
+                {stateDictionary[torrentData.state]?.short ?? torrentData.state}
+              </span>
             )}
           </Heading>
         </Flex>
@@ -324,8 +264,8 @@ const TorrentBox = ({
           <Progress
             rounded={100}
             size={"sm"}
-            color={"blue.500"}
             value={100 * torrentData.progress}
+            color={"blue.500"}
           />
         </LightMode>
         <Flex justifyContent={"flex-end"} alignItems={"center"} mt={3}>
@@ -487,7 +427,6 @@ const TorrentBox = ({
           <LightMode>
             <Button
               disabled={newName === torrentData.name}
-              colorScheme={"blue"}
               w={"100%"}
               onClick={() => renameTorrent()}
               isLoading={renameLoading}
@@ -507,5 +446,47 @@ const TorrentBox = ({
     </div>
   );
 };
+
+const LoadingCard = memo(_LoadingCard, () => true);
+
+function _LoadingCard(props: BoxProps) {
+  const BoxBg = useColorModeValue("white", "gray.900");
+
+  return (
+    <Box {...props}>
+      <Box px={5} py={4} rounded={"xl"} bgColor={BoxBg} mb={5}>
+        <Skeleton
+          height={5}
+          width={(Math.random() * (100 - 40) + 40).toString() + "%"}
+        />
+        <Flex mt={2} gap={2}>
+          <Skeleton height={4} width={24} />
+          <Skeleton height={4} width={16} />
+          <Skeleton height={4} width={12} />
+        </Flex>
+        <Flex
+          mt={4}
+          gap={2}
+          justifyContent={"space-between"}
+          alignItems={"end"}
+        >
+          <Skeleton height={8} width={16} />
+          <Skeleton height={5} width={20} />
+        </Flex>
+        <Skeleton mt={2} height={3} width={"100%"} />
+        <Flex mt={4} justifyContent={"space-between"} alignItems={"center"}>
+          <Flex gap={2}>
+            <Skeleton height={4} width={16} />
+            <Skeleton height={4} width={24} />
+          </Flex>
+          <Flex gap={2}>
+            <Skeleton height={8} width={12} />
+            <Skeleton height={8} width={12} />
+          </Flex>
+        </Flex>
+      </Box>
+    </Box>
+  );
+}
 
 export default TorrentBox;

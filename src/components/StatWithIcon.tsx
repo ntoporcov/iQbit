@@ -21,6 +21,7 @@ export const StatWithIcon = ({
       justifyContent={{ base: "center", lg: "flex-start" }}
     >
       <Box
+        opacity={"0.4"}
         color={
           lit ? "blue.500" : lit !== undefined ? "grayAlpha.500" : undefined
         }
@@ -32,7 +33,7 @@ export const StatWithIcon = ({
       ) : (
         <Text
           ml={1}
-          fontWeight={400}
+          fontWeight={500}
           noOfLines={1}
           fontSize={"md"}
           color={lit ? TextLitColor : lit !== undefined ? TextColor : undefined}

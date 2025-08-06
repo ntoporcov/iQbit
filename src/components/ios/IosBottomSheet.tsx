@@ -20,6 +20,7 @@ import {
   useColorModeValue,
   UseDisclosureReturn,
 } from "@chakra-ui/react";
+import { GlassContainer } from "../GlassContainer";
 
 export interface IosBottomSheetProps {
   title: string;
@@ -79,10 +80,16 @@ const IosBottomSheet = ({
       <DrawerOverlay zIndex={"modal"} />
       <DrawerContent
         roundedTop={12}
+        width={"calc(100% - 30px)"}
+        mx={"auto"}
+        background={"transparent"}
+        className={"glassEffect"}
         maxHeight={"85vh"}
-        backgroundColor={backgroundColor}
-        // overflow={"hidden"}
+        rounded={"50px"}
+        mb={"20px"}
       >
+        <div className={"glassTint"} />
+        <div className={"glassEffect"} />
         <DrawerHeader
           // backgroundColor={backgroundColor}
           display={"flex"}

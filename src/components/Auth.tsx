@@ -46,17 +46,9 @@ export const AuthView = () => {
 
   const { handleLogin, formError } = useLogin();
 
-  const fakeBodyBg = useColorModeValue("gray.50", "black");
-
   return (
-    <VStack backgroundColor={fakeBodyBg}>
-      <Box
-        backgroundColor={fakeBodyBg}
-        position={"fixed"}
-        height={"100vh"}
-        width={"100vw"}
-        zIndex={-1}
-      />
+    <VStack>
+      <Box position={"fixed"} height={"100vh"} width={"100vw"} zIndex={-1} />
       <LogoHeader />
       <VStack pt={5} px={10}>
         <VStack mb={8} justifyContent={"center"}>

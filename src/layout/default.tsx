@@ -13,13 +13,15 @@ import { IconBaseProps } from "react-icons";
 import { useIsLargeScreen } from "../utils/screenSize";
 import { PageLabels, Pages } from "../Pages";
 import Home from "../pages/Home";
-import { useLocation } from "react-router-dom";
+import { NavLink, useLocation } from "react-router-dom";
 import useScrollPosition from "../hooks/useScrollPosition";
 import { useLogin } from "../utils/useLogin";
 import { logout } from "../components/Auth";
 import { isAndroid, isIOS } from "react-device-detect";
 import { useReadLocalStorage } from "usehooks-ts";
 import { defaultTabs } from "../pages/TabSelectorPage";
+import { GlassContainer } from "../components/GlassContainer";
+import { useIsPWA } from "../hooks/useIsPWA";
 
 export interface DefaultLayoutProps {}
 
@@ -42,51 +44,26 @@ const DefaultLayout = (props: PropsWithChildren<DefaultLayoutProps>) => {
     activeColor,
   };
   const iconProps: IconBaseProps = {
-    size: 20,
+    size: 24,
   };
   const activeIconProps: IconBaseProps = {
     color: activeColor,
   };
 
-  const BgColor = useColorModeValue("gray.75", "gray.900");
-  const BgBorderColor = useColorModeValue("gray.200", "gray.600");
+  const isPWA = useIsPWA();
   const isLarge = useIsLargeScreen();
 
   const largeWorkAreaBgColor = useColorModeValue("white", "gray.900");
   const isTouchDevice = isAndroid || isIOS;
-  const scroll = useScrollPosition();
-  const fakeBodyBg = useColorModeValue("gray.50", "black");
 
-  const storedTabs = useReadLocalStorage<(PageLabels | "")[]>("tabs");
-  const tabsSelected = storedTabs ?? defaultTabs;
-
-  const DownloadsPage = Pages.find((page) => page.label === "Downloads");
-  const SettingsPage = Pages.find((page) => page.label === "Settings");
+  const DownloadsPage = Pages.find((page) => page.label === "Downloads")!;
+  const SettingsPage = Pages.find((page) => page.label === "Settings")!;
+  const SearchPage = Pages.find((page) => page.label === "Search")!;
+  const TrendingPage = Pages.find((page) => page.label === "Trending")!;
 
   return (
-    <Box backgroundColor={fakeBodyBg}>
-      <Box
-        backgroundColor={fakeBodyBg}
-        position={"fixed"}
-        height={"100vh"}
-        width={"100vw"}
-        zIndex={-1}
-      />
-      {isTouchDevice && (
-        <Box
-          zIndex={scroll > 15 ? 1000 : -1}
-          h={"60px"}
-          top={"-60px"}
-          mb={"-60px"}
-          // transform={"translateY(-60px)"}
-          position={"sticky"}
-          w={"100vw"}
-          backgroundColor={"blackAlpha.500"}
-          backdropFilter={"blur(15px)"}
-          opacity={isTouchDevice ? (scroll - 30) * 0.01 * 0.6 : 0}
-        />
-      )}
-      <Flex gap={isLarge ? 10 : undefined} as={"main"} mb={"30vh"} px={5}>
+    <Box px={5}>
+      <Flex gap={isLarge ? 10 : undefined} as={"main"} mb={"30vh"}>
         <Box maxWidth={isLarge ? "400px" : undefined} width={"100%"}>
           {isLarge ? <Home /> : props.children}
         </Box>
@@ -96,12 +73,11 @@ const DefaultLayout = (props: PropsWithChildren<DefaultLayoutProps>) => {
             mt={6}
             as={"aside"}
             backgroundColor={largeWorkAreaBgColor}
-            height={"calc(100vh - 150px)"}
+            height={"calc(100vh - 40px)"}
             shadow={"lg"}
             rounded={12}
             overflow={"hidden"}
             position={"fixed"}
-            top={"90px"}
             width={"calc(100% - 470px)"}
             left={"450px"}
           >
@@ -187,67 +163,57 @@ const DefaultLayout = (props: PropsWithChildren<DefaultLayoutProps>) => {
         )}
       </Flex>
       {!isLarge && (
-        <SimpleGrid
-          as={"nav"}
-          columns={(tabsSelected?.filter((curr) => !!curr).length || 0) + 2}
-          width={"100%"}
+        <Flex
+          width={"calc(100% - 40px)"}
+          left={"20px"}
           position={"fixed"}
-          bottom={0}
-          bgColor={BgColor}
-          borderTop={"1px solid"}
-          borderColor={BgBorderColor}
+          bottom={isPWA ? "25px" : "5px"}
+          gap={3}
         >
-          {DownloadsPage && (
+          <GlassContainer
+            flexGrow={1}
+            rounded={99999999}
+            zIndex={1000}
+            noTint
+            overflow={"visible"}
+          >
+            <Flex as={"nav"} width={"100%"}>
+              {[DownloadsPage, TrendingPage, SettingsPage].map(
+                ({ url, Icon, label }) => {
+                  return (
+                    <NavButton
+                      key={url}
+                      {...sharedNavButtonProps}
+                      path={url}
+                      icon={{
+                        active: Icon.active({
+                          ...activeIconProps,
+                          ...iconProps,
+                        }),
+                        inactive: Icon.inactive({ ...iconProps }),
+                      }}
+                      label={label}
+                    />
+                  );
+                }
+              )}
+            </Flex>
+          </GlassContainer>
+          <GlassContainer rounded={"100%"} h={16} aspectRatio={"1 / 1"} noTint>
             <NavButton
-              key={DownloadsPage.url}
               {...sharedNavButtonProps}
-              path={DownloadsPage.url}
+              path={SearchPage.url}
               icon={{
-                active: DownloadsPage.Icon.active({
+                active: SearchPage.Icon.active({
                   ...activeIconProps,
                   ...iconProps,
                 }),
-                inactive: DownloadsPage.Icon.inactive({ ...iconProps }),
+                inactive: SearchPage.Icon.inactive({ ...iconProps }),
               }}
-              label={DownloadsPage.label}
+              label={""}
             />
-          )}
-          {tabsSelected.map((tab) => {
-            const pageData = Pages.find((page) => page.label === tab);
-
-            if (!pageData) return null;
-
-            const { url, Icon, label } = pageData;
-
-            return (
-              <NavButton
-                key={url}
-                {...sharedNavButtonProps}
-                path={url}
-                icon={{
-                  active: Icon.active({ ...activeIconProps, ...iconProps }),
-                  inactive: Icon.inactive({ ...iconProps }),
-                }}
-                label={label}
-              />
-            );
-          })}
-          {SettingsPage && (
-            <NavButton
-              key={SettingsPage.url}
-              {...sharedNavButtonProps}
-              path={SettingsPage.url}
-              icon={{
-                active: SettingsPage.Icon.active({
-                  ...activeIconProps,
-                  ...iconProps,
-                }),
-                inactive: SettingsPage.Icon.inactive({ ...iconProps }),
-              }}
-              label={SettingsPage.label}
-            />
-          )}
-        </SimpleGrid>
+          </GlassContainer>
+        </Flex>
       )}
     </Box>
   );
