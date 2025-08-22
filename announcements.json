@@ -8,6 +8,12 @@
   },
   "announcements": [
     {
+      "id": "Aug222025",
+      "title": "UI – iOS26 Bugfixes",
+      "body": "Pushed some bugfixes related to the previous iOS26 release.",
+      "type": "info"
+    },
+    {
       "id": "Aug062025",
       "title": "UI – iOS26",
       "body": "Ahead of the iOS26 release, the UI has been updated to match the new design language.",

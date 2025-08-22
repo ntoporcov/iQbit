@@ -79,14 +79,14 @@ const IosBottomSheet = ({
     >
       <DrawerOverlay zIndex={"modal"} />
       <DrawerContent
-        roundedTop={12}
-        width={"calc(100% - 30px)"}
+        roundedTop={"25px"}
+        width={"calc(100% - 16px)"}
         mx={"auto"}
         background={"transparent"}
         className={"glassEffect"}
         maxHeight={"85vh"}
-        rounded={"50px"}
-        mb={"20px"}
+        roundedBottom={"50px"}
+        mb={"8px"}
       >
         <div className={"glassTint"} />
         <div className={"glassEffect"} />

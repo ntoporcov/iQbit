@@ -134,7 +134,7 @@ function App() {
       global: (props: any) => ({
         body: {
           backgroundColor: mode("gray.50", "black")(props),
-          minHeight: "100vh",
+          minHeight: "100dvh",
         },
       }),
     },

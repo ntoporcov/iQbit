@@ -10,11 +10,11 @@ import {
 import { PageLabels, Pages } from "../Pages";
 import { useLocalStorage } from "usehooks-ts";
 
-export const defaultTabs: PageLabels[] = ["Search", "Trending"];
+export const defaultTabs: PageLabels[] = ["Trending", "Search"];
 
 const TabSelectorPage = () => {
   const bgColor = useColorModeValue("white", "gray.900");
-  const [tabs, setTabs] = useLocalStorage<(PageLabels | "")[]>("tabs", [
+  const [tabs, setTabs] = useLocalStorage<(PageLabels | "")[]>("tabs-v2", [
     "Search",
     "Trending",
   ]);
@@ -62,7 +62,6 @@ const TabSelectorPage = () => {
                 )
               }
             >
-              <option value={-1}>None</option>
               <option value={0}>Position 1</option>
               <option value={1}>Position 2</option>
             </Select>
@@ -82,6 +81,7 @@ const TabSelectorPage = () => {
         <Text bg={"blue.400"} p={1} rounded={"md"}>
           Position 1
         </Text>
+        <span />
         <Text bg={"blue.400"} p={1} rounded={"md"}>
           Position 2
         </Text>

@@ -48,7 +48,7 @@ export const AuthView = () => {
 
   return (
     <VStack>
-      <Box position={"fixed"} height={"100vh"} width={"100vw"} zIndex={-1} />
+      <Box position={"fixed"} height={"100dvh"} width={"100vw"} zIndex={-1} />
       <LogoHeader />
       <VStack pt={5} px={10}>
         <VStack mb={8} justifyContent={"center"}>

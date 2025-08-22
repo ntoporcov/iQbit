@@ -192,7 +192,7 @@ const SearchPage = () => {
           </Flex>
         </Flex>
       )}
-      <Box mt={4} height={20}>
+      <Box mt={4}>
         {selectedProvider === "YTS" && (
           <YTSSearch
             category={providers[selectedProvider].categories[selectedCategory]}

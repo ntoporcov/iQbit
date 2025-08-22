@@ -54,16 +54,26 @@ const DefaultLayout = (props: PropsWithChildren<DefaultLayoutProps>) => {
   const isLarge = useIsLargeScreen();
 
   const largeWorkAreaBgColor = useColorModeValue("white", "gray.900");
-  const isTouchDevice = isAndroid || isIOS;
+
+  const storedTabs = useReadLocalStorage<(PageLabels | "")[]>("tabs-v2");
+  const tabsSelected = storedTabs ?? defaultTabs;
+
+  const middleTab = tabsSelected[0] || "Trending";
+  const rightTab = tabsSelected[1] || "Search";
 
   const DownloadsPage = Pages.find((page) => page.label === "Downloads")!;
   const SettingsPage = Pages.find((page) => page.label === "Settings")!;
-  const SearchPage = Pages.find((page) => page.label === "Search")!;
-  const TrendingPage = Pages.find((page) => page.label === "Trending")!;
+  const MiddleTab = Pages.find((page) => page.label === middleTab)!;
+  const RightTab = Pages.find((page) => page.label === rightTab)!;
 
   return (
     <Box px={5}>
-      <Flex gap={isLarge ? 10 : undefined} as={"main"} mb={"30vh"}>
+      <Flex
+        gap={isLarge ? 10 : undefined}
+        as={"main"}
+        mb={"30vh"}
+        id={"app-container"}
+      >
         <Box maxWidth={isLarge ? "400px" : undefined} width={"100%"}>
           {isLarge ? <Home /> : props.children}
         </Box>
@@ -73,13 +83,14 @@ const DefaultLayout = (props: PropsWithChildren<DefaultLayoutProps>) => {
             mt={6}
             as={"aside"}
             backgroundColor={largeWorkAreaBgColor}
-            height={"calc(100vh - 40px)"}
+            height={"calc(100dvh - 40px)"}
             shadow={"lg"}
             rounded={12}
             overflow={"hidden"}
             position={"fixed"}
             width={"calc(100% - 470px)"}
             left={"450px"}
+            id={"desktop-container"}
           >
             <Flex
               flexDirection={"column"}
@@ -169,6 +180,7 @@ const DefaultLayout = (props: PropsWithChildren<DefaultLayoutProps>) => {
           position={"fixed"}
           bottom={isPWA ? "25px" : "5px"}
           gap={3}
+          id={"mobile-container"}
         >
           <GlassContainer
             flexGrow={1}
@@ -178,7 +190,7 @@ const DefaultLayout = (props: PropsWithChildren<DefaultLayoutProps>) => {
             overflow={"visible"}
           >
             <Flex as={"nav"} width={"100%"}>
-              {[DownloadsPage, TrendingPage, SettingsPage].map(
+              {[DownloadsPage, MiddleTab, SettingsPage].map(
                 ({ url, Icon, label }) => {
                   return (
                     <NavButton
@@ -202,13 +214,13 @@ const DefaultLayout = (props: PropsWithChildren<DefaultLayoutProps>) => {
           <GlassContainer rounded={"100%"} h={16} aspectRatio={"1 / 1"} noTint>
             <NavButton
               {...sharedNavButtonProps}
-              path={SearchPage.url}
+              path={RightTab.url}
               icon={{
-                active: SearchPage.Icon.active({
+                active: RightTab.Icon.active({
                   ...activeIconProps,
                   ...iconProps,
                 }),
-                inactive: SearchPage.Icon.inactive({ ...iconProps }),
+                inactive: RightTab.Icon.inactive({ ...iconProps }),
               }}
               label={""}
             />
