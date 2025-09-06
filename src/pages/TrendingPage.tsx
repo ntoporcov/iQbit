@@ -44,7 +44,7 @@ const TrendingPage = () => {
             time_window: "day",
             language: browserLanguage,
         })
-        );
+    );
 
     const [currentPage, setCurrentPage] = useState(1);
 
