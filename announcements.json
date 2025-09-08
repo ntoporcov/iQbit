@@ -8,6 +8,12 @@
   },
   "announcements": [
     {
+      "id": "Sep082025",
+      "title": "Bugfixes",
+      "body": "Bugfixes pushed out including pause button bug. Thanks to @shashikiran797!",
+      "type": "info"
+    },
+    {
       "id": "Aug222025",
       "title": "UI – iOS26 Bugfixes",
       "body": "Pushed some bugfixes related to the previous iOS26 release.",
