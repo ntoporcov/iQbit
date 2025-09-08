@@ -21,17 +21,29 @@ const smallImage = "http://image.tmdb.org/t/p/w200";
 const originalImage = "http://image.tmdb.org/t/p/original";
 
 
+// Helper to get browser language, fallback to 'en-US', and map to supported TMDB codes
+const getBrowserLanguage = () => {
+    const supported = [
+        "en-US", "es-ES", "fr-FR", "de-DE", "pt-BR"
+    ];
+    const lang = typeof navigator !== 'undefined' ? navigator.language : 'en-US';
+    // If supported, use as is, else fallback to 'en-US'
+    return supported.includes(lang) ? lang : 'en-US';
+};
+
 const TrendingPage = () => {
   const tabs = ["Movies", "TV", "TOP 100"];
   const [tab, setTab] = useState(0);
 
   const [selectedMovie, setSelectedMovie] = useState<MovieResult>();
   const movieBottomSheet = useDisclosure();
-  const {data: trendingMovies} = useQuery("getTrendingMovies", async () =>
-      tmdbClient.trending({
-        media_type: "movie",
-        time_window: "day",
-      })
+    const browserLanguage = getBrowserLanguage();
+    const {data: trendingMovies} = useQuery("getTrendingMovies", async () =>
+        tmdbClient.trending({
+            media_type: "movie",
+            time_window: "day",
+            language: browserLanguage,
+        })
     );
 
     const [currentPage, setCurrentPage] = useState(1);
@@ -74,6 +86,7 @@ const TrendingPage = () => {
         tmdbClient.trending({
             media_type: "tv",
             time_window: "day",
+            language: browserLanguage,
         })
     );
 
