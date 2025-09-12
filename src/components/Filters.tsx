@@ -51,9 +51,15 @@ export function useFilterState(): useFilterStateReturn {
 export const FilterHeading = ({
   disclosure,
   indicator,
+  title = "Filters",
+  icon = <IoFilter />,
+  ...props
 }: {
   disclosure: UseDisclosureReturn;
   indicator?: number;
+  title?: string;
+  icon?: React.ReactElement;
+  [key: string]: any;
 }) => (
   <Flex
     p={5}
@@ -64,9 +70,10 @@ export const FilterHeading = ({
     alignItems={"center"}
     justifyContent={"space-between"}
     gap={2}
+    {...props}
   >
     <Heading as={"span"} size={"sm"}>
-      Filters
+      {title}
       <LightMode>
         {indicator ? (
           <Badge bgColor={"blue.500"} color={"white"} ml={3}>
@@ -75,7 +82,7 @@ export const FilterHeading = ({
         ) : null}
       </LightMode>
     </Heading>
-    {disclosure.isOpen ? <IoClose /> : <IoFilter />}
+    {disclosure.isOpen ? <IoClose /> : icon}
   </Flex>
 );
 
