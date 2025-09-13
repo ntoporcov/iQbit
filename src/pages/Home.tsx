@@ -102,7 +102,7 @@ const Home = () => {
   const [firstAndLastPiece, setFirstAndLastPiece] = useState(false);
 
   const [fileError, setFileError] = useState("");
-  const [file, setFile] = useState<File>();
+  const [files, setFiles] = useState<File[]>([]);
   const [draggingOver, setDraggingOver] = useState(false);
 
   const { data: settings } = useQuery(
@@ -111,26 +111,37 @@ const Home = () => {
     { refetchInterval: 30000 }
   );
 
-  const validateAndSelectFile = (file: File) => {
-    if (file.name.endsWith(".torrent")) {
-      setFile(file);
-    } else {
-      setFileError("This does not seem to be .torrent file");
+  const validateAndSelectFiles = (fileList: FileList) => {
+    let validFiles: File[] = [];
+    for (let i = 0; i < fileList.length; i++) {
+      const file = fileList[i];
+      if (file.name.endsWith(".torrent")) {
+        validFiles.push(file);
+      } else {
+        setFileError("One or more files are not .torrent files");
+        setDraggingOver(false);
+        return;
+      }
     }
-
+    setFiles(validFiles);
+    setFileError("");
     setDraggingOver(false);
   };
 
-  const { mutate: attemptAddTorrent, isLoading: attemptAddLoading } =
-    useMutation(
-      "addTorrent",
-      (opts: { autoTmm?: boolean }) =>
-        TorrClient.addTorrent(
-          !!textArea ? "urls" : "torrents",
-          !!textArea ? textArea : file!
-        ),
-      { onSuccess: addModalDisclosure.onClose }
-    );
+  const { mutate: attemptAddTorrent, isLoading: attemptAddLoading } = useMutation(
+    async (opts: { autoTmm?: boolean, payload?: string | File | File[] }) => {
+      if (!!textArea) {
+        return await TorrClient.addTorrent("urls", textArea);
+      } else {
+        if (Array.isArray(opts.payload)) {
+          return await Promise.all(opts.payload.map((file) => TorrClient.addTorrent("torrents", file)));
+        } else {
+          return await TorrClient.addTorrent("torrents", opts.payload as File);
+        }
+      }
+    },
+    { onSuccess: addModalDisclosure.onClose }
+  );
 
   const isLarge = useIsLargeScreen();
 
@@ -234,7 +245,7 @@ const Home = () => {
 
           <IosBottomSheet title={"Add Torrent"} disclosure={addModalDisclosure}>
             <VStack gap={4}>
-              <FormControl isDisabled={!!file}>
+              <FormControl isDisabled={files.length > 0}>
                 <FormLabel>{"Magnet Link / URL"}</FormLabel>
                 <Textarea
                   _disabled={{ bgColor: "gray.50" }}
@@ -249,14 +260,14 @@ const Home = () => {
                   mb={2}
                 >
                   <FormLabel mb={0}>{"Add with .torrent file"}</FormLabel>
-                  {file && (
+                  {files.length > 0 && (
                     <Button
                       size={"sm"}
                       variant={"ghost"}
                       colorScheme={"blue"}
                       onClick={(e) => {
                         e.preventDefault();
-                        setFile(undefined);
+                        setFiles([]);
                       }}
                     >
                       {"Clear"}
@@ -269,41 +280,33 @@ const Home = () => {
                   alignItems={"center"}
                   justifyContent={"center"}
                   position={"relative"}
-                  borderColor={file ? "green.500" : "blue.500"}
+                  borderColor={files.length > 0 ? "green.500" : "blue.500"}
                   borderWidth={1}
                   rounded={"lg"}
                   bgColor={
-                    draggingOver ? "blue.500" : file ? "green.50" : "blue.50"
+                    draggingOver ? "blue.500" : files.length > 0 ? "green.50" : "blue.50"
                   }
                   p={4}
                   color={
-                    draggingOver ? "white" : file ? "green.500" : "blue.500"
+                    draggingOver ? "white" : files.length > 0 ? "green.500" : "blue.500"
                   }
                   opacity={!!textArea ? 0.5 : undefined}
                 >
                   <IoDocumentAttach size={40} />
                   <Heading size={"sm"} noOfLines={1}>
-                    {draggingOver
-                      ? "Drop it"
-                      : file
-                      ? file.name
-                      : "Click or Drag and Drop"}
+                    {draggingOver ? "Drop it" : files.length > 0 ? (files.length === 1 ? files[0].name : `${files.length} files selected`) : "Click or Drag and Drop"}
                   </Heading>
                   <Input
                     accept={".torrent"}
+                    multiple
                     onDragEnter={() => {
                       if (!!textArea) return;
                       setFileError("");
                       setDraggingOver(true);
                     }}
                     onDragLeave={() => setDraggingOver(false)}
-                    onDrop={(e) =>
-                      validateAndSelectFile(e.dataTransfer.files[0])
-                    }
-                    onChange={(e) =>
-                      e?.target?.files &&
-                      validateAndSelectFile(e?.target?.files[0])
-                    }
+                    onDrop={(e) => validateAndSelectFiles(e.dataTransfer.files)}
+                    onChange={(e) => e?.target?.files && validateAndSelectFiles(e.target.files)}
                     opacity={0}
                     _disabled={{ opacity: 0 }}
                     type={"file"}
@@ -368,14 +371,14 @@ const Home = () => {
             </VStack>
             <LightMode>
               <Button
-                disabled={!textArea && !file}
+                disabled={!textArea && files.length === 0}
                 isLoading={attemptAddLoading}
                 width={"100%"}
                 size={"lg"}
                 colorScheme={"blue"}
                 mt={16}
                 onClick={() =>
-                  attemptAddTorrent({ autoTmm: settings?.auto_tmm_enabled })
+                  attemptAddTorrent({ autoTmm: settings?.auto_tmm_enabled, payload: !!textArea ? textArea : files })
                 }
               >
                 {"Add Torrent"}
