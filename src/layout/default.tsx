@@ -67,7 +67,7 @@ const DefaultLayout = (props: PropsWithChildren<DefaultLayoutProps>) => {
   const RightTab = Pages.find((page) => page.label === rightTab)!;
 
   return (
-    <Box px={5}>
+    <Box px={5} pb={100}>
       <Flex
         gap={isLarge ? 10 : undefined}
         as={"main"}
