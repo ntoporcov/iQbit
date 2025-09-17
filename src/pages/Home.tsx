@@ -383,7 +383,7 @@ const Home = () => {
             </LightMode>
           </IosBottomSheet>
 
-          <Box bgColor={bgColor} rounded={"lg"} mb={5} mt={isLarge ? 10 : 0}>
+          <Box bgColor={bgColor} rounded={"lg"} mb={5} mt={10}>
             <FilterHeading
               indicator={filterIndicator}
               disclosure={filterDisclosure}
@@ -428,17 +428,15 @@ const Home = () => {
           </Box>
 
           <Flex flexDirection={"column"} gap={5}>
-            {!Torrents?.length &&
-              isFetching &&
-              Array.from(Array(10).keys()).map((key) => (
-                <TorrentBox
-                  key={key}
-                  torrentData={randomTorrent}
-                  categories={[]}
-                  hash={""}
-                  loading
-                />
-              ))}
+            {!Torrents?.length && isLoading && filterIndicator === 0 && Array.from(Array(10).keys()).map((key) => (
+              <TorrentBox
+                key={key}
+                torrentData={randomTorrent}
+                categories={[]}
+                hash={""}
+                loading
+              />
+            ))}
 
             {Torrents.length === 0 && filterIndicator > 0 && (
               <Flex alignItems={"center"} flexDirection={"column"} gap={4}>
