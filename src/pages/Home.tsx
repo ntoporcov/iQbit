@@ -100,6 +100,7 @@ const Home = () => {
   const [automaticManagment, setAutomaticManagment] = useState(false);
   const [sequentialDownload, setSequentialDownload] = useState(false);
   const [firstAndLastPiece, setFirstAndLastPiece] = useState(false);
+  const [downloadFolder, setDownloadFolder] = useState<string>("");
 
   const [fileError, setFileError] = useState("");
   const [files, setFiles] = useState<File[]>([]);
@@ -129,12 +130,12 @@ const Home = () => {
   };
 
   const { mutate: attemptAddTorrent, isLoading: attemptAddLoading } = useMutation(
-    async (opts: { autoTmm?: boolean, payload?: string | File | File[] }) => {
+    async (opts: { autoTmm?: boolean, payload?: string | File | File[], downloadFolder?: string }) => {
       if (!!textArea) {
         return await TorrClient.addTorrent("urls", textArea);
       } else {
         if (Array.isArray(opts.payload)) {
-          return await Promise.all(opts.payload.map((file) => TorrClient.addTorrent("torrents", file)));
+          return await Promise.all(opts.payload.map((file) => TorrClient.addTorrent("torrents", file, "", opts.downloadFolder)));
         } else {
           return await TorrClient.addTorrent("torrents", opts.payload as File);
         }
@@ -354,6 +355,14 @@ const Home = () => {
                   }}
                 />
               </FormControl>
+              <FormControl>
+                <FormLabel>Download Folder</FormLabel>
+                <Input
+                  type="text"
+                  value={downloadFolder || ((settings as any)?.save_path || '')}
+                  onChange={(e) => setDownloadFolder(e.target.value)}
+                />
+              </FormControl>
               {Categories.length && (
                 <FormControl>
                   <FormLabel>{"Category"}</FormLabel>
@@ -378,7 +387,7 @@ const Home = () => {
                 colorScheme={"blue"}
                 mt={16}
                 onClick={() =>
-                  attemptAddTorrent({ autoTmm: settings?.auto_tmm_enabled, payload: !!textArea ? textArea : files })
+                  attemptAddTorrent({ autoTmm: settings?.auto_tmm_enabled, downloadFolder, payload: !!textArea ? textArea : files })
                 }
               >
                 {"Add Torrent"}
