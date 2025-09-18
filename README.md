@@ -71,6 +71,10 @@ do my best to add it in a timely manner.
 
 iQbit is licensed under the terms of the GNU GPLv3 and is available for free.
 
+## Troubleshooting
+
+1. If you face any issues related to login. Try disabling Cross-Site Forgery (CSRF) protection from the settings
+
 ## Bugs & Feature Suggestions
 
 Please use the issues tab for any bugs found and feature suggestions.
