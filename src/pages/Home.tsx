@@ -130,7 +130,7 @@ const Home = () => {
   };
 
   const { mutate: attemptAddTorrent, isLoading: attemptAddLoading } = useMutation(
-    async (opts: { autoTmm?: boolean, payload?: string | File | File[] }) => {
+    async (opts: { autoTmm?: boolean, payload?: string | File | File[], downloadFolder?: string }) => {
       if (!!textArea) {
         return await TorrClient.addTorrent("urls", textArea);
       } else {
