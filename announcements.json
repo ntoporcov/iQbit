@@ -8,6 +8,12 @@
   },
   "announcements": [
     {
+      "id": "Sep232025",
+      "title": "Updates and Bugfixes",
+      "body": "Bugfixes and updates pushed by @shashikiran797 and @Prolonz",
+      "type": "info"
+    },
+    {
       "id": "Sep082025",
       "title": "Bugfixes",
       "body": "Bugfixes pushed out including pause button bug. Thanks to @shashikiran797!",
