@@ -1,0 +1,69 @@
+name: Build and Commit
+on:
+  workflow_dispatch:
+    inputs:
+      addAnnouncement:
+        description: 'Adds an announcement to announcements.json'
+        required: true
+      title:
+        description: 'Title'
+        required: false
+      body:
+        description: 'Body'
+        required: false
+      type:
+        description: 'Type (success, error, warning, info)'
+        required: false
+      newUser:
+        description: 'Show to all new users (true/false)'
+        required: false
+        default: 'false'
+
+jobs:
+  build-and-commit:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install dependencies
+        run: yarn install --frozen-lockfile
+
+      - name: Build project
+        run: yarn build
+
+  add-announcement:
+    if: ${{ github.event.inputs.addAnnouncement == 'true' }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Add announcement
+        run: |
+          node .github/scripts/addAnnouncement.js \
+            "${{ github.event.inputs.title }}" \
+            "${{ github.event.inputs.body }}" \
+            "${{ github.event.inputs.type }}" \
+            "${{ github.event.inputs.newUser }}"
+
+      - name: Commit changes
+        run: |
+          git config --local user.email "github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
+          git add announcements.json
+          git commit -m "chore: add new announcement [skip ci]" || echo "No changes to commit"
+          git push https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }} master

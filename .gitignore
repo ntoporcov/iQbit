@@ -24,3 +24,4 @@ yarn-error.log*
 
 /server/node_modules
 .env
+.idea
