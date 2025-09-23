@@ -40,19 +40,8 @@ jobs:
       - name: Build project
         run: yarn build
 
-  add-announcement:
-    if: ${{ github.event.inputs.addAnnouncement == 'true' }}
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-
-      - name: Set up Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: '20'
-
       - name: Add announcement
+        if: ${{ github.event.inputs.addAnnouncement == 'true' }}
         run: |
           node .github/scripts/addAnnouncement.js \
             "${{ github.event.inputs.title }}" \
