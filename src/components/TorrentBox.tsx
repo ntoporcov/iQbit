@@ -36,6 +36,8 @@ import {
   IoPricetags,
   IoServer,
   IoSpeedometer,
+  IoTrendingUpOutline,
+  IoCubeOutline
 } from "react-icons/io5";
 import { StatWithIcon } from "./StatWithIcon";
 import { useMutation } from "react-query";
@@ -224,11 +226,19 @@ const TorrentBox = ({
             <PopoverBody textAlign={"center"}>{torrentData.name}</PopoverBody>
           </PopoverContent>
         </Popover>
-        <HStack color={"grayAlpha.800"} gap={2}>
-          <StatWithIcon
+        <HStack color={"grayAlpha.800"} gap={2} flexWrap={"wrap"} mt={2}>
+          {isDownloading && (<StatWithIcon
+            icon={<IoTrendingUpOutline />}
+            label={`Seed Ratio: ${torrentData.ratio.toFixed(2)}`}
+          />)}
+          {isDownloading && (<StatWithIcon
+            icon={<IoCubeOutline />}
+            label={`Availability: ${torrentData.availability.toFixed(2)}x`}
+          />)}
+          {!isDownloading && (<StatWithIcon
             icon={<IoCalendar />}
             label={new Date(torrentData.added_on * 1000).toLocaleDateString()}
-          />
+          />)}
           <StatWithIcon
             icon={<IoServer />}
             label={filesize(torrentData.total_size, { round: 1 })}
