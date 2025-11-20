@@ -50,8 +50,6 @@ export const providers: { [i in ProviderKeys]: Provider } = {
   },
 };
 
-const providersWidth = Object.values(providers).length * 400;
-
 const ProviderButton = (
   props: ButtonProps & {
     isSelected: boolean;
@@ -74,6 +72,8 @@ const ProviderButton = (
       onClick={props.onClick}
       py={props.small ? 3 : 3}
       minHeight={props.small ? 12 : 16}
+      // Flex grow helps fill the space evenly on small screens
+      flexGrow={1} 
       border={"solid 3px white"}
       borderColor={props.isSelected ? "blue.500" : backgroundColor}
       rounded={"xl"}
@@ -135,19 +135,13 @@ const SearchPage = () => {
       <Heading size={"md"} mb={3}>
         Select Search Provider
       </Heading>
-      <Flex
-        mb={3}
-        gap={3}
-        overflowX={"scroll"}
-        mx={-5}
-        pl={5}
-        className={"no-scrollbar"}
-      >
+      
+      {/* FIX: Improved scrolling container with better spacing */}
+      <Box overflowX="auto" mx={-5} px={5} pb={3} className="no-scrollbar">
         <Flex
-          w={{ base: providersWidth + "px", xl: "100%" }}
           gap={3}
-          pr={{ base: 20, lg: 0 }}
-          wrap={{ lg: "wrap" }}
+          w={{ base: "max-content", lg: "100%" }}
+          minW="100%" // Ensures it takes full width if content is small
         >
           {Object.entries(providers)
             .filter((provider) =>
@@ -159,25 +153,21 @@ const SearchPage = () => {
                 isSelected={key === selectedProvider && !pluginsLoading}
                 onClick={() => setSelectedProvider(key as ProviderKeys)}
                 experimental={value.experimental}
+                // Make buttons slightly wider on mobile so they don't squish
+                minW={{ base: "140px", lg: "auto" }}
               >
                 {value.logo}
               </ProviderButton>
             ))}
         </Flex>
-      </Flex>
+      </Box>
+
       {providers[selectedProvider].categories.length > 1 && (
-        <Flex
-          gap={3}
-          overflowX={"auto"}
-          mx={-5}
-          pl={5}
-          className={"no-scrollbar"}
-        >
+        <Box overflowX="auto" mx={-5} px={5} pb={3} className="no-scrollbar">
           <Flex
-            w={{ base: providersWidth + "px", xl: "100%" }}
             gap={3}
-            pr={{ base: 20, lg: 0 }}
-            wrap={{ lg: "wrap" }}
+            w={{ base: "max-content", lg: "100%" }}
+            minW="100%"
           >
             {providers[selectedProvider].categories.map((item, key) => (
               <ProviderButton
@@ -185,13 +175,15 @@ const SearchPage = () => {
                 isSelected={key === selectedCategory}
                 onClick={() => setSelectedCategory(key)}
                 small
+                minW={{ base: "100px", lg: "auto" }}
               >
                 {item}
               </ProviderButton>
             ))}
           </Flex>
-        </Flex>
+        </Box>
       )}
+
       <Box mt={4}>
         {selectedProvider === "YTS" && (
           <YTSSearch
