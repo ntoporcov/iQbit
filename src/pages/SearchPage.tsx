@@ -50,8 +50,6 @@ export const providers: { [i in ProviderKeys]: Provider } = {
   },
 };
 
-const providersWidth = Object.values(providers).length * 400;
-
 const ProviderButton = (
   props: ButtonProps & {
     isSelected: boolean;
@@ -138,16 +136,16 @@ const SearchPage = () => {
       <Flex
         mb={3}
         gap={3}
-        overflowX={"scroll"}
+        overflowX={"auto"}
         mx={-5}
         pl={5}
         className={"no-scrollbar"}
       >
         <Flex
-          w={{ base: providersWidth + "px", xl: "100%" }}
+          w={{ base: "max-content", lg: "100%" }}
           gap={3}
-          pr={{ base: 20, lg: 0 }}
-          wrap={{ lg: "wrap" }}
+          pr={{ base: 5, lg: 0 }}
+          wrap={{ base: "nowrap", lg: "wrap" }}
         >
           {Object.entries(providers)
             .filter((provider) =>
@@ -174,10 +172,10 @@ const SearchPage = () => {
           className={"no-scrollbar"}
         >
           <Flex
-            w={{ base: providersWidth + "px", xl: "100%" }}
+            w={{ base: "max-content", lg: "100%" }}
             gap={3}
-            pr={{ base: 20, lg: 0 }}
-            wrap={{ lg: "wrap" }}
+            pr={{ base: 5, lg: 0 }}
+            wrap={{ base: "nowrap", lg: "wrap" }}
           >
             {providers[selectedProvider].categories.map((item, key) => (
               <ProviderButton
