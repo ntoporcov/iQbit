@@ -32,6 +32,7 @@ export type TorrServerState = {
   up_rate_limit: number;
   alltime_dl: number;
   dl_info_speed: number;
+  last_external_address_v4?: string;
 };
 
 export const TorrTorrentInfoStates = [
@@ -233,6 +234,18 @@ export enum TorrSettingsUploadSlotsBehavior {
   UplaodRateBased,
 }
 
+export enum TorrSettingsDiskIOType {
+  Default,
+  POSIX,
+  MemoryMapped,
+}
+
+export enum TorrSettingsDiskIOMode {
+  DisableOSCache,
+  EnableOSCache,
+  WriteThrough,
+}
+
 export enum TorrSettingsUTPTCPMixedMode {
   preferTCP,
   peerProportional,
@@ -314,6 +327,7 @@ export type TorrSettings = {
   disk_cache: number;
   max_ratio: number;
   rss_refresh_interval: number;
+  rss_fetch_delay: number;
   web_ui_port: number;
   upload_slots_behavior: TorrSettingsUploadSlotsBehavior;
   limit_utp_rate: boolean;
@@ -341,10 +355,13 @@ export type TorrSettings = {
   create_subfolder_enabled: boolean;
   alt_up_limit: number;
   max_active_downloads: number;
+  max_active_checking_torrents: number;
   slow_torrent_inactive_timer: number;
   max_active_uploads: number;
   lsd: boolean;
   utp_tcp_mixed_mode: TorrSettingsUTPTCPMixedMode;
+  max_inactive_seeding_time: number;
+  max_inactive_seeding_time_enabled: boolean;
   auto_delete_mode: number;
   outgoing_ports_min: number;
   slow_torrent_ul_rate_threshold: number;
@@ -375,6 +392,9 @@ export type TorrSettings = {
   start_paused_enabled: boolean;
   rss_smart_episode_filters: string;
   add_trackers_enabled: boolean;
+  add_trackers_from_url_enabled: boolean;
+  add_trackers_url: string;
+  add_trackers_url_list: string;
   web_ui_secure_cookie_enabled: boolean;
   checking_memory_use: number;
   mail_notification_auth_enabled: boolean;
@@ -387,6 +407,43 @@ export type TorrSettings = {
   export_dir: string;
   web_ui_reverse_proxy_enabled: boolean;
   web_ui_reverse_proxies_list: string;
+  resume_data_storage_type: string;
+  torrent_content_remove_option: string;
+  memory_working_set_limit: number;
+  torrent_file_size_limit: number;
+  confirm_torrent_recheck: boolean;
+  app_instance_name: string;
+  reannounce_when_address_changed: boolean;
+  embedded_tracker_port_forwarding: boolean;
+  ignore_ssl_errors: boolean;
+  python_executable_path: string;
+  bdecode_depth_limit: number;
+  bdecode_token_limit: number;
+  hashing_threads: number;
+  disk_queue_size: number;
+  disk_io_type: TorrSettingsDiskIOType;
+  disk_io_read_mode: TorrSettingsDiskIOMode;
+  disk_io_write_mode: TorrSettingsDiskIOMode;
+  connection_speed: number;
+  socket_send_buffer_size: number;
+  socket_receive_buffer_size: number;
+  upnp_lease_duration: number;
+  peer_tos: number;
+  idn_support_enabled: boolean;
+  validate_https_tracker_certificate: boolean;
+  ssrf_mitigation: boolean;
+  block_peers_on_privileged_ports: boolean;
+  announce_port: number;
+  max_concurrent_http_announces: number;
+  peer_turnover: number;
+  peer_turnover_cutoff: number;
+  peer_turnover_interval: number;
+  request_queue_size: number;
+  dht_bootstrap_nodes: string;
+  i2p_inbound_quantity: number;
+  i2p_outbound_quantity: number;
+  i2p_inbound_length: number;
+  i2p_outbound_length: number;
 };
 
 export type SearchProviderComponentProps = {
@@ -476,4 +533,24 @@ export type rarbgTorrent = {
   };
   ranked: number;
   info_page: string;
+};
+
+export type TorrFilePriority = 0 | 1 | 2 | 7; // 0=skip, 1=normal, 2=high, 7=maximal
+
+export type TorrFile = {
+  index: number;
+  name: string;
+  size: number;
+  progress: number;
+  priority: TorrFilePriority;
+  is_seed?: boolean;
+  piece_range?: [number, number];
+};
+
+export type TorrFileContent = {
+  index: number;
+  name: string;
+  size: number;
+  progress: number;
+  priority: TorrFilePriority;
 };

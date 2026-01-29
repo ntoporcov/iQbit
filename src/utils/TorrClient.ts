@@ -6,6 +6,8 @@ import {
   TorrPluginSearchResultResponse,
   TorrSettings,
   TorrTorrentInfo,
+  TorrFile,
+  TorrFilePriority,
 } from "../types";
 
 let serverAddress = new URL(".", window.location.href).href
@@ -82,6 +84,11 @@ export const TorrClient = {
     return data;
   },
 
+  getTransferInfo: async (): Promise<TorrServerState> => {
+    const { data } = await APICall.get("transfer/info");
+    return data;
+  },
+
   resume: async (hash = "") => {
     return await APICall.post("torrents/start", `hashes=${hash}`);
   },
@@ -91,7 +98,7 @@ export const TorrClient = {
   },
 
   pause: async (hash = "") => {
-    return await APICall.post("torrents/pause", `hashes=${hash}`);
+    return await APICall.post("torrents/stop", `hashes=${hash}`);
   },
 
   pauseAll: async () => {
@@ -198,6 +205,30 @@ export const TorrClient = {
     );
   },
 
+  recheck: async (hash: string) => {
+    return await APICall.post("torrents/recheck", `hashes=${hash}`);
+  },
+
+  reannounce: async (hash: string) => {
+    return await APICall.post("torrents/reannounce", `hashes=${hash}`);
+  },
+
+  setLocation: async (hash: string, location: string, moveFiles: boolean = true) => {
+    return await APICall.post("torrents/setLocation", `hashes=${hash}&location=${location}`);
+  },
+
+  renameFile: async (hash: string, oldPath: string, newPath: string) => {
+    return await APICall.post("torrents/renameFile", `hash=${hash}&oldPath=${oldPath}&newPath=${newPath}`);
+  },
+
+  setDownloadLimit: async (hash: string, limit: string) => {
+    return await APICall.post("torrents/setDownloadLimit", `hashes=${hash}&limit=${limit}`);
+  },
+
+  setUploadLimit: async (hash: string, limit: string) => {
+    return await APICall.post("torrents/setUploadLimit", `hashes=${hash}&limit=${limit}`);
+  },
+
   getInstalledPlugins: async (): Promise<TorrPlugin[]> => {
     const { data } = await APICall.get("search/plugins");
     return data;
@@ -244,5 +275,100 @@ export const TorrClient = {
       `pattern=${query}&plugins=enabled&category=all`
     );
     return data;
+  },
+  getTorrentContents: async (hash: string): Promise<TorrFile[]> => {
+    const { data } = await APICall.get("torrents/files", {
+      params: {
+        hash,
+      },
+    });
+
+    return data;
+  },
+
+  setFilePriority: async (hash: string, fileIndex: number, priority: TorrFilePriority) => {
+    return await APICall.post(
+      "torrents/filePrio",
+      `hash=${hash}&id=${fileIndex}&priority=${priority}`
+    );
+  },
+
+  setFilePriorities: async (hash: string, fileIndices: number[], priority: TorrFilePriority) => {
+    const ids = fileIndices.join("|");
+    return await APICall.post(
+      "torrents/filePrio",
+      `hash=${hash}&id=${ids}&priority=${priority}`
+    );
+  },
+
+  setForceStart: async (hash: string, value: boolean) => {
+    return await APICall.post(
+      "torrents/setForceStart",
+      "hashes=" + hash + "&value=" + value
+    );
+  },
+
+  setSuperSeeding: async (hash: string, value: boolean) => {
+    return await APICall.post(
+      "torrents/setSuperSeeding",
+      "hashes=" + hash + "&value=" + value
+    );
+  },
+
+  exportTorrent: async (hash: string) => {
+    const { data } = await APICall.get("torrents/export", {
+      params: { hash },
+      responseType: "blob",
+    });
+    return data;
+  },
+
+  getTrackers: async (hash: string) => {
+    const { data } = await APICall.get("torrents/trackers", {
+      params: { hash },
+    });
+    return data;
+  },
+
+  addTrackers: async (hash: string, urls: string) => {
+    return await APICall.post(
+      "torrents/addTrackers",
+      `hashes=${hash}&urls=${encodeURIComponent(urls)}`
+    );
+  },
+
+  editTracker: async (hash: string, origUrl: string, newUrl: string) => {
+    return await APICall.post(
+      "torrents/editTracker",
+      `hash=${hash}&origUrl=${encodeURIComponent(origUrl)}&newUrl=${encodeURIComponent(newUrl)}`
+    );
+  },
+
+  removeTrackers: async (hash: string, urls: string) => {
+    return await APICall.post(
+      "torrents/removeTrackers",
+      `hashes=${hash}&urls=${encodeURIComponent(urls)}`
+    );
+  },
+
+  getWebSeeds: async (hash: string) => {
+    const { data } = await APICall.get("torrents/webseeds", {
+      params: { hash },
+    });
+    return data;
+  },
+
+  addHttpSeeds: async (hash: string, urls: string) => {
+    return await APICall.post(
+      "torrents/addHttpSeeds",
+      `hashes=${hash}&urls=${encodeURIComponent(urls)}`
+    );
+  },
+
+  removeHttpSeeds: async (hash: string, urls: string) => {
+    return await APICall.post(
+      "torrents/removeHttpSeeds",
+      `hashes=${hash}&urls=${encodeURIComponent(urls)}`
+    );
   },
 };

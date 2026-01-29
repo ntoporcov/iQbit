@@ -83,6 +83,7 @@ img {
     inset: 0;
     background: rgba(255, 255, 255, 0.7);
     pointer-events: none;
+    border-radius: inherit;
 }
 
 .glassEffect.glassNoTint > .glassTint {

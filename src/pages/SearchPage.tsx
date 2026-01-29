@@ -32,16 +32,16 @@ export type Provider = {
 };
 
 export const providers: { [i in ProviderKeys]: Provider } = {
-  YTS: {
-    logo: <YtsLogo />,
-    name: "YTS",
-    categories: ["Movies"],
-  },
   plugin: {
     logo: <QbitLogo />,
     name: "Plugins",
     categories: ["all"],
     experimental: true,
+  },
+  YTS: {
+    logo: <YtsLogo />,
+    name: "YTS",
+    categories: ["Movies"],
   },
   TPB: {
     logo: <TpbLogo />,
@@ -101,9 +101,7 @@ const ProviderButton = (
 const SearchPage = () => {
   const location = useLocation();
 
-  const [selectedProvider, setSelectedProvider] = useState<ProviderKeys>(
-    (location?.state as any)?.provider || "YTS"
-  );
+  const [selectedProvider, setSelectedProvider] = useState<ProviderKeys>("plugin");
   const [selectedCategory, setSelectedCategory] = useState(0);
 
   const searchState = useState(
@@ -115,16 +113,19 @@ const SearchPage = () => {
     TorrClient.getInstalledPlugins
   );
 
+  const filterState = useFilterState();
+
   useEffect(() => {
-    if (selectedCategory >= providers[selectedProvider].categories.length) {
+    if (
+      providers[selectedProvider] &&
+      selectedCategory >= providers[selectedProvider].categories.length
+    ) {
       setSelectedCategory(0);
     }
   }, [selectedCategory, selectedProvider]);
 
-  const filterState = useFilterState();
-
   return (
-    <>
+    <Box>
       <PageHeader title={"Search"} />
       <Text color={"gray.500"} mb={5}>
         Warning: Be sure to comply with your country's copyright laws when
@@ -147,20 +148,25 @@ const SearchPage = () => {
           pr={{ base: 5, lg: 0 }}
           wrap={{ base: "nowrap", lg: "wrap" }}
         >
-          {Object.entries(providers)
-            .filter((provider) =>
-              provider[1].name === "Plugins" ? !!plugins?.length : true
-            )
-            .map(([key, value]) => (
+          {Object.entries(providers).map(([key, value]) => {
+            const isPlugin = value.name === "Plugins";
+            const shouldShow = isPlugin
+              ? pluginsLoading || (plugins && plugins.length > 0)
+              : true;
+
+            if (!shouldShow) return null;
+
+            return (
               <ProviderButton
                 key={key}
-                isSelected={key === selectedProvider && !pluginsLoading}
+                isSelected={key === selectedProvider}
                 onClick={() => setSelectedProvider(key as ProviderKeys)}
                 experimental={value.experimental}
               >
                 {value.logo}
               </ProviderButton>
-            ))}
+            );
+          })}
         </Flex>
       </Flex>
       {providers[selectedProvider].categories.length > 1 && (
@@ -215,7 +221,7 @@ const SearchPage = () => {
           />
         )}
       </Box>
-    </>
+    </Box>
   );
 };
 

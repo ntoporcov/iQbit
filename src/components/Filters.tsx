@@ -1,4 +1,4 @@
-import React, { Dispatch, SetStateAction, useState } from "react";
+import React, { Dispatch, PropsWithChildren, SetStateAction, useMemo, useState } from "react";
 import {
   Badge,
   Box,
@@ -36,7 +36,7 @@ export function useFilterState(): useFilterStateReturn {
   const [selectedSource, setSelectedSource] = useState<string>("");
   const [minSeeds, setMinSeeds] = useState<string>("0");
 
-  return {
+  return useMemo(() => ({
     qualitySelected,
     setQualitySelected,
     sourceList,
@@ -45,7 +45,7 @@ export function useFilterState(): useFilterStateReturn {
     setSelectedSource,
     minSeeds,
     setMinSeeds,
-  };
+  }), [qualitySelected, sourceList, selectedSource, minSeeds]);
 }
 
 export const FilterHeading = ({
@@ -79,7 +79,7 @@ export const FilterHeading = ({
   </Flex>
 );
 
-const Filters = (state: useFilterStateReturn) => {
+const Filters = (props: PropsWithChildren<useFilterStateReturn & { indicator?: number }>) => {
   const filterDisclosure = useDisclosure();
   const backgroundColor = useColorModeValue("blackAlpha.50", "grayAlpha.400");
 
@@ -87,58 +87,61 @@ const Filters = (state: useFilterStateReturn) => {
 
   return (
     <Box bgColor={backgroundColor} rounded={6} width={"100%"}>
-      <FilterHeading disclosure={filterDisclosure} />
+      <FilterHeading disclosure={filterDisclosure} indicator={props.indicator} />
       <Flex
         px={4}
         pb={4}
         hidden={!filterDisclosure.isOpen}
         mt={3}
         gap={5}
-        wrap={{ base: "wrap", lg: "nowrap" }}
+        wrap={"wrap"}
       >
-        <Flex width={"100%"}>
-          {smartMap([...qualities], (qual, { isLast, isFirst }) => (
-            <Button
-              key={qual}
-              width={{ base: "100%", lg: undefined }}
-              size={inputSizes}
-              variant={state.qualitySelected !== qual ? "outline" : undefined}
-              isActive={state.qualitySelected === qual}
-              colorScheme={"blue"}
-              roundedRight={isFirst ? 0 : undefined}
-              roundedLeft={isLast ? 0 : undefined}
-              rounded={!isFirst && !isLast ? 0 : undefined}
-              onClick={() =>
-                state.setQualitySelected((curr) =>
-                  curr === qual ? undefined : qual
-                )
-              }
-            >
-              {qual}
-            </Button>
-          ))}
-        </Flex>
-        <Select
-          width={"100%"}
-          size={inputSizes}
-          placeholder={"Filter Sources..."}
-          value={state.selectedSource}
-          onChange={(event) => state.setSelectedSource(event.target.value)}
-        >
-          {state.sourceList.map((source, index) => (
-            <option key={index}>{source}</option>
-          ))}
-        </Select>
-        <Flex gap={2} alignItems={"center"} width={{ base: "100%", lg: "70%" }}>
-          <Text whiteSpace={"nowrap"}>Min Seeds</Text>
-          <Input
-            min={0}
-            type={"number"}
+        <Flex width={"100%"} gap={5} wrap={{ base: "wrap", lg: "nowrap" }}>
+          <Flex width={"100%"}>
+            {smartMap([...qualities], (qual, { isLast, isFirst }) => (
+              <Button
+                key={qual}
+                width={{ base: "100%", lg: undefined }}
+                size={inputSizes}
+                variant={props.qualitySelected !== qual ? "outline" : undefined}
+                isActive={props.qualitySelected === qual}
+                colorScheme={"blue"}
+                roundedRight={isFirst ? 0 : undefined}
+                roundedLeft={isLast ? 0 : undefined}
+                rounded={!isFirst && !isLast ? 0 : undefined}
+                onClick={() =>
+                  props.setQualitySelected((curr) =>
+                    curr === qual ? undefined : qual
+                  )
+                }
+              >
+                {qual}
+              </Button>
+            ))}
+          </Flex>
+          <Select
+            width={"100%"}
             size={inputSizes}
-            value={state.minSeeds}
-            onChange={(e) => state.setMinSeeds(e.target.value)}
-          />
+            placeholder={"Filter Sources..."}
+            value={props.selectedSource}
+            onChange={(event) => props.setSelectedSource(event.target.value)}
+          >
+            {props.sourceList.map((source, index) => (
+              <option key={index}>{source}</option>
+            ))}
+          </Select>
+          <Flex gap={2} alignItems={"center"} width={{ base: "100%", lg: "70%" }}>
+            <Text whiteSpace={"nowrap"}>Min Seeds</Text>
+            <Input
+              min={0}
+              type={"number"}
+              size={inputSizes}
+              value={props.minSeeds}
+              onChange={(e) => props.setMinSeeds(e.target.value)}
+            />
+          </Flex>
         </Flex>
+        {props.children}
       </Flex>
     </Box>
   );

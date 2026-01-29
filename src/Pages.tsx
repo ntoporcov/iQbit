@@ -7,6 +7,8 @@ import {
   IoDownloadOutline,
   IoExtensionPuzzle,
   IoExtensionPuzzleOutline,
+  IoMoon,
+  IoMoonOutline,
   IoPricetags,
   IoPricetagsOutline,
   IoSearch,
@@ -23,6 +25,7 @@ import SearchPluginsPage from "./pages/SearchPluginsPage";
 import TrendingPage from "./pages/TrendingPage";
 import FontSizeSelection from "./pages/FontSizeSelection";
 import TabSelectorPage from "./pages/TabSelectorPage";
+import AppearanceSettings from "./pages/AppearanceSettings";
 
 export type PageNames =
   | "sideNav"
@@ -48,6 +51,7 @@ export type PageLabels =
   | "Search"
   | "Trending"
   | "Categories"
+  | "Appearance"
   | "Font Size"
   | "Settings"
   | "Search Plugins"
@@ -101,6 +105,16 @@ export const Pages: PageObject[] = [
     Icon: {
       active: (props) => <IoPricetags {...props} />,
       inactive: (props) => <IoPricetagsOutline {...props} />,
+    },
+    visibleOn: ["sideNavBottom", "mobileSettingsList", "tabSelector"],
+  },
+  {
+    label: "Appearance",
+    url: "/appearance",
+    component: <AppearanceSettings />,
+    Icon: {
+      active: (props) => <IoMoon {...props} />,
+      inactive: (props) => <IoMoonOutline {...props} />,
     },
     visibleOn: ["sideNavBottom", "mobileSettingsList", "tabSelector"],
   },

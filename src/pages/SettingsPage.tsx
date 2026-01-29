@@ -11,6 +11,7 @@ import {
   IoGitCompare,
   IoLink,
   IoLogoRss,
+  IoMoon,
   IoPhonePortrait,
   IoPricetags,
   IoSpeedometer,
@@ -31,6 +32,9 @@ import DownloadsPage from "../components/settings/Downloads/DownloadsPage";
 import SaveAndResetButtons from "../components/settings/SaveAndResetButtons";
 import ConnectionPage from "../components/settings/Connection/ConnectionPage";
 import SpeedPage from "../components/settings/Speed/SpeedPage";
+import BitTorrentPage from "../components/settings/BitTorrent/BitTorrentPage";
+import RSSPage from "../components/settings/RSS/RSSPage";
+import AdvancedPage from "../components/settings/Advanced/AdvancedPage";
 import RequestMoreSettings from "../components/settings/RequestMoreSettings";
 import { logout } from "../components/Auth";
 import AllAnnouncementsPage from "../components/settings/AllAnnouncements";
@@ -38,6 +42,7 @@ import SearchPluginsPage from "./SearchPluginsPage";
 import CategoriesPage from "./CategoriesPage";
 import FontSizeSelection from "./FontSizeSelection";
 import TabSelectorPage from "./TabSelectorPage";
+import AppearanceSettings from "./AppearanceSettings";
 import { GlassContainer } from "../components/GlassContainer";
 
 export interface SettingsPageProps {}
@@ -49,7 +54,13 @@ type settingsPageNames =
   | "BitTorrent"
   | "RSS"
   | "Web UI"
-  | "Advanced";
+  | "Advanced"
+  | "Appearance"
+  | "iQbit Updates"
+  | "Search Plugins"
+  | "Categories"
+  | "Font Size"
+  | "Mobile Bottom Tabs";
 
 type SettingsPageObject = {
   icon: ReactElement;
@@ -84,13 +95,13 @@ const SettingsPages: {
   },
   BitTorrent: {
     icon: <IoGitCompare size={iconSize} />,
-    component: <RequestMoreSettings />,
+    component: <BitTorrentPage />,
     color: "blue.500",
     group: "qBittorrent Settings",
   },
   RSS: {
     icon: <IoLogoRss size={iconSize} />,
-    component: <RequestMoreSettings />,
+    component: <RSSPage />,
     color: "orange.500",
     group: "qBittorrent Settings",
   },
@@ -102,7 +113,7 @@ const SettingsPages: {
   },
   Advanced: {
     icon: <IoCog size={iconSize} />,
-    component: <RequestMoreSettings />,
+    component: <AdvancedPage />,
     color: "gray.800",
     group: "qBittorrent Settings",
   },
@@ -125,6 +136,12 @@ const SettingsPages: {
     color: "red.900",
     group: "Other Settings",
     mobileOnly: true,
+  },
+  Appearance: {
+    icon: <IoMoon size={iconSize} />,
+    component: <AppearanceSettings />,
+    color: "purple.800",
+    group: "Other Settings",
   },
   "Font Size": {
     icon: <IoText size={iconSize} />,

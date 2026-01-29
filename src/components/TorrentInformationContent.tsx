@@ -66,6 +66,11 @@ const TorrentInformationContent = ({
       <IosGridBox mb={3} title={"Torrent Name"}>
         <Heading wordBreak={"break-all"}>{torrentData.name}</Heading>
       </IosGridBox>
+      <IosGridBox mb={3} title={"Save Location"}>
+        <Heading size="sm" wordBreak={"break-all"} textAlign="center">
+          {torrentData.save_path || torrentData.content_path || "Unknown"}
+        </Heading>
+      </IosGridBox>
       <SimpleGrid columns={4} templateRows={"auto"} gap={defaultGap}>
         <IosGridBox
           order={1}

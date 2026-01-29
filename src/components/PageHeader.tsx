@@ -5,7 +5,6 @@ import {
   Heading,
   LightMode,
   Text,
-  useColorModeValue,
 } from "@chakra-ui/react";
 import { FaPlus } from "react-icons/fa";
 import { useIsLargeScreen } from "../utils/screenSize";

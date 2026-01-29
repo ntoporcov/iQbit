@@ -8,7 +8,7 @@ import {
   useColorModeValue,
 } from "@chakra-ui/react";
 import { useIsLargeScreen } from "../utils/screenSize";
-import { useMutation } from "react-query";
+import { useMutation, useQueryClient } from "react-query";
 import { TorrClient } from "../utils/TorrClient";
 import { IoCheckmark } from "react-icons/io5";
 
@@ -17,6 +17,7 @@ export interface TorrentDownloadBoxProps {
   magnetURL?: string;
   onSelect?: () => Promise<string>;
   category?: string;
+  savePath?: string;
 }
 
 const TorrentDownloadBox = ({
@@ -25,12 +26,20 @@ const TorrentDownloadBox = ({
   onSelect,
   children,
   category,
+  savePath,
 }: PropsWithChildren<TorrentDownloadBoxProps>) => {
   const isLarge = useIsLargeScreen();
+  const queryClient = useQueryClient();
 
   const { mutate, isLoading, isSuccess } = useMutation(
     "addBox",
-    (magnetURLParam: string) => TorrClient.addTorrent("urls", magnetURLParam, category)
+    (magnetURLParam: string) => TorrClient.addTorrent("urls", magnetURLParam, category, savePath),
+    {
+      onSuccess: () => {
+        // Invalidate torrent queries to show new torrent immediately
+        queryClient.invalidateQueries("torrentsTxData");
+      }
+    }
   );
 
   const {
@@ -63,7 +72,7 @@ const TorrentDownloadBox = ({
         {children}
       </Box>
       <LightMode>
-        <Flex width="100%">
+        <Flex width={!isLarge ? "100%" : "30%"}>
           <Button
             minW={32}
             disabled={
@@ -81,7 +90,6 @@ const TorrentDownloadBox = ({
             }}
             leftIcon={isSuccess ? <IoCheckmark /> : undefined}
             flexGrow={1}
-            roundedRight={0}
           >
             {isSuccess ? "Added" : "Download"}
           </Button>

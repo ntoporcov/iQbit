@@ -45,6 +45,7 @@
   "scripts": {
     "start": "vite dev --host --port 3000",
     "build": "vite build && cp ./release/public/index.html ./release/public/login.html",
+    "lint": "eslint src",
     "preview": "vite preview",
     "winBuild": "vite build && powershell Remove-Item -Recurse -Force -Confirm:$false ./release/public/* && powershell mv build/* ./release/public && powershell cp release/public/index.html release/public/login.html",
     "server-setup": "cd server && npm install ",

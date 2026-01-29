@@ -2,14 +2,15 @@ import PageHeader from "../components/PageHeader";
 import {
   Box,
   Button,
-  ButtonGroup,
   Flex,
   FormControl,
   FormErrorMessage,
   FormLabel,
   Heading,
+  HStack,
   LightMode,
   Select,
+  Text,
   Textarea,
   useColorModeValue,
   useDisclosure,
@@ -17,25 +18,32 @@ import {
   VStack,
   IconButton,
 } from "@chakra-ui/react";
-import { IoDocumentAttach, IoPause, IoPlay } from "react-icons/io5";
+import { IoDocumentAttach, IoPause, IoPlay, IoClose, IoTrash } from "react-icons/io5";
 import { useMutation, useQuery } from "react-query";
 import { TorrClient } from "../utils/TorrClient";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useMemo, useState } from "react";
 import TorrentBox from "../components/TorrentBox";
 import { TorrTorrentInfo } from "../types";
 import IosBottomSheet from "../components/ios/IosBottomSheet";
 import { Input } from "@chakra-ui/input";
-import { useIsLargeScreen } from "../utils/screenSize";
 import { randomTorrent } from "../data";
 import "react-virtualized/styles.css";
 import { FilterHeading } from "../components/Filters";
 import stateDictionary from "../utils/StateDictionary";
-import { useLocalStorage, useTernaryDarkMode } from "usehooks-ts";
+import { useLocalStorage } from "usehooks-ts";
 import { useFontSizeContext } from "../components/FontSizeProvider";
+import { useQueryClient } from "react-query";
+
+import { useIsLargeScreen } from "../utils/screenSize";
+import { useIsPWA } from "../hooks/useIsPWA";
 
 import { List, WindowScroller } from "react-virtualized";
 
 const Home = () => {
+  const queryClient = useQueryClient();
+  const isLarge = useIsLargeScreen();
+  const isPWA = useIsPWA();
+  
   const { mutate: resumeAll } = useMutation("resumeAll", TorrClient.resumeAll);
 
   const { mutate: pauseAll } = useMutation("resumeAll", TorrClient.pauseAll);
@@ -47,13 +55,71 @@ const Home = () => {
   }>({});
 
   const [removedTorrs, setRemovedTorrs] = useState<string[]>([]);
+  const [selectedTorrents, setSelectedTorrents] = useState<string[]>([]);
+
+  const toggleSelection = (hash: string) => {
+    setSelectedTorrents((prev) => {
+      if (prev.includes(hash)) {
+        return prev.filter((h) => h !== hash);
+      } else {
+        return [...prev, hash];
+      }
+    });
+  };
+
+  const deleteMultipleDisclosure = useDisclosure();
+  const { mutate: removeMultiple } = useMutation(
+    "deleteMultipleTorrents",
+    async (deleteFiles: boolean) => {
+      await Promise.all(
+        selectedTorrents.map((hash) => TorrClient.remove(hash, deleteFiles))
+      );
+    },
+    {
+      onSuccess: () => {
+        setSelectedTorrents([]);
+        deleteMultipleDisclosure.onClose();
+        queryClient.invalidateQueries("torrentsTxData");
+      },
+    }
+  );
+
+  const { mutate: pauseMultiple } = useMutation(
+    "pauseMultipleTorrents",
+    async () => {
+      await Promise.all(
+        selectedTorrents.map((hash) => TorrClient.pause(hash))
+      );
+    },
+    {
+      onSuccess: () => {
+        setSelectedTorrents([]);
+        queryClient.invalidateQueries("torrentsTxData");
+      },
+    }
+  );
+
+  const { mutate: resumeMultiple } = useMutation(
+    "resumeMultipleTorrents",
+    async () => {
+      await Promise.all(
+        selectedTorrents.map((hash) => TorrClient.resume(hash))
+      );
+    },
+    {
+      onSuccess: () => {
+        setSelectedTorrents([]);
+        queryClient.invalidateQueries("torrentsTxData");
+      },
+    }
+  );
 
   const { data: categories } = useQuery(
     "torrentsCategory",
     TorrClient.getCategories
   );
 
-  const { isLoading, isFetching } = useQuery(
+  const { isLoading } = useQuery(
     "torrentsTxData",
     () => TorrClient.sync(rid),
     {
@@ -130,21 +196,31 @@ const Home = () => {
   };
 
   const { mutate: attemptAddTorrent, isLoading: attemptAddLoading } = useMutation(
-    async (opts: { autoTmm?: boolean, payload?: string | File | File[], downloadFolder?: string }) => {
+    async (opts: { autoTmm?: boolean, payload?: string | File | File[], downloadFolder?: string, category?: string }) => {
       if (!!textArea) {
-        return await TorrClient.addTorrent("urls", textArea);
+        return await TorrClient.addTorrent("urls", textArea, opts.category, opts.downloadFolder);
       } else {
         if (Array.isArray(opts.payload)) {
-          return await Promise.all(opts.payload.map((file) => TorrClient.addTorrent("torrents", file, "", opts.downloadFolder)));
+          return await Promise.all(opts.payload.map((file) => TorrClient.addTorrent("torrents", file, opts.category || "", opts.downloadFolder)));
         } else {
-          return await TorrClient.addTorrent("torrents", opts.payload as File);
+          return await TorrClient.addTorrent("torrents", opts.payload as File, opts.category, opts.downloadFolder);
         }
       }
     },
-    { onSuccess: addModalDisclosure.onClose }
+    { 
+      onSuccess: () => {
+        // Clear form
+        setTextArea("");
+        setFiles([]);
+        setSelectedCategory("");
+        setDownloadFolder("");
+        
+        addModalDisclosure.onClose();
+        // Invalidate the sync query to force a full update and show new torrent immediately
+        queryClient.invalidateQueries("torrentsTxData");
+      }
+    }
   );
-
-  const isLarge = useIsLargeScreen();
 
   const filterDisclosure = useDisclosure();
   const [filterSearch, setFilterSearch] = useLocalStorage(
@@ -167,7 +243,7 @@ const Home = () => {
   };
 
   const bgColor = useColorModeValue("white", "gray.900");
-  const { isDarkMode } = useTernaryDarkMode();
+  const borderColor = useColorModeValue("gray.200", "gray.700");
 
   const filterIndicator = useMemo(() => {
     let indicator = 0;
@@ -369,7 +445,14 @@ const Home = () => {
                   <Select
                     placeholder="Select category"
                     value={selectedCategory}
-                    onChange={(e) => setSelectedCategory(e.target.value)}
+                    onChange={(e) => {
+                      const selected = e.target.value;
+                      setSelectedCategory(selected);
+                      // Auto-set download folder from category's savePath
+                      if (selected && categories && categories[selected]) {
+                        setDownloadFolder(categories[selected].savePath);
+                      }
+                    }}
                   >
                     {Categories.map((c) => (
                       <option key={c.label}>{c.label}</option>
@@ -387,7 +470,12 @@ const Home = () => {
                 colorScheme={"blue"}
                 mt={16}
                 onClick={() =>
-                  attemptAddTorrent({ autoTmm: settings?.auto_tmm_enabled, downloadFolder, payload: !!textArea ? textArea : files })
+                  attemptAddTorrent({ 
+                    autoTmm: settings?.auto_tmm_enabled, 
+                    downloadFolder, 
+                    category: selectedCategory,
+                    payload: !!textArea ? textArea : files 
+                  })
                 }
               >
                 {"Add Torrent"}
@@ -478,20 +566,110 @@ const Home = () => {
                 index, // Index of row within collection
                 style, // Style object to be applied to row (to position it)
               }) => (
-                <div key={key}>
-                  <TorrentBox
-                    torrentData={Torrents[index][1]}
-                    hash={Torrents[index][0]}
-                    categories={Object.values(categories || {})}
-                    style={{
-                      ...style,
-                      paddingBottom:
-                        index === Torrents.length - 1 ? "30vh" : undefined,
-                    }}
-                  />
-                </div>
+                <TorrentBox
+                  key={key}
+                  torrentData={Torrents[index][1]}
+                  hash={Torrents[index][0]}
+                  categories={Object.values(categories || {})}
+                  isSelected={selectedTorrents.includes(Torrents[index][0])}
+                  selectionMode={selectedTorrents.length > 0}
+                  toggleSelection={toggleSelection}
+                  style={{
+                    ...style,
+                    paddingBottom:
+                      index === Torrents.length - 1 ? "30vh" : undefined,
+                  }}
+                />
               )}
             />
+
+            {selectedTorrents.length > 0 && (
+              <Box
+                position="fixed"
+                bottom={
+                  isLarge
+                    ? 12
+                    : isPWA
+                    ? "calc(140px + env(safe-area-inset-bottom))"
+                    : "130px"
+                }
+                left="50%"
+                transform="translateX(-50%)"
+                zIndex={1000}
+                bgColor={bgColor}
+                boxShadow="lg"
+                rounded="full"
+                px={6}
+                py={3}
+                display="flex"
+                alignItems="center"
+                gap={4}
+                borderWidth={1}
+                borderColor={borderColor}
+              >
+                <Text fontWeight="bold">
+                  {selectedTorrents.length} selected
+                </Text>
+                <HStack>
+                  <IconButton
+                    aria-label="Resume selected"
+                    icon={<IoPlay />}
+                    size="sm"
+                    colorScheme="blue"
+                    onClick={() => resumeMultiple()}
+                  />
+                  <IconButton
+                    aria-label="Pause selected"
+                    icon={<IoPause />}
+                    size="sm"
+                    colorScheme="orange"
+                    onClick={() => pauseMultiple()}
+                  />
+                  <Button
+                    size="sm"
+                    colorScheme="red"
+                    leftIcon={<IoTrash />}
+                    onClick={deleteMultipleDisclosure.onOpen}
+                  >
+                    Delete
+                  </Button>
+                </HStack>
+                <IconButton
+                  aria-label="Cancel selection"
+                  icon={<IoClose />}
+                  size="sm"
+                  variant="ghost"
+                  onClick={() => setSelectedTorrents([])}
+                />
+              </Box>
+            )}
+
+            <IosBottomSheet
+              title="Delete Torrents"
+              disclosure={deleteMultipleDisclosure}
+            >
+              <VStack gap={3} pb={6}>
+                <Text>
+                  Are you sure you want to delete {selectedTorrents.length}{" "}
+                  torrents?
+                </Text>
+                <Button
+                  width="100%"
+                  colorScheme="red"
+                  variant="outline"
+                  onClick={() => removeMultiple(false)}
+                >
+                  Remove
+                </Button>
+                <Button
+                  width="100%"
+                  colorScheme="red"
+                  onClick={() => removeMultiple(true)}
+                >
+                  Remove and delete files
+                </Button>
+              </VStack>
+            </IosBottomSheet>
 
             {/*{Object.entries(torrentsTx)*/}
             {/*  ?.sort((a, b) => b[1]?.added_on - a[1]?.added_on)*/}

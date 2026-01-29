@@ -1,7 +1,6 @@
-import React, { useEffect } from "react";
+import React from "react";
 
 import {
-  Box,
   ChakraProvider,
   extendTheme,
   ThemeConfig,
@@ -9,8 +8,6 @@ import {
 import { QueryClient, QueryClientProvider } from "react-query";
 import { mode } from "@chakra-ui/theme-tools";
 import { AuthChecker } from "./components/Auth";
-import useScrollPosition from "./hooks/useScrollPosition";
-import { useIsTouchDevice } from "./hooks/useIsTouchDevice";
 import AnnouncementChecker from "./components/AnnouncementChecker";
 import pckg from "../package.json";
 

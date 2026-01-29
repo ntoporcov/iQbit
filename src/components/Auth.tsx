@@ -5,7 +5,6 @@ import {
   FormControl,
   FormErrorMessage,
   Heading,
-  useColorModeValue,
   VStack,
 } from "@chakra-ui/react";
 import LogoHeader from "./LogoHeader";

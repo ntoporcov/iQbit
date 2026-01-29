@@ -26,6 +26,7 @@ import IosBottomSheet from "../components/ios/IosBottomSheet";
 import { Input } from "@chakra-ui/input";
 import axios from "axios";
 import { StatWithIcon } from "../components/StatWithIcon";
+import SegmentedPicker from "../components/SegmentedPicker";
 
 const SearchPlugin = ({ plugin }: { plugin: TorrPlugin }) => {
   const pluginOptionsDisclosure = useDisclosure();
@@ -93,12 +94,15 @@ const SearchPlugin = ({ plugin }: { plugin: TorrPlugin }) => {
           />
           <IosActionSheet
             trigger={
-              <Button
-                variant={"ghost"}
-                onClick={pluginOptionsDisclosure.onToggle}
+              <Box
+                display="flex"
+                alignItems="center"
+                justifyContent="center"
+                cursor="pointer"
+                px={2}
               >
                 <IoEllipsisVertical size={25} />
-              </Button>
+              </Box>
             }
             disclosure={pluginOptionsDisclosure}
             options={[
@@ -225,6 +229,8 @@ const SearchPluginsPage = () => {
 
   const [pluginLocation, setPluginLocation] = useState("");
   const [added, setAdded] = useState<string[]>([]);
+  const [sortBy, setSortBy] = useState("Name");
+  const [sortAscending, setSortAscending] = useState(true);
 
   const { data: publicPlugins } = useQuery("getPublicPlugins", async () => {
     const { data } = await axios.get<TorrPublicPlugin[]>(
@@ -309,21 +315,63 @@ const SearchPluginsPage = () => {
           malfunction of other plugins as well, hence the use of these plugins
           are strongly discouraged.
         </Text>
+        <SegmentedPicker
+          options={["Name", "Date", "Version", "Author", "Comments"].map(option =>
+            option === sortBy ? `${option} ${sortAscending ? '↑' : '↓'}` : option
+          )}
+          selected={["Name", "Date", "Version", "Author", "Comments"].indexOf(sortBy)}
+          onSelect={(index) => {
+            const selectedOption = ["Name", "Date", "Version", "Author", "Comments"][index];
+            if (selectedOption === sortBy) {
+              // If clicking the same option, toggle direction
+              setSortAscending(!sortAscending);
+            } else {
+              // If clicking a different option, select it and reset to ascending
+              setSortBy(selectedOption);
+              setSortAscending(true);
+            }
+          }}
+          sticky={false}
+        />
         <Flex gap={3} flexDirection={"column"}>
-          {publicPlugins?.map((plugin, key) => {
-            const isInstalled = added?.some((inst) => inst === plugin.link);
+          {publicPlugins
+            ?.sort((a, b) => {
+              let result = 0;
+              switch (sortBy) {
+                case "Name":
+                  result = a.name.localeCompare(b.name);
+                  break;
+                case "Date":
+                  result = new Date(a.lastUpdated).getTime() - new Date(b.lastUpdated).getTime();
+                  break;
+                case "Version":
+                  result = a.version.localeCompare(b.version);
+                  break;
+                case "Author":
+                  result = (a.authors?.join(", ") || "").localeCompare(b.authors?.join(", ") || "");
+                  break;
+                case "Comments":
+                  result = a.comments.localeCompare(b.comments);
+                  break;
+                default:
+                  result = 0;
+              }
+              return sortAscending ? result : -result;
+            })
+            .map((plugin, key) => {
+              const isInstalled = added?.some((inst) => inst === plugin.link);
 
-            return (
-              <PublicPlugin
-                key={key}
-                plugin={plugin}
-                onSuccess={async (path) => {
-                  setAdded((curr) => [...curr, path]);
-                }}
-                isInstalled={isInstalled}
-              />
-            );
-          })}
+              return (
+                <PublicPlugin
+                  key={key}
+                  plugin={plugin}
+                  onSuccess={async (path) => {
+                    setAdded((curr) => [...curr, path]);
+                  }}
+                  isInstalled={isInstalled}
+                />
+              );
+            })}
         </Flex>
       </IosBottomSheet>
     </>

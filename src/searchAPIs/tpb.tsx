@@ -1,7 +1,7 @@
 import { SearchProviderComponentProps, TPBRecord } from "../types";
-import { Flex, VStack } from "@chakra-ui/react";
+import { Flex, FormControl, FormLabel, Input, VStack } from "@chakra-ui/react";
 import IosSearch from "../components/ios/IosSearch";
-import { useMutation } from "react-query";
+import { useMutation, useQuery } from "react-query";
 import axios from "axios";
 import TorrentDownloadBox from "../components/TorrentDownloadBox";
 import { SectionSM, useSearchFromParams } from "./yts";
@@ -11,6 +11,7 @@ import TorrentMovieData from "../components/TorrentMovieData";
 import Filters from "../components/Filters";
 import ReactGA from "react-ga";
 import CategorySelect from "../components/CategorySelect";
+import { TorrClient } from "../utils/TorrClient";
 
 export type AliasList = { name: string; aliases?: string[] }[];
 
@@ -154,6 +155,21 @@ const TPBSearch = (props: SearchProviderComponentProps) => {
   ]);
 
   const [addToCategory, setAddToCategory] = useState<string>("");
+  const [savePath, setSavePath] = useState<string>("");
+
+  const { data: categories } = useQuery("torrentsCategoryTPB", TorrClient.getCategories, {
+    staleTime: 10000,
+  });
+
+  const handleCategorySelect = (categoryName: string) => {
+    setAddToCategory(categoryName);
+    if (categoryName && categories) {
+      const cat = Object.values(categories).find((c) => c.name === categoryName);
+      setSavePath(cat?.savePath || "");
+    } else {
+      setSavePath("");
+    }
+  };
 
   return (
     <VStack id={"tpb-search"}>
@@ -167,33 +183,26 @@ const TPBSearch = (props: SearchProviderComponentProps) => {
       <Flex flexDirection={"column"} gap={2} width={"100%"}>
         {(!data?.length || true) && <Filters {...props.filterState} />}
         {data && (
-          <SectionSM
-            title={"Results"}
-            titleRight={
-              <CategorySelect
-                category={addToCategory}
-                onSelected={setAddToCategory}
-              />
-            }
-          >
-            {filteredMovies.map((torr) => (
-              <TorrentDownloadBox
-                key={torr.info_hash}
-                title={torr.name}
-                magnetURL={torr.info_hash}
-                category={addToCategory}
-              >
-                {props.category === "Video" && (
-                  <TorrentMovieData
-                    quality={parseFromString(torr.name, qualityAliases)}
-                    type={parseFromString(torr.name, typeAliases)}
-                    size={parseInt(torr.size)}
-                  />
-                )}
-                <SeedsAndPeers seeds={torr.seeders} peers={torr.leechers} />
-              </TorrentDownloadBox>
-            ))}
-          </SectionSM>
+          <>
+            <FormControl>
+              <FormLabel>Download Location</FormLabel>
+              <Input value={savePath} onChange={(e) => setSavePath(e.target.value)} placeholder="Enter save path" />
+            </FormControl>
+            <SectionSM title={"Results"} titleRight={<CategorySelect category={addToCategory} onSelected={handleCategorySelect} />}>
+              {filteredMovies.map((torr) => (
+                <TorrentDownloadBox key={torr.info_hash} title={torr.name} magnetURL={torr.info_hash} category={addToCategory} savePath={savePath}>
+                  {props.category === "Video" && (
+                    <TorrentMovieData
+                      quality={parseFromString(torr.name, qualityAliases)}
+                      type={parseFromString(torr.name, typeAliases)}
+                      size={parseInt(torr.size)}
+                    />
+                  )}
+                  <SeedsAndPeers seeds={torr.seeders} peers={torr.leechers} />
+                </TorrentDownloadBox>
+              ))}
+            </SectionSM>
+          </>
         )}
       </Flex>
     </VStack>

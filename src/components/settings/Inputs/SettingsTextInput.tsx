@@ -72,7 +72,7 @@ const SettingsTextInput = (props: SettingsSwitchProps) => {
                 updateSetting(
                   props.settingKey,
                   typeof settings?.[props.settingKey] === "number"
-                    ? parseInt(e.target.value)
+                    ? parseFloat(e.target.value)
                     : e.target.value
                 )
               }
