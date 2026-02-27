@@ -8,14 +8,13 @@ import {
   Text,
   useColorModeValue,
   useDisclosure,
-  Icon,
-  Select,
 } from "@chakra-ui/react";
 import PageHeader from "../components/PageHeader";
 import { useMutation, useQuery } from "react-query";
 import { tmdbClient } from "../utils/tmdbClient";
 import PosterGrid from "../components/PosterGrid";
 import { MovieResult, TvResult } from "moviedb-promise";
+import SegmentedPicker from "../components/SegmentedPicker";
 import IosBottomSheet from "../components/ios/IosBottomSheet";
 import { createYTSMagnetLink, SectionSM } from "../searchAPIs/yts";
 import { YTSClient } from "../utils/YTSClient";
@@ -26,118 +25,54 @@ import { providers } from "./SearchPage";
 import { useNavigate } from "react-router-dom";
 import { SearchPluginsPageQuery } from "./SearchPluginsPage";
 import { TorrClient } from "../utils/TorrClient";
-import { IoLanguage } from "react-icons/io5";
 
 const smallImage = "http://image.tmdb.org/t/p/w200";
 const originalImage = "http://image.tmdb.org/t/p/original";
 
-// Helper to get browser language, fallback to 'en-US'
+// Helper to get browser language, fallback to 'en-US', and map to supported TMDB codes
 const getBrowserLanguage = () => {
   const supported = ["en-US", "es-ES", "fr-FR", "de-DE", "pt-BR"];
-  const lang = typeof navigator !== "undefined" ? navigator.language : "en-US";
+  const lang =
+    typeof navigator !== "undefined" ? navigator.language : "en-US";
+  // If supported, use as is, else fallback to 'en-US'
   return supported.includes(lang) ? lang : "en-US";
 };
 
 const TrendingPage = () => {
-  const tabs = [
-    "Movies", "TV", 
-    "Top Movies", "Top TV", 
-    "Upcoming", "In Theaters", "On Air"
-  ];
+  const tabs = ["Movies", "TV", "TOP 100"];
   const [tab, setTab] = useState(0);
-
-  // STATE: Language Toggle
-  const [forceEnglish, setForceEnglish] = useState(false);
-  
-  const browserLanguage = getBrowserLanguage();
-  const displayLanguage = forceEnglish ? "en-US" : browserLanguage;
 
   const [selectedMovie, setSelectedMovie] = useState<MovieResult>();
   const movieBottomSheet = useDisclosure();
-
-  // --- DATA QUERIES ---
-
-  // 0. Trending Movies
-  const { data: trendingMovies } = useQuery(
-    ["getTrendingMovies", displayLanguage], 
-    async () =>
-      tmdbClient.trending({
-        media_type: "movie",
-        time_window: "day",
-        language: displayLanguage,
-      })
+  const browserLanguage = getBrowserLanguage();
+  const { data: trendingMovies } = useQuery("getTrendingMovies", async () =>
+    tmdbClient.trending({
+      media_type: "movie",
+      time_window: "day",
+      language: browserLanguage,
+    })
   );
 
-  // 1. Trending TV
-  const { data: trendingTv } = useQuery(
-    ["getTrendingTv", displayLanguage],
-    async () =>
-      tmdbClient.trending({
-        media_type: "tv",
-        time_window: "day",
-        language: displayLanguage,
-      })
-  );
+  const [currentPage, setCurrentPage] = useState(1);
 
-  // 2. Top Rated Movies
-  const [topMovPage, setTopMovPage] = useState(1);
-  const [topMovData, setTopMovData] = useState<MovieResult[]>([]);
-  const { refetch: refetchTopMov } = useQuery(
-    ["getTopMovies", displayLanguage], 
-    async () => {
-      const res = await tmdbClient.movieTopRated({
-        page: topMovPage,
-        language: displayLanguage,
-      });
-      if (topMovPage === 1) setTopMovData(res?.results ?? []);
-      else setTopMovData((prev) => [...prev, ...(res?.results ?? [])]);
-      return res;
-    }
-  );
+  const [topMoviesData, setTopMoviesData] = useState<MovieResult[]>([]);
 
-  // 3. Top Rated TV
-  const [topTvPage, setTopTvPage] = useState(1);
-  const [topTvData, setTopTvData] = useState<TvResult[]>([]);
-  const { refetch: refetchTopTv } = useQuery(
-    ["getTopTv", displayLanguage], 
-    async () => {
-      const res = await tmdbClient.tvTopRated({
-        page: topTvPage,
-        language: displayLanguage,
-      });
-      if (topTvPage === 1) setTopTvData(res?.results ?? []);
-      else setTopTvData((prev) => [...prev, ...(res?.results ?? [])]);
-      return res;
-    }
-  );
+  const { refetch } = useQuery("getTopMovies", async () => {
+    const res = await tmdbClient.movieTopRated({
+      page: currentPage,
+    });
+    setCurrentPage(currentPage + 1);
+    setTopMoviesData([...topMoviesData, ...(res?.results ?? [])]);
+    return res;
+  });
 
-  // 4. Upcoming Movies (Using 'as any' to fix TypeScript error)
-  const { data: upcomingMovies } = useQuery(
-    ["getUpcomingMovies", displayLanguage],
-    async () => (tmdbClient as any).movieUpcoming({ language: displayLanguage })
-  );
+  const handleLoadMore = async () => {
+    const newPage = currentPage + 1;
+    setCurrentPage(newPage);
+    let { data } = await refetch({ queryKey: `getTopMovies:${newPage}` });
+    setTopMoviesData([...topMoviesData, ...(data?.results ?? [])]);
+  };
 
-  // 5. In Theaters
-  const { data: nowPlayingMovies } = useQuery(
-    ["getNowPlayingMovies", displayLanguage],
-    async () => tmdbClient.movieNowPlaying({ language: displayLanguage })
-  );
-
-  // 6. On The Air TV
-  const { data: onAirTv } = useQuery(
-    ["getOnAirTv", displayLanguage],
-    async () => tmdbClient.tvOnTheAir({ language: displayLanguage })
-  );
-
-  useMemo(() => {
-    setTopMovPage(1);
-    setTopMovData([]);
-    setTopTvPage(1);
-    setTopTvData([]);
-  }, [displayLanguage]);
-
-
-  // --- TORRENT SEARCH ---
   const {
     data: TorrData,
     mutate: getTorrs,
@@ -150,6 +85,13 @@ const TrendingPage = () => {
 
   const tvBottomSheet = useDisclosure();
   const [selectedTv, setSelectedTv] = useState<TvResult>();
+  const { data: trendingTv } = useQuery("getTrendingTv", async () =>
+    tmdbClient.trending({
+      media_type: "tv",
+      time_window: "day",
+      language: browserLanguage,
+    })
+  );
 
   const { data: plugins } = useQuery(
     SearchPluginsPageQuery,
@@ -157,6 +99,7 @@ const TrendingPage = () => {
   );
 
   const bgColor = useColorModeValue("grayAlpha.200", "grayAlpha.400");
+
   const push = useNavigate();
 
   const providerMapper = useMemo(() => {
@@ -167,180 +110,89 @@ const TrendingPage = () => {
       );
   }, [plugins?.length]);
 
-  const handleMovieSelect = (movie: MovieResult) => {
-    const searchTitle = movie?.original_title || movie?.title || "";
-    getTorrs(
-      `${searchTitle} ${movie?.release_date?.split("-")?.[0] || ""}`
-    );
-    movieBottomSheet.onOpen();
-    setSelectedMovie(movie);
-  };
-
-  const handleTvSelect = (show: TvResult) => {
-    setSelectedTv(show);
-    tvBottomSheet.onOpen();
-  };
-
   return (
     <>
-      {/* Header */}
-      <Flex justifyContent="space-between" alignItems="center" mb={2}>
-        <PageHeader title={"Trending"} />
-        <Button 
-            size="sm" 
-            variant={forceEnglish ? "solid" : "outline"}
-            colorScheme="blue"
-            leftIcon={<Icon as={IoLanguage} />}
-            onClick={() => setForceEnglish(!forceEnglish)}
-        >
-            {forceEnglish ? "English" : "Native"}
-        </Button>
-      </Flex>
-
-      <Text color={"gray.500"} mb={2}>
-        Discover content from TMDB
-      </Text>
+      <PageHeader title={"Trending"} />
+      <Text color={"gray.500"}>Trending Movies and Shows from TMDB</Text>
       
-      {/* THE FIX: Simple Dropdown instead of scrolling tabs */}
-      <Box mb={4}>
-        <Select 
-            value={tab} 
-            onChange={(e) => setTab(parseInt(e.target.value))}
-            size="lg"
-            fontWeight="bold"
-            bg={useColorModeValue("white", "gray.800")}
-            shadow="sm"
-            rounded="xl"
-        >
-            {tabs.map((name, index) => (
-                <option key={index} value={index}>{name}</option>
-            ))}
-        </Select>
+      {/* FIX 1: Added Box wrapper for scrollable tabs on small screens */}
+      <Box overflowX="auto" pb={2} mb={2} className="no-scrollbar">
+        <Box minW="max-content">
+            <SegmentedPicker options={tabs} selected={tab} onSelect={setTab} />
+        </Box>
       </Box>
 
-      {/* TAB 0: Trending Movies */}
-      {tab === 0 && (
+      {tab === 0 ? (
         <PosterGrid
           list={(trendingMovies?.results as MovieResult[]) || []}
-          keyExtractor={(item) => item?.id?.toString() || Math.random().toString()}
-          titleExtractor={(movie) => movie?.title || "Unknown"}
+          keyExtractor={(item) =>
+            item?.id?.toString() || Math.random().toString()
+          }
+          titleExtractor={(movie) => movie?.title || "Unknown Title"}
           images={(movie) => ({
-            large: originalImage + movie.poster_path,
-            small: smallImage + movie.poster_path,
+            large: originalImage + movie.poster_path || "",
+            small: smallImage + movie.poster_path || "",
           })}
-          onSelect={handleMovieSelect}
+          onSelect={(movie) => {
+            // FIX 2: Use original_title for search to find English torrents
+            const searchTitle = movie?.original_title || movie?.title || "";
+            getTorrs(
+              `${searchTitle} ${movie?.release_date?.split("-")?.[0] || ""}`
+            );
+            movieBottomSheet.onOpen();
+            setSelectedMovie(movie);
+          }}
         />
-      )}
-      
-      {/* TAB 1: Trending TV */}
-      {tab === 1 && (
+      ) : tab === 1 ? (
         <PosterGrid
           list={(trendingTv?.results as TvResult[]) || []}
-          keyExtractor={(show) => show?.id?.toString() || Math.random().toString()}
-          titleExtractor={(show) => show?.name || "Unknown"}
+          keyExtractor={(show) =>
+            show?.id?.toString() || Math.random().toString()
+          }
+          titleExtractor={(show) => show?.name || "Unknown Show"}
           images={(show) => ({
-            large: originalImage + show.poster_path,
-            small: smallImage + show.poster_path,
+            large: originalImage + show.poster_path || "",
+            small: smallImage + show.poster_path || "",
           })}
-          onSelect={handleTvSelect}
+          onSelect={(show) => {
+            setSelectedTv(show);
+            tvBottomSheet.onOpen();
+          }}
         />
-      )}
-
-      {/* TAB 2: Top Movies */}
-      {tab === 2 && (
+      ) : tab === 2 ? (
         <Flex flexDir={"column"}>
           <PosterGrid
-            list={(topMovData as MovieResult[]) || []}
-            keyExtractor={(item) => item?.id?.toString() || Math.random().toString()}
-            titleExtractor={(movie) => movie?.title || "Unknown"}
+            list={(topMoviesData as MovieResult[]) || []}
+            keyExtractor={(item) =>
+              item?.id?.toString() || Math.random().toString()
+            }
+            titleExtractor={(movie) => movie?.title || "Unknown Title"}
             images={(movie) => ({
-              large: originalImage + movie.poster_path,
-              small: smallImage + movie.poster_path,
+              large: originalImage + movie.poster_path || "",
+              small: smallImage + movie.poster_path || "",
             })}
-            onSelect={handleMovieSelect}
+            onSelect={(movie) => {
+               // FIX 3: Apply the same fix to the Top 100 tab
+              const searchTitle = movie?.original_title || movie?.title || "";
+              getTorrs(
+                `${searchTitle} ${movie?.release_date?.split("-")?.[0] || ""}`
+              );
+              movieBottomSheet.onOpen();
+              setSelectedMovie(movie);
+            }}
           />
           <Button
-            mt={3} width={"full"} variant={"ghost"} colorScheme={"blue"}
-            onClick={async () => {
-                const newPage = topMovPage + 1;
-                setTopMovPage(newPage);
-                await refetchTopMov();
-            }}
+            mt={3}
+            width={"full"}
+            variant={"ghost"}
+            colorScheme={"blue"}
+            onClick={handleLoadMore}
           >
             Load More
           </Button>
         </Flex>
-      )}
+      ) : null}
 
-      {/* TAB 3: Top TV */}
-      {tab === 3 && (
-        <Flex flexDir={"column"}>
-          <PosterGrid
-            list={(topTvData as TvResult[]) || []}
-            keyExtractor={(item) => item?.id?.toString() || Math.random().toString()}
-            titleExtractor={(show) => show?.name || "Unknown"}
-            images={(show) => ({
-              large: originalImage + show.poster_path,
-              small: smallImage + show.poster_path,
-            })}
-            onSelect={handleTvSelect}
-          />
-          <Button
-            mt={3} width={"full"} variant={"ghost"} colorScheme={"blue"}
-            onClick={async () => {
-                const newPage = topTvPage + 1;
-                setTopTvPage(newPage);
-                await refetchTopTv();
-            }}
-          >
-            Load More
-          </Button>
-        </Flex>
-      )}
-
-      {/* TAB 4: Upcoming Movies */}
-      {tab === 4 && (
-        <PosterGrid
-          list={(upcomingMovies?.results as MovieResult[]) || []}
-          keyExtractor={(item) => item?.id?.toString() || Math.random().toString()}
-          titleExtractor={(movie) => movie?.title || "Unknown"}
-          images={(movie) => ({
-            large: originalImage + movie.poster_path,
-            small: smallImage + movie.poster_path,
-          })}
-          onSelect={handleMovieSelect}
-        />
-      )}
-
-      {/* TAB 5: In Theaters */}
-      {tab === 5 && (
-        <PosterGrid
-          list={(nowPlayingMovies?.results as MovieResult[]) || []}
-          keyExtractor={(item) => item?.id?.toString() || Math.random().toString()}
-          titleExtractor={(movie) => movie?.title || "Unknown"}
-          images={(movie) => ({
-            large: originalImage + movie.poster_path,
-            small: smallImage + movie.poster_path,
-          })}
-          onSelect={handleMovieSelect}
-        />
-      )}
-
-      {/* TAB 6: On Air TV */}
-      {tab === 6 && (
-        <PosterGrid
-          list={(onAirTv?.results as TvResult[]) || []}
-          keyExtractor={(item) => item?.id?.toString() || Math.random().toString()}
-          titleExtractor={(show) => show?.name || "Unknown"}
-          images={(show) => ({
-            large: originalImage + show.poster_path,
-            small: smallImage + show.poster_path,
-          })}
-          onSelect={handleTvSelect}
-        />
-      )}
-
-      {/* Movie Bottom Sheet */}
       <IosBottomSheet
         modalProps={{ size: "xl" }}
         title={selectedMovie?.title ?? ""}
@@ -380,6 +232,7 @@ const TrendingPage = () => {
                             replace: true,
                             state: {
                               provider: key,
+                              // FIX 4: Use original_title for external providers too
                               query: `${selectedMovie?.original_title || selectedMovie?.title} ${
                                 selectedMovie?.release_date?.split("-")?.[0]
                               }`,
@@ -434,7 +287,6 @@ const TrendingPage = () => {
         </Flex>
       </IosBottomSheet>
 
-      {/* TV Bottom Sheet */}
       <IosBottomSheet
         title={selectedTv?.name ?? ""}
         disclosure={tvBottomSheet}
@@ -469,6 +321,7 @@ const TrendingPage = () => {
                       onClick={() =>
                         push("/search", {
                           replace: true,
+                          // FIX 5: Use original_name for TV shows
                           state: { provider: key, query: selectedTv?.original_name || selectedTv?.name },
                         })
                       }

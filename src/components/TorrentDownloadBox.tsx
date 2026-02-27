@@ -6,11 +6,18 @@ import {
   Heading,
   LightMode,
   useColorModeValue,
+  Menu,
+  MenuButton,
+  MenuList,
+  MenuItem,
+  ButtonGroup,
 } from "@chakra-ui/react";
 import { useIsLargeScreen } from "../utils/screenSize";
 import { useMutation } from "react-query";
 import { TorrClient } from "../utils/TorrClient";
-import { IoCheckmark } from "react-icons/io5";
+import { IoCheckmark, IoChevronDown, IoTv, IoFilm } from "react-icons/io5";
+import { useLocalStorage } from "usehooks-ts";
+import { pushToServarr } from "../utils/ServarrClient";
 
 export interface TorrentDownloadBoxProps {
   title?: string;
@@ -28,18 +35,38 @@ const TorrentDownloadBox = ({
 }: PropsWithChildren<TorrentDownloadBoxProps>) => {
   const isLarge = useIsLargeScreen();
 
+  const [sonarrUrl] = useLocalStorage("iqbit-sonarr-url", "");
+  const [radarrUrl] = useLocalStorage("iqbit-radarr-url", "");
+
   const { mutate, isLoading, isSuccess } = useMutation(
     "addBox",
     (magnetURLParam: string) => TorrClient.addTorrent("urls", magnetURLParam, category)
+  );
+
+  const { mutate: mutateSonarr, isLoading: isSonarrLoading, isSuccess: isSonarrSuccess } = useMutation(
+    "addBoxSonarr",
+    (magnetURLParam: string) => pushToServarr("Sonarr", title || "Unknown", magnetURLParam)
+  );
+
+  const { mutate: mutateRadarr, isLoading: isRadarrLoading, isSuccess: isRadarrSuccess } = useMutation(
+    "addBoxRadarr",
+    (magnetURLParam: string) => pushToServarr("Radarr", title || "Unknown", magnetURLParam)
   );
 
   const {
     mutate: callbackMutation,
     isLoading: callbackLoading,
     isSuccess: callbackSuccess,
-  } = useMutation("addBoxWithCallback", () => onSelect!(), {
-    onSuccess: (magnetURL) => mutate(magnetURL),
+  } = useMutation("addBoxWithCallback", (target: "qbit" | "sonarr" | "radarr") => Promise.all([onSelect!(), target] as const), {
+    onSuccess: ([magnetUrlResult, target]) => {
+      if (target === "sonarr") mutateSonarr(magnetUrlResult);
+      else if (target === "radarr") mutateRadarr(magnetUrlResult);
+      else mutate(magnetUrlResult);
+    },
   });
+
+  const anyLoading = isLoading || callbackLoading || isSonarrLoading || isRadarrLoading;
+  const anySuccess = isSuccess || callbackSuccess || isSonarrSuccess || isRadarrSuccess;
 
   const bgColor = useColorModeValue("grayAlpha.200", "grayAlpha.400");
 
@@ -64,27 +91,61 @@ const TorrentDownloadBox = ({
       </Box>
       <LightMode>
         <Flex width="100%">
-          <Button
-            minW={32}
-            disabled={
-              isSuccess || callbackSuccess || callbackLoading || isLoading
-            }
-            isLoading={isLoading || callbackLoading}
-            colorScheme={"blue"}
-            width={!isLarge ? "100%" : undefined}
-            onClick={() => {
-              if (magnetURL) {
-                mutate(magnetURL);
-              } else if (onSelect) {
-                callbackMutation();
-              }
-            }}
-            leftIcon={isSuccess ? <IoCheckmark /> : undefined}
-            flexGrow={1}
-            roundedRight={0}
-          >
-            {isSuccess ? "Added" : "Download"}
-          </Button>
+          <ButtonGroup isAttached width={!isLarge ? "100%" : undefined} flexGrow={1}>
+            <Button
+              minW={32}
+              disabled={anySuccess || anyLoading}
+              isLoading={isLoading || callbackLoading}
+              colorScheme={"blue"}
+              width={"100%"}
+              onClick={() => {
+                if (magnetURL) mutate(magnetURL);
+                else if (onSelect) callbackMutation("qbit");
+              }}
+              leftIcon={anySuccess ? <IoCheckmark /> : undefined}
+            >
+              {anySuccess ? "Sent" : "Download"}
+            </Button>
+
+            {(sonarrUrl || radarrUrl) && (
+              <Menu>
+                <MenuButton
+                  as={Button}
+                  colorScheme="blue"
+                  disabled={anySuccess || anyLoading}
+                  px={2}
+                  borderLeft="1px solid"
+                  borderColor="blue.600"
+                >
+                  <IoChevronDown />
+                </MenuButton>
+                <MenuList color="black">
+                  {sonarrUrl && (
+                    <MenuItem
+                      icon={<IoTv />}
+                      onClick={() => {
+                        if (magnetURL) mutateSonarr(magnetURL);
+                        else if (onSelect) callbackMutation("sonarr");
+                      }}
+                    >
+                      Send to Sonarr
+                    </MenuItem>
+                  )}
+                  {radarrUrl && (
+                    <MenuItem
+                      icon={<IoFilm />}
+                      onClick={() => {
+                        if (magnetURL) mutateRadarr(magnetURL);
+                        else if (onSelect) callbackMutation("radarr");
+                      }}
+                    >
+                      Send to Radarr
+                    </MenuItem>
+                  )}
+                </MenuList>
+              </Menu>
+            )}
+          </ButtonGroup>
         </Flex>
       </LightMode>
     </Flex>

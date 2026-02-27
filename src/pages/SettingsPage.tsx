@@ -39,8 +39,9 @@ import CategoriesPage from "./CategoriesPage";
 import FontSizeSelection from "./FontSizeSelection";
 import TabSelectorPage from "./TabSelectorPage";
 import { GlassContainer } from "../components/GlassContainer";
+import IntegrationsPage from "./IntegrationsPage";
 
-export interface SettingsPageProps {}
+export interface SettingsPageProps { }
 
 type settingsPageNames =
   | "Download"
@@ -139,6 +140,12 @@ const SettingsPages: {
     color: "teal.600",
     group: "Other Settings",
     mobileOnly: true,
+  },
+  Integrations: {
+    icon: <IoExtensionPuzzle size={iconSize} />,
+    component: <IntegrationsPage />,
+    color: "purple.600",
+    group: "Other Settings",
   },
 };
 

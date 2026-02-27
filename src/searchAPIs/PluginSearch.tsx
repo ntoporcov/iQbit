@@ -14,7 +14,7 @@ import { useMutation, useQuery } from "react-query";
 import { TorrClient } from "../utils/TorrClient";
 import TorrentDownloadBox from "../components/TorrentDownloadBox";
 import SeedsAndPeers from "../components/SeedsAndPeers";
-import { IoList, IoStop } from "react-icons/io5";
+import { IoList, IoStop, IoRefresh } from "react-icons/io5";
 import { useIsLargeScreen } from "../utils/screenSize";
 import { StatWithIcon } from "../components/StatWithIcon";
 import { parseFromString, qualityAliases, typeAliases } from "./tpb";
@@ -54,6 +54,11 @@ const PluginSearch = (props: SearchProviderComponentProps) => {
     {
       onSuccess: () => deleteSearch(),
     }
+  );
+
+  const { mutate: updatePlugins, isLoading: isUpdatingPlugins } = useMutation(
+    "updatePlugins",
+    () => TorrClient.updatePlugins()
   );
 
   const { data } = useQuery(
@@ -142,6 +147,17 @@ const PluginSearch = (props: SearchProviderComponentProps) => {
         </Flex>
       )}
       {(!data?.results?.length || true) && <Filters {...props.filterState} />}
+      <Flex w="100%" justifyContent="flex-end">
+        <Button
+          leftIcon={<IoRefresh />}
+          isLoading={isUpdatingPlugins}
+          onClick={() => updatePlugins()}
+          size="sm"
+          variant="ghost"
+        >
+          Update Search Plugins
+        </Button>
+      </Flex>
       {filteredResults.map((result) => (
         <TorrentDownloadBox
           key={result.fileUrl}
