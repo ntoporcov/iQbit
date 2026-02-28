@@ -1,0 +1,8 @@
+{
+    "mirrors": [
+        "https://yts.bz/api/v2/",
+        "https://yts.lt/api/v2/",
+        "https://yts.am/api/v2/",
+        "https://yts.ag/api/v2/"
+    ]
+}
