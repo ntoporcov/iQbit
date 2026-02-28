@@ -4,10 +4,12 @@ import { videoQualities } from "../components/Filters";
 
 // Fallback list of YTS mirrors used if the remote config cannot be fetched.
 const FALLBACK_MIRRORS = [
-  "https://yts.bz/api/v2/",
-  "https://yts.lt/api/v2/",
+  "https://yts.mx/api/v2/",
   "https://yts.am/api/v2/",
   "https://yts.ag/api/v2/",
+  "https://yts.lt/api/v2/",
+  "https://yts.pm/api/v2/",
+  "https://yts.bz/api/v2/",
 ];
 
 // Remote mirror list hosted in the repo — update this file on GitHub to fix
@@ -104,15 +106,15 @@ export const YTSClient = {
       try {
         const { data } = await axios.get(`${baseURL}list_movies.json`, {
           params: {
-            limit,
-            page,
-            quality,
-            minimum_rating,
-            query_term,
-            genre,
-            sort_by,
+            limit, // Integer between 1 - 50 (inclusive)
+            page, // Integer (Unsigned)
+            quality, // String (720p, 1080p, 2160p, 3D)
+            minimum_rating, // Integer between 0 - 9 (inclusive)
+            query_term, // String
+            genre, // String from http://www.imdb.com/genre/
+            sort_by, // String (title, year, rating, peers, seeds, download_count, like_count, date_added)
             order_by,
-            with_rt_ratings: true,
+            with_rt_ratings: true, // Bool
           },
           // Timeout after 3 seconds to fail fast and try the next mirror
           timeout: 3000,
@@ -124,6 +126,7 @@ export const YTSClient = {
           return data.data;
         }
       } catch (error) {
+        // If this mirror fails, log it (optional) and loop to the next one
         console.warn(`YTS mirror failed: ${baseURL}`, error);
         lastError = error;
       }
