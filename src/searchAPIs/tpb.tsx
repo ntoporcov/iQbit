@@ -84,11 +84,11 @@ const TPBSearch = (props: SearchProviderComponentProps) => {
     "tpbSearch",
     async () => {
       const { data } = await axios.get<TPBRecord[]>(
-        `${ApiDomain}api/tpb/search`,
+        `https://apibay.org/q.php`,
         {
           params: {
-            query: props.searchState[0],
-            category: props.category,
+            q: props.searchState[0],
+            cat: props.category === 'Video' ? 200 : (props.category === 'Audio' ? 100 : 0)
           },
         }
       );

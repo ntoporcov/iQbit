@@ -215,6 +215,10 @@ export const TorrClient = {
     await APICall.post("search/installPlugin", `sources=${path}`);
   },
 
+  updatePlugins: async () => {
+    await APICall.post("search/updatePlugins");
+  },
+
   uninstallPlugin: async (name: string) => {
     const { data } = await APICall.post(
       "search/uninstallPlugin",
