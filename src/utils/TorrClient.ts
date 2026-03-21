@@ -8,7 +8,7 @@ import {
   TorrTorrentInfo,
 } from "../types";
 
-let serverAddress = new URL(".", window.location.href).href
+let serverAddress = new URL(".", window.location.href).href;
 
 if (serverAddress.substring(serverAddress.length - 1) !== "/") {
   serverAddress = `${serverAddress}/`;
@@ -20,6 +20,50 @@ const APICall = axios.create({
   baseURL: baseURL,
   withCredentials: true,
 });
+
+// --- INTERCEPTOR AÑADIDO PARA SOLUCIONAR EL BUCLE AL CADUCAR LA SESIÓN ---
+APICall.interceptors.response.use(
+  (response) => response,
+  async (error) => {
+    const originalRequest = error.config;
+    
+    // Si el servidor devuelve error 403 (Prohibido/Sesión caducada) y no hemos reintentado ya
+    if (error.response && error.response.status === 403 && !originalRequest._retry) {
+      originalRequest._retry = true;
+      
+      // Intentar recuperar las credenciales guardadas
+      const credsStr = window.localStorage.getItem("iqbit_creds");
+      if (credsStr) {
+        try {
+          const creds = JSON.parse(credsStr); // useLocalStorage guarda como JSON
+          if (creds.username && creds.password) {
+            
+            // Intentar re-autenticarse en segundo plano
+            const loginRes = await TorrClient.login({ 
+                username: creds.username, 
+                password: creds.password 
+            });
+            
+            if (loginRes.data === "Ok.") {
+              // Si el login automático tiene éxito, reintentar la petición original que falló
+              return APICall(originalRequest); 
+            }
+          }
+        } catch (e) {
+          console.error("Error reconectando:", e);
+        }
+      }
+      
+      // Si llegamos aquí es que la reconexión falló o las credenciales son inválidas.
+      // Borramos las credenciales obsoletas y recargamos para mostrar la pantalla de login de nuevo.
+      window.localStorage.removeItem("iqbit_creds");
+      window.location.reload();
+    }
+    
+    return Promise.reject(error);
+  }
+);
+// --------------------------------------------------------------------------
 
 export const TorrClient = {
   getVersion: async () => {
