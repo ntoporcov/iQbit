@@ -21,6 +21,48 @@ const APICall = axios.create({
   withCredentials: true,
 });
 
+APICall.interceptors.response.use(
+  (response) => response,
+  async (error) => {
+    const originalRequest = error.config;
+
+    if (
+      error.response &&
+      (error.response.status === 401 || error.response.status === 403) &&
+      !originalRequest._retry &&
+      originalRequest.url !== "auth/login"
+    ) {
+      originalRequest._retry = true;
+
+      try {
+        const credsStr = window.localStorage.getItem("iqbit_creds");
+        if (credsStr) {
+          const localCreds = JSON.parse(credsStr);
+          if (localCreds && localCreds.username && localCreds.password) {
+            const loginRes = await TorrClient.login({
+              username: localCreds.username,
+              password: localCreds.password,
+            });
+
+            if (loginRes.data === "Ok.") {
+              return APICall(originalRequest);
+            }
+          }
+        }
+      } catch (e) {
+        console.error("Auto re-login failed", e);
+      }
+
+      // If re-login fails or we don't have creds, clear creds and reload
+      window.localStorage.removeItem("iqbit_creds");
+      window.location.reload();
+      return Promise.reject(error);
+    }
+
+    return Promise.reject(error);
+  }
+);
+
 export const TorrClient = {
   getVersion: async () => {
     return await APICall.get("/app/version");
