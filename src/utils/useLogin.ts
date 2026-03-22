@@ -2,8 +2,9 @@ import { useState } from "react";
 import { useLocalStorage } from "usehooks-ts";
 import { useMutation } from "react-query";
 import { TorrClient } from "./TorrClient";
+import { CredsLocalStorageKey } from "./constants";
 
-export const CredsLocalStorageKey = "iqbit_creds";
+export { CredsLocalStorageKey };
 export const loginPOSTKey = "loginPOST";
 
 export const useLogin = (props?: { onLogin?: () => void }) => {
