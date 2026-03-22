@@ -7,6 +7,7 @@ import {
   TorrSettings,
   TorrTorrentInfo,
 } from "../types";
+import { CredsLocalStorageKey } from "./constants";
 
 let serverAddress = new URL(".", window.location.href).href
 
@@ -20,6 +21,52 @@ const APICall = axios.create({
   baseURL: baseURL,
   withCredentials: true,
 });
+
+// --- INTERCEPTOR ADDED TO FIX THE LOOP WHEN THE SESSION EXPIRES ---
+APICall.interceptors.response.use(
+  (response) => response,
+  async (error) => {
+    const originalRequest = error.config as import("axios").AxiosRequestConfig & { _retry?: boolean };
+    
+    // If the server returns 403 (Forbidden/Session expired) and we have not retried yet
+    if (error.response && error.response.status === 403 && !originalRequest._retry) {
+      if (originalRequest.url && originalRequest.url.includes("auth/login")) {
+        return Promise.reject(error);
+      }
+      originalRequest._retry = true;
+      
+      // Try to recover stored credentials
+      const credsStr = window.localStorage.getItem(CredsLocalStorageKey);
+      if (credsStr) {
+        try {
+          const creds = JSON.parse(credsStr); // useLocalStorage stores values as JSON
+          if (creds.username && creds.password) {
+            
+            // Try to re-authenticate in the background
+            const loginRes = await TorrClient.login({ 
+                username: creds.username, 
+                password: creds.password 
+            });
+            
+            if (loginRes.data === "Ok.") {
+              // If automatic login succeeds, retry the original request that failed
+              return APICall(originalRequest as any); 
+            }
+          }
+        } catch (e) {
+          console.error("Error reconnecting:", e);
+        }
+        
+        // If we reach this point, reconnection failed or credentials are invalid.
+        // Remove obsolete credentials and reload to show the login screen again.
+        window.localStorage.removeItem(CredsLocalStorageKey);
+        window.location.reload();
+      }
+    }
+    
+    return Promise.reject(error);
+  }
+);
 
 export const TorrClient = {
   getVersion: async () => {
