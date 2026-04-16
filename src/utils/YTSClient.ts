@@ -4,39 +4,32 @@ import { videoQualities } from "../components/Filters";
 
 // Fallback list of YTS mirrors used if the remote config cannot be fetched.
 const FALLBACK_MIRRORS = [
-  "https://yts.mx/api/v2/",
-  "https://yts.am/api/v2/",
-  "https://yts.ag/api/v2/",
-  "https://yts.lt/api/v2/",
-  "https://yts.pm/api/v2/",
   "https://yts.bz/api/v2/",
+  "https://yts.lt/api/v2/",
 ];
-
-// Remote mirror list hosted in the repo — update this file on GitHub to fix
-// broken mirrors for all users without any code change or rebuild needed.
-const REMOTE_MIRRORS_URL =
-  "https://raw.githubusercontent.com/Indi733/iQbit/main/public/yts-mirrors.json";
 
 const CACHE_KEY = "iqbit-yts-working-mirror";
 
-/** Load the mirror list: tries remote JSON first, falls back to hardcoded list. */
+/** Load the mirror list from local config only. */
 async function loadMirrors(): Promise<string[]> {
-  try {
-    const { data } = await axios.get(REMOTE_MIRRORS_URL, { timeout: 3000 });
-    if (Array.isArray(data?.mirrors) && data.mirrors.length > 0) {
-      return data.mirrors as string[];
-    }
-  } catch {
-    // Remote fetch failed — use hardcoded fallback silently
-  }
-  return FALLBACK_MIRRORS;
+  const sanitizeMirrors = (mirrors: string[]) =>
+    Array.from(
+      new Set(
+        mirrors
+          .map((mirror) => mirror.trim())
+          .filter(Boolean)
+          .map((mirror) => (mirror.endsWith("/") ? mirror : `${mirror}/`))
+      )
+    );
+
+  return sanitizeMirrors(FALLBACK_MIRRORS);
 }
 
 /** Build a mirror list that tries the cached working mirror first. */
 function prioritizeCached(mirrors: string[]): string[] {
   const cached = localStorage.getItem(CACHE_KEY);
   if (cached && mirrors.includes(cached)) {
-    return [cached, ...mirrors.filter((m) => m !== cached)];
+    return [cached, ...mirrors.filter((mirror) => mirror !== cached)];
   }
   return mirrors;
 }
@@ -98,8 +91,7 @@ export const YTSClient = {
   }: ytsSearchParams): Promise<YTSData> => {
     let lastError: any;
 
-    // Load mirrors: tries remote JSON first, falls back to hardcoded list.
-    // Then re-orders so the last known working mirror is tried first.
+    // Load mirrors from local config, then try the last known working mirror first.
     const mirrors = prioritizeCached(await loadMirrors());
 
     for (const baseURL of mirrors) {
@@ -120,8 +112,8 @@ export const YTSClient = {
           timeout: 3000,
         });
 
-        // If request is successful and contains data, cache the mirror and return
-        if (data && data.data) {
+        // YTS returns `movie_count: 0` without a `movies` array for empty results.
+        if (data?.data) {
           localStorage.setItem(CACHE_KEY, baseURL);
           return data.data;
         }
