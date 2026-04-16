@@ -66,6 +66,9 @@ export const typeAliases: AliasList = [
   },
 ];
 
+export const createTPBMagnetLink = (hash: string, title: string) =>
+  `magnet:?xt=urn:btih:${hash}&dn=${encodeURIComponent(title)}`;
+
 const devURL = "http://localhost:5005/";
 const useLocalServer = false;
 
@@ -84,11 +87,11 @@ const TPBSearch = (props: SearchProviderComponentProps) => {
     "tpbSearch",
     async () => {
       const { data } = await axios.get<TPBRecord[]>(
-        `https://apibay.org/q.php`,
+        `${ApiDomain}api/tpb/search`,
         {
           params: {
-            q: props.searchState[0],
-            cat: props.category === 'Video' ? 200 : (props.category === 'Audio' ? 100 : 0)
+            query: props.searchState[0],
+            category: props.category,
           },
         }
       );
@@ -180,7 +183,7 @@ const TPBSearch = (props: SearchProviderComponentProps) => {
               <TorrentDownloadBox
                 key={torr.info_hash}
                 title={torr.name}
-                magnetURL={torr.info_hash}
+                magnetURL={createTPBMagnetLink(torr.info_hash, torr.name)}
                 category={addToCategory}
               >
                 {props.category === "Video" && (
