@@ -9,6 +9,12 @@
   "announcements": [
     {
       "id": "Apr162026",
+      "title": "TPB Search Fix",
+      "body": "Fixing TPB Search",
+      "type": "info"
+    },
+    {
+      "id": "Apr162026",
       "title": "YTS Search Fix",
       "body": "Fixed YTS (I think)",
       "type": "info"
