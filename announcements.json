@@ -8,6 +8,12 @@
   },
   "announcements": [
     {
+      "id": "Apr162026",
+      "title": "YTS Search Fix",
+      "body": "Fixed YTS (I think)",
+      "type": "info"
+    },
+    {
       "id": "Nov222025",
       "title": "Updates and Bugfixes",
       "body": "YTS Search improvements pushed by @Indi733. Thanks!",
