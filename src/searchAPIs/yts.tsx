@@ -193,6 +193,7 @@ const YTSSearch = (props: SearchProviderComponentProps) => {
                     })` || "Title not found"
                   )}
                   category={addToCategory}
+                  existingTorrentHashes={props.existingTorrentHashes}
                 >
                   <Flex flexDirection={"column"} width={"100%"}>
                     <TorrentMovieData

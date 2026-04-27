@@ -185,6 +185,7 @@ const TPBSearch = (props: SearchProviderComponentProps) => {
                 title={torr.name}
                 magnetURL={createTPBMagnetLink(torr.info_hash, torr.name)}
                 category={addToCategory}
+                existingTorrentHashes={props.existingTorrentHashes}
               >
                 {props.category === "Video" && (
                   <TorrentMovieData

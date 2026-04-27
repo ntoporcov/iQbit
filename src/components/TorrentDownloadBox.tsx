@@ -24,7 +24,17 @@ export interface TorrentDownloadBoxProps {
   magnetURL?: string;
   onSelect?: () => Promise<string>;
   category?: string;
+  existingTorrentHashes?: string[];
 }
+
+const getMagnetHash = (magnetURL?: string) => {
+  if (!magnetURL?.startsWith("magnet:?")) return undefined;
+
+  return new URLSearchParams(magnetURL.slice("magnet:?".length))
+    .get("xt")
+    ?.replace(/^urn:btih:/i, "")
+    .toLowerCase();
+};
 
 const TorrentDownloadBox = ({
   magnetURL,
@@ -32,6 +42,7 @@ const TorrentDownloadBox = ({
   onSelect,
   children,
   category,
+  existingTorrentHashes = [],
 }: PropsWithChildren<TorrentDownloadBoxProps>) => {
   const isLarge = useIsLargeScreen();
 
@@ -67,6 +78,7 @@ const TorrentDownloadBox = ({
 
   const anyLoading = isLoading || callbackLoading || isSonarrLoading || isRadarrLoading;
   const anySuccess = isSuccess || callbackSuccess || isSonarrSuccess || isRadarrSuccess;
+  const isAdded = existingTorrentHashes.includes(getMagnetHash(magnetURL) || "");
 
   const bgColor = useColorModeValue("grayAlpha.200", "grayAlpha.400");
 
@@ -94,7 +106,7 @@ const TorrentDownloadBox = ({
           <ButtonGroup isAttached width={!isLarge ? "100%" : undefined} flexGrow={1}>
             <Button
               minW={32}
-              disabled={anySuccess || anyLoading}
+              disabled={isAdded || anySuccess || anyLoading}
               isLoading={isLoading || callbackLoading}
               colorScheme={"blue"}
               width={"100%"}
@@ -102,9 +114,9 @@ const TorrentDownloadBox = ({
                 if (magnetURL) mutate(magnetURL);
                 else if (onSelect) callbackMutation("qbit");
               }}
-              leftIcon={anySuccess ? <IoCheckmark /> : undefined}
+              leftIcon={isAdded || anySuccess ? <IoCheckmark /> : undefined}
             >
-              {anySuccess ? "Sent" : "Download"}
+              {isAdded ? "Added" : anySuccess ? "Sent" : "Download"}
             </Button>
 
             {(sonarrUrl || radarrUrl) && (
@@ -112,7 +124,7 @@ const TorrentDownloadBox = ({
                 <MenuButton
                   as={Button}
                   colorScheme="blue"
-                  disabled={anySuccess || anyLoading}
+                  disabled={isAdded || anySuccess || anyLoading}
                   px={2}
                   borderLeft="1px solid"
                   borderColor="blue.600"

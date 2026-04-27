@@ -393,6 +393,7 @@ export type SearchProviderComponentProps = {
   category: string;
   searchState: [string, Dispatch<SetStateAction<string>>];
   filterState: useFilterStateReturn;
+  existingTorrentHashes?: string[];
   onSearch?: () => void;
 };
 

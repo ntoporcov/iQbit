@@ -163,6 +163,7 @@ const PluginSearch = (props: SearchProviderComponentProps) => {
           key={result.fileUrl}
           magnetURL={result.fileUrl}
           title={result.fileName}
+          existingTorrentHashes={props.existingTorrentHashes}
         >
           <SeedsAndPeers
             seeds={result.nbSeeders.toString()}

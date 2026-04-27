@@ -8,6 +8,12 @@
   },
   "announcements": [
     {
+      "id": "Apr272026",
+      "title": "Search Results Update",
+      "body": "Search results now show Added when the torrent is already in qBittorrent.",
+      "type": "info"
+    },
+    {
       "id": "Apr162026",
       "title": "TPB Search Fix",
       "body": "Fixing TPB Search",

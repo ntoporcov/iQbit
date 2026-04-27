@@ -115,6 +115,14 @@ const SearchPage = () => {
     TorrClient.getInstalledPlugins
   );
 
+  const { data: torrents } = useQuery("searchTorrents", () =>
+    TorrClient.getTorrents()
+  );
+
+  const existingTorrentHashes = (torrents || [])
+    .map((torrent) => torrent.hash?.toLowerCase())
+    .filter(Boolean) as string[];
+
   useEffect(() => {
     if (selectedCategory >= providers[selectedProvider].categories.length) {
       setSelectedCategory(0);
@@ -196,6 +204,7 @@ const SearchPage = () => {
             category={providers[selectedProvider].categories[selectedCategory]}
             searchState={searchState}
             filterState={filterState}
+            existingTorrentHashes={existingTorrentHashes}
           />
         )}
         {selectedProvider === "TPB" && (
@@ -203,6 +212,7 @@ const SearchPage = () => {
             category={providers[selectedProvider].categories[selectedCategory]}
             searchState={searchState}
             filterState={filterState}
+            existingTorrentHashes={existingTorrentHashes}
           />
         )}
         {selectedProvider === "plugin" && (
@@ -212,6 +222,7 @@ const SearchPage = () => {
             }
             searchState={searchState}
             filterState={filterState}
+            existingTorrentHashes={existingTorrentHashes}
           />
         )}
       </Box>
