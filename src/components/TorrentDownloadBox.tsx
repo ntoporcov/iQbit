@@ -108,7 +108,8 @@ const TorrentDownloadBox = ({
               minW={32}
               disabled={isAdded || anySuccess || anyLoading}
               isLoading={isLoading || callbackLoading}
-              colorScheme={"blue"}
+              colorScheme={isAdded ? "gray" : "blue"}
+              variant={isAdded ? "outline" : "solid"}
               width={"100%"}
               onClick={() => {
                 if (magnetURL) mutate(magnetURL);
