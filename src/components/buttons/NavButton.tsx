@@ -12,6 +12,7 @@ export interface NavButtonProps {
   };
   label: string;
   activeColor: ColorProps["color"];
+  foregroundColor?: ColorProps["color"];
 }
 
 const NavButton = (props: NavButtonProps) => {
@@ -39,6 +40,7 @@ const NavButton = (props: NavButtonProps) => {
             width={"100%"}
             rounded={isLarge ? 5 : 0}
             bgColor={isLarge && isActive ? "grayAlpha.300" : "transparent"}
+            color={!isLarge ? props.foregroundColor : undefined}
             pos={"relative"}
             _hover={{ bgColor: !isLarge ? "transparent" : undefined }}
             _active={{
@@ -73,11 +75,16 @@ const NavButton = (props: NavButtonProps) => {
             {isActive ? props.icon.active : props.icon.inactive}
             <Text
               width={"100%"}
-              color={isActive ? props.activeColor : undefined}
+              color={
+                isActive
+                  ? props.foregroundColor ?? props.activeColor
+                  : props.foregroundColor
+              }
               mt={isLarge ? 0 : "2px"}
               ml={isLarge ? 2 : 0}
               fontSize={isLarge ? "sm" : 10}
               textAlign={isLarge ? "left" : "center"}
+              transition={"color 160ms ease"}
             >
               {props.label}
             </Text>

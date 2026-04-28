@@ -1,4 +1,4 @@
-import React, { PropsWithChildren } from "react";
+import React, { PointerEvent, PropsWithChildren, useRef, useState } from "react";
 import { useIsLargeScreen } from "../../utils/screenSize";
 import {
   Box,
@@ -36,6 +36,42 @@ const IosBottomSheet = ({
 }: PropsWithChildren<IosBottomSheetProps>) => {
   const isLarge = useIsLargeScreen();
   const backgroundColor = useColorModeValue("white", "gray.900");
+  const dragStartY = useRef(0);
+  const [dragOffset, setDragOffset] = useState(0);
+  const [isDragging, setIsDragging] = useState(false);
+
+  const handleDragStart = (event: PointerEvent<HTMLDivElement>) => {
+    if (event.pointerType === "mouse" && event.button !== 0) {
+      return;
+    }
+
+    dragStartY.current = event.clientY;
+    setIsDragging(true);
+    event.currentTarget.setPointerCapture(event.pointerId);
+  };
+
+  const handleDragMove = (event: PointerEvent<HTMLDivElement>) => {
+    if (!isDragging) {
+      return;
+    }
+
+    setDragOffset(Math.max(0, event.clientY - dragStartY.current));
+  };
+
+  const handleDragEnd = (event: PointerEvent<HTMLDivElement>) => {
+    if (!isDragging) {
+      return;
+    }
+
+    event.currentTarget.releasePointerCapture(event.pointerId);
+    setIsDragging(false);
+
+    if (dragOffset > 120) {
+      disclosure.onClose();
+    }
+
+    setDragOffset(0);
+  };
 
   const header = (
     <Heading size={"lg"} fontWeight={300} noOfLines={1}>
@@ -79,14 +115,23 @@ const IosBottomSheet = ({
     >
       <DrawerOverlay zIndex={"modal"} />
       <DrawerContent
+        onPointerDown={handleDragStart}
+        onPointerMove={handleDragMove}
+        onPointerUp={handleDragEnd}
+        onPointerCancel={handleDragEnd}
         roundedTop={"25px"}
         width={"calc(100% - 16px)"}
         mx={"auto"}
         background={"transparent"}
-        className={"glassEffect"}
+        className={"glassEffect draggableBottomSheet"}
         maxHeight={"85vh"}
         roundedBottom={"50px"}
         mb={"8px"}
+        style={{
+          "--bottom-sheet-drag-offset": `${dragOffset}px`,
+          transition: isDragging ? "none" : "transform 180ms ease-out",
+          touchAction: "pan-y",
+        } as React.CSSProperties}
       >
         <div className={"glassTint"} />
         <div className={"glassEffect"} />

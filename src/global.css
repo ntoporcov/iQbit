@@ -68,14 +68,14 @@ img {
         width:100%;
         height:100%;
         border-radius: inherit;
-        backdrop-filter: brightness(1) blur(8px);
+        backdrop-filter: brightness(var(--glass-brightness, 1)) blur(8px);
         filter:url("/refraction.svg#glass-distortion");
         overflow:hidden !important;
         isolation: isolate;
     }
 
     &.glassNoTint::after {
-        backdrop-filter: brightness(1) hue-rotate(18deg) blur(6px);
+        backdrop-filter: brightness(var(--glass-brightness, 1)) hue-rotate(18deg) blur(6px);
     }
 
     & > * {
@@ -118,9 +118,17 @@ img {
     inset: 0;
     filter: blur(1px);
     overflow: hidden;
+    background:
+            radial-gradient(circle at 18% 10%, rgba(255, 255, 255, var(--glass-specular-hotspot-opacity, 0.85)), transparent 18%),
+            linear-gradient(145deg, rgba(255, 255, 255, var(--glass-specular-opacity, 0.45)) 0%, transparent 32%, rgba(255, 255, 255, var(--glass-specular-soft-opacity, 0.16)) 56%, transparent 78%);
+    opacity: var(--glass-shine-opacity, 1);
     box-shadow: inset 1px 1px 1px 0 rgba(255, 255, 255, 1),
     inset -1px -1px 1px 1px rgba(0, 0, 0, 0.15);
     pointer-events: none;
+}
+
+.draggableBottomSheet {
+    transform: translateY(var(--bottom-sheet-drag-offset, 0px)) !important;
 }
 
 a,button{
