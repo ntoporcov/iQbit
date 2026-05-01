@@ -1,10 +1,18 @@
 html, body {
+    background: #F2F2F2;
+    color-scheme: light dark;
     margin: 0;
     padding: 0;
     /*overscroll-behavior: none;*/
     scrollbar-width: none;
     user-select: none;
     max-height: 100%;
+}
+
+@media (prefers-color-scheme: dark) {
+    html, body {
+        background: #000000;
+    }
 }
 
 * {
