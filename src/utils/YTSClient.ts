@@ -2,10 +2,11 @@ import axios from "axios";
 import { YTSData } from "../types";
 import { videoQualities } from "../components/Filters";
 
-// Fallback list of YTS mirrors used if the remote config cannot be fetched.
+// Direct CORS-enabled endpoints. Redirecting mirrors fail in browsers because
+// their redirect responses do not include an Access-Control-Allow-Origin header.
 const FALLBACK_MIRRORS = [
-  "https://yts.bz/api/v2/",
-  "https://yts.lt/api/v2/",
+  "https://movies-api.accel.li/api/v2/",
+  "https://yts.gg/api/v2/",
 ];
 
 const CACHE_KEY = "iqbit-yts-working-mirror";
