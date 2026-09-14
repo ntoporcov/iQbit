@@ -21,7 +21,7 @@ export const useLogin = (props?: { onLogin?: () => void }) => {
       TorrClient.login({ username, password }),
     {
       onSuccess: ({ data }, { username, password }) => {
-        if (data === "Ok.") {
+        if (data !== "Fails.") {
           setLocalCreds({
             username,
             password,

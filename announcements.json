@@ -8,6 +8,12 @@
   },
   "announcements": [
     {
+      "id": "Sep142026",
+      "title": "qBittorrent Login Fix",
+      "body": "Login now supports the latest qBittorrent WebUI authentication response.",
+      "type": "info"
+    },
+    {
       "id": "Sep132026",
       "title": "YTS Search Fix",
       "body": "YTS search has been restored after its API endpoints moved.",
